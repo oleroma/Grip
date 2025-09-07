@@ -9,7 +9,7 @@ Grip mod of Alpakka 1.0 controller
 - [Input Labs Roadmap](https://github.com/orgs/inputlabs/projects/2/views/2).
 
 ## Previews
-`<span><img width='250px' src='./preview/top.png'/></span>`
+``<span><img width='250px' src='./preview/top.png'/></span>``
 `<span><img width='250px' src='./preview/front.png'/></span>`
 `<span><img width='250px' src='./preview/bottom.png'/></span>`
 `<span><img width='250px' src='./preview/side.png'/></span>`
