@@ -1,0 +1,7 @@
+*.blend1
+backup/
+stl/
+prusa/
+orca/
+.vscode/
+__pycache__/
