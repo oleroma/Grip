@@ -9,16 +9,16 @@ Grip mod of Alpakka 1.0 controller
 - [Input Labs Roadmap](https://github.com/orgs/inputlabs/projects/2/views/2).
 
 ## Previews
-`<span><img width='250px' src='./preview/top.png'/></span>
-`<span><img width='250px' src='./preview/front.png'/></span>
-`<span><img width='250px' src='./preview/bottom.png'/></span>
-`<span><img width='250px' src='./preview/side.png'/></span>
-`<span><img width='250px' src='./preview/diagonal1.png'/></span>
-`<span><img width='250px' src='./preview/diagonal2.png'/></span>
-`<span><img width='250px' src='./preview/diagonal3.png'/></span>
-`<span><img width='250px' src='./preview/trans1.png'/></span>
-`<span><img width='250px' src='./preview/trans2.png'/></span>
-`<br>*(Previews might be outdated)*
+`<span><img width='250px' src='./preview/top.png'/></span>`
+`<span><img width='250px' src='./preview/front.png'/></span>`
+`<span><img width='250px' src='./preview/bottom.png'/></span>`
+`<span><img width='250px' src='./preview/side.png'/></span>`
+`<span><img width='250px' src='./preview/diagonal1.png'/></span>`
+`<span><img width='250px' src='./preview/diagonal2.png'/></span>`
+`<span><img width='250px' src='./preview/diagonal3.png'/></span>`
+`<span><img width='250px' src='./preview/trans1.png'/></span>`
+`<span><img width='250px' src='./preview/trans2.png'/></span>`
+`<br>*(Previews might be outdated)*`
 
 ## Dependencies
 - Git LFS.
