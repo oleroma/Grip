@@ -1,6 +1,6 @@
 # GRIP 1.0
 
-Grip mod of Alpakka 1.0 controller
+Grip shell of Alpakka 1.0 controller
 ## Project links
 - [Alpakka Manual](https://inputlabs.io/devices/alpakka/manual). _(only original, not for this mod)_
 - [Alpakka Firmware](https://github.com/inputlabs/alpakka_firmware).
