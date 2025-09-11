@@ -1,7 +1,9 @@
 # GRIP 1.0
 
 Grip shell for Alpakka 1.0 controller
+
 Case mod
+
 Grip designed to improve gyro stability and reduce strain.
 Costumizable and procedural in Blender geometry nodes.
 
