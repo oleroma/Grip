@@ -8,6 +8,7 @@ Grip designed to improve gyro stability and reduce strain.
 Costumizable and procedural in Blender geometry nodes.
 
 Customization options:
+
 Button and stick size and shape, tolerances, are procedural. Capacitive plate can be embedded into case or sticking out, hieght, size  are costimizable. You can have huge ABXY using top caps that are press fit or you can have both capas and capacitive plate and capped buttons. You can disable it all as well. Thumbstick has customizable textures. Model is not 100% constrained, some values have infinite min max so easy with sliders. Should be robust enough for you to go and figure out what each parameter does by simply dragging those sliders and looking at what are they doing.
 
 Oleroma 
