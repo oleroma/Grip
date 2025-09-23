@@ -1,6 +1,5 @@
-# GRIP 1.0
-
-Grip shell for Alpakka 1.0 controller
+# GRIPR1 1.0
+Transmutated grip shell version with R1 main.
 
 Case mod
 
