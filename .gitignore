@@ -1,6 +1,5 @@
 *.blend1
 backup/
-stl/
 prusa/
 gcode/
 .vscode/
