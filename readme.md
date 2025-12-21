@@ -23,7 +23,14 @@ Millwod
 - [Input Labs Roadmap](https://github.com/orgs/inputlabs/projects/2/views/2).
 
 ## Previews
-
+<span><img width='250px' src='./preview/1.png'/></span>
+<span><img width='250px' src='./preview/2.png'/></span>
+<span><img width='250px' src='./preview/3.png'/></span>
+<span><img width='250px' src='./preview/4.png'/></span>
+<span><img width='250px' src='./preview/5.png'/></span>
+<span><img width='250px' src='./preview/6.png'/></span>
+<span><img width='250px' src='./preview/7.png'/></span>
+<br>*(Previews might be outdated)*
 
 ## Dependencies
 - Git LFS.
@@ -33,7 +40,3 @@ Millwod
 If you only want to download the Blender and STL files `DO NOT USE download ZIP` GitHub button, since it is not compatible with LFS (Large File Storage), but instead clone the repo.
 
 To use Git with this project it is required to install Git [Large File Storage](https://git-lfs.github.com).
-
-
-
-
