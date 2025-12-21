@@ -2,6 +2,6 @@
 backup/
 stl/
 prusa/
-orca/
+gcode/
 .vscode/
 __pycache__/
