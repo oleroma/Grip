@@ -12,8 +12,6 @@ Grip designed to improve grip for gyro.
 
 Costumizable and procedural in Blender geometry nodes.
 
-For a while ive been experimenting with different controller shapes looking for better grip. This resulted in development of "Grip" alpakka shell with @Jim Foster that would mimick pistol handle feel with joystick controls in mind. Then, since i use R1 L1 as main buttons for index fingers and i wanted to utilize also ring fingers i diverged design and since then im working on "GripR1" version. This "GripR1" is my current vision of ergonomics that help gyro. Theres some caveats. Theres only wired version of "GripR1" for now and there is cursor jumping  issue on R1 L1 because this mod uses different button solution then stock alpakka. I wish I could release it as a complete alternative to stock case but for now with unresolved issues i would keep it pre release, untill i figure out stable solutions or at least workaranounds. Anyway I wanted to create new thread with pics and explanations for this mod.
-
 Mod is made in blender like original case extensively using geometry nodes for customization.
 
 WHAT IS CUSTOMIZABLE:
