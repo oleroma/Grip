@@ -1,4 +1,4 @@
-# GRIPR1 1.0
+# GRIPR1
 Transmutated grip shell version with R1 main.
 
 Case mod
