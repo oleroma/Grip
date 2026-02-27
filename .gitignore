@@ -1,6 +1,5 @@
 *.blend1
 backup/
-prusa/
 gcode/
 .vscode/
 __pycache__/
