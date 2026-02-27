@@ -23,7 +23,7 @@ Millwod
 - [Alpakka 3D-print](https://github.com/inputlabs/alpakka_case). _(original case)_
 - [Input Labs Roadmap](https://github.com/orgs/inputlabs/projects/2/views/2).
 
-## Previews
+<!-- ## Previews
 <span><img width='250px' src='./preview/1.png'/></span>
 <span><img width='250px' src='./preview/2.png'/></span>
 <span><img width='250px' src='./preview/3.png'/></span>
@@ -32,6 +32,7 @@ Millwod
 <span><img width='250px' src='./preview/6.png'/></span>
 <span><img width='250px' src='./preview/7.png'/></span>
 <br>*(Previews might be outdated)*
+-->
 
 ## Dependencies
 - Git LFS.
