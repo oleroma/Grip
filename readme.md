@@ -1,9 +1,10 @@
 # GRIPR1
-Transmutated grip shell version with R1 main.
 
-Case mod
 
-Grip designed to improve gyro stability and reduce strain.
+Complete case for Alpakka 1.0 controller
+
+Grip designed to improve grip for gyro.
+
 Costumizable and procedural in Blender geometry nodes.
 
 Customization options:
