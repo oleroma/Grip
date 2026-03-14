@@ -1,0 +1,128 @@
+import bpy
+import re
+
+# --- CONFIGURATION ---
+KEYWORD = "Copy_"
+# ---------------------
+
+def get_unique_name_without_dots(base_name, data_collection, current_item=None):
+    """
+    Finds a unique name in the data collection without using Blender's .001 formatting.
+    Uses _1, _2 instead so Blender doesn't forcefully revert our changes.
+    """
+    final_name = base_name
+    counter = 1
+    while True:
+        existing = data_collection.get(final_name)
+        # If the name is free, or it's already owned by the exact item we're checking
+        if not existing or existing == current_item:
+            break
+        # Append an underscore counter instead of a dot to avoid Blender's auto-indexing
+        final_name = f"{base_name}_{counter}"
+        counter += 1
+    return final_name
+
+def process_selected_node_groups():
+    # Collect all node trees that are currently active/visible to the user
+    trees_to_check = set()
+
+    if getattr(bpy.context, 'screen', None):
+        for area in bpy.context.screen.areas:
+            if area.type == 'NODE_EDITOR':
+                for space in area.spaces:
+                    if space.type == 'NODE_EDITOR':
+                        if getattr(space, 'edit_tree', None):
+                            trees_to_check.add(space.edit_tree)
+                        if getattr(space, 'node_tree', None):
+                            trees_to_check.add(space.node_tree)
+
+    obj = bpy.context.active_object
+    if obj:
+        if getattr(obj, 'material_slots', None):
+            for slot in obj.material_slots:
+                mat = slot.material
+                if mat and getattr(mat, 'use_nodes', False) and getattr(mat, 'node_tree', None):
+                    trees_to_check.add(mat.node_tree)
+
+        if getattr(obj, 'modifiers', None):
+            for mod in obj.modifiers:
+                if mod.type == 'NODES' and getattr(mod, 'node_group', None):
+                    trees_to_check.add(mod.node_group)
+
+    scene = bpy.context.scene
+    if getattr(scene, 'use_nodes', False) and getattr(scene, 'node_tree', None):
+        trees_to_check.add(scene.node_tree)
+
+    modified_count = 0
+    renamed_count = 0
+
+    # --- PHASE 1: Process User-Selected Nodes ---
+    for tree in trees_to_check:
+        for node in tree.nodes:
+            if node.select:
+                if hasattr(node, 'node_tree') and node.node_tree:
+
+                    # 1. Make Single User
+                    if node.node_tree.users > 1:
+                        new_tree = node.node_tree.copy()
+                        node.node_tree = new_tree
+                        modified_count += 1
+
+                    # 2. Aggressive Clean and Rename
+                    current_name = node.node_tree.name
+
+                    # Remove all dot-indexes (e.g., .001, .002) at the end of the string
+                    clean_name = re.sub(r'(\.\d+)+$', '', current_name)
+
+                    # Add keyword if missing
+                    if not clean_name.startswith(KEYWORD):
+                        clean_name = f"{KEYWORD}{clean_name}"
+
+                    # Ensure name is unique without using dot syntax
+                    unique_name = get_unique_name_without_dots(clean_name, bpy.data.node_groups, node.node_tree)
+
+                    # Apply changes
+                    if node.node_tree.name != unique_name:
+                        node.node_tree.name = unique_name
+
+                    node.name = unique_name
+                    node.label = unique_name
+                    renamed_count += 1
+
+    # --- PHASE 2: Global Cleanup Pass ---
+    # Loops over ALL node groups in the blend file continuously until NO data block ends with an index.
+    # This guarantees Blender didn't sneak an index onto a sub-node somewhere.
+    cleanup_done = False
+    while not cleanup_done:
+        cleanup_done = True
+        for ng in bpy.data.node_groups:
+            # If we spot a dot followed by numbers at the end of any node group
+            if re.search(r'\.\d+$', ng.name):
+                # Strip the index
+                clean_name = re.sub(r'(\.\d+)+$', '', ng.name)
+
+                # Assign a unique name using underscores instead of dots
+                unique_name = get_unique_name_without_dots(clean_name, bpy.data.node_groups, ng)
+
+                if ng.name != unique_name:
+                    ng.name = unique_name
+
+                    # Because we modified the collection while looping, we must restart the loop
+                    # to be absolutely sure we didn't miss anything.
+                    cleanup_done = False
+                    break
+
+    return modified_count, renamed_count
+
+copied, renamed = process_selected_node_groups()
+
+def draw_popup(self, context):
+    if copied > 0 or renamed > 0:
+        self.layout.label(text=f"Success! Made {copied} node(s) single-user.")
+        self.layout.label(text=f"Cleaned names & labels for {renamed} selected node(s).")
+        self.layout.label(text="Global node index cleanup complete.")
+    else:
+        self.layout.label(text="0 nodes changed (Global index cleaner ran).")
+
+if getattr(bpy.context, 'window_manager', None):
+    bpy.context.window_manager.popup_menu(draw_popup, title="Node Groups Processed", icon='INFO')
