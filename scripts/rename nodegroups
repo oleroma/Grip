@@ -1,0 +1,70 @@
+import bpy
+import re
+
+# --- CONFIGURATION ---
+PREFIX = "GripV " 
+CONFLICT_SUFFIX = "_OLD"
+# ---------------------
+
+def rename_group_logic(group):
+    base_name = group.name
+    
+    # 1. Dynamically remove Blender's auto-appended suffixes (e.g., .001, .002)
+    base_name = re.sub(r'\.\d+$', '', base_name)
+    
+    # 2. Chop off the first word
+    parts = re.split(r'[ _]+', base_name, maxsplit=1)
+    
+    if len(parts) > 1:
+        clean_name = parts[1].strip()
+    else:
+        clean_name = ""
+    
+    # 3. Construct the intended target name
+    target_name = PREFIX + clean_name
+    
+    # If it already has the exact target name, we can skip it
+    if group.name == target_name:
+        return False
+        
+    # 4. CONFLICT RESOLUTION
+    if target_name in bpy.data.node_groups:
+        existing_group = bpy.data.node_groups[target_name]
+        
+        # Make sure we aren't looking at the exact group we are trying to rename
+        if existing_group != group:
+            existing_group.name = target_name + CONFLICT_SUFFIX
+            print(f"  -> Conflict found: Renamed old group to '{existing_group.name}'")
+    
+    # 5. Apply the clean name
+    old_name = group.name
+    group.name = target_name
+    print(f"Renamed: '{old_name}' -> '{group.name}'")
+    return True
+
+def batch_rename_nodegroups():
+    processed_groups = set()
+    made_changes = False
+    
+    # Scenario 1: Hunt for the Node Editor to grab selected nodes
+    for area in bpy.context.screen.areas:
+        if area.type == 'NODE_EDITOR':
+            space = area.spaces.active
+            tree = space.edit_tree 
+            
+            if tree:
+                for node in tree.nodes:
+                    if node.select and node.type == 'GROUP' and node.node_tree:
+                        group = node.node_tree
+                        
+                        # Only process each unique group once
+                        if group not in processed_groups:
+                            if rename_group_logic(group):
+                                made_changes = True
+                            processed_groups.add(group)
+
+    if not made_changes:
+        print("Nothing changed. Ensure nodes/objects are selected or names are already correct.")
+
+# Execute the function
+batch_rename_nodegroups()
