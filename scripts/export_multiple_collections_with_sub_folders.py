@@ -1,7 +1,7 @@
 bl_info = {
     "name": "Batch STL Exporter (Multi-Collection, Presets & Versioning)",
     "author": "AI",
-    "version": (4, 0),
+    "version": (4, 1),
     "blender": (4, 1, 0),
     "location": "View3D > Sidebar > Export",
     "description": "Export collections to a dynamic root directory with relative sub-paths, switchable via global presets.",
@@ -27,7 +27,7 @@ def find_layer_collection(layer_collection, collection_name):
     return None
 
 def get_enabled_objects_recursive(layer_coll):
-    """Recursively gather all valid objects from a LayerCollection if it is enabled (unchecked)."""
+    """Recursively gather all valid objects from a LayerCollection if it is enabled."""
     objects = []
 
     if layer_coll.exclude:
@@ -55,11 +55,14 @@ def get_active_preset(scene):
 
 class BatchSTLExportItem(bpy.types.PropertyGroup):
     """Group of properties representing a single collection -> sub-path mapping."""
-    collection: bpy.props.PointerProperty(
+
+    # FIX: Use StringProperty instead of PointerProperty to prevent Depsgraph lag
+    collection_name: bpy.props.StringProperty(
         name="Collection",
-        type=bpy.types.Collection,
-        description="Select the root collection to export"
+        description="Select the root collection to export",
+        default=""
     )
+
     sub_path: bpy.props.StringProperty(
         name="Sub-folder Path",
         description="Relative path appended to the Root Directory (e.g., 'parts/gears/')",
@@ -68,11 +71,7 @@ class BatchSTLExportItem(bpy.types.PropertyGroup):
 
 
 class BatchSTLExportPreset(bpy.types.PropertyGroup):
-    """A named, self-contained set of collection -> sub-path mappings.
-
-    Presets are stored globally on the Scene, so any collection can be
-    exported to a different sub-folder simply by switching the active preset.
-    """
+    """A named, self-contained set of collection -> sub-path mappings."""
     name: bpy.props.StringProperty(
         name="Preset Name",
         default="New Preset",
@@ -138,7 +137,7 @@ class BATCH_STL_OT_duplicate_preset(bpy.types.Operator):
 
         for src_item in source.mappings:
             new_item = new_preset.mappings.add()
-            new_item.collection = src_item.collection
+            new_item.collection_name = src_item.collection_name
             new_item.sub_path = src_item.sub_path
 
         scene.batch_stl_preset_index = len(scene.batch_stl_presets) - 1
@@ -195,7 +194,6 @@ class EXPORT_OT_batch_stl_multi(bpy.types.Operator):
     def execute(self, context):
         scene = context.scene
 
-        # Ensure a root directory is set
         if not scene.batch_stl_root_dir:
             self.report({'ERROR'}, "Please select a Root Export Directory first.")
             return {"CANCELLED"}
@@ -210,21 +208,27 @@ class EXPORT_OT_batch_stl_multi(bpy.types.Operator):
         if context.active_object and context.mode != "OBJECT":
             bpy.ops.object.mode_set(mode="OBJECT")
 
+        # Save active selection state to restore later
+        original_selected = context.selected_objects
+        original_active = context.active_object
+
         total_exported = 0
 
         for item in preset.mappings:
-            if not item.collection:
+            if not item.collection_name:
                 continue
 
-            # Join the root directory with the mapping's specific sub-path
-            # os.path.normpath cleans up any double slashes automatically
+            if item.collection_name not in bpy.data.collections:
+                self.report({'WARNING'}, f"Collection '{item.collection_name}' does not exist.")
+                continue
+
             out_dir = os.path.normpath(os.path.join(root_dir, item.sub_path))
             os.makedirs(out_dir, exist_ok=True)
 
-            root_layer_coll = find_layer_collection(context.view_layer.layer_collection, item.collection.name)
+            root_layer_coll = find_layer_collection(context.view_layer.layer_collection, item.collection_name)
 
             if not root_layer_coll:
-                self.report({'WARNING'}, f"Collection '{item.collection.name}' not found in View Layer.")
+                self.report({'WARNING'}, f"Collection '{item.collection_name}' not found in View Layer.")
                 continue
 
             objects_to_export = get_enabled_objects_recursive(root_layer_coll)
@@ -239,7 +243,13 @@ class EXPORT_OT_batch_stl_multi(bpy.types.Operator):
                 bpy.ops.wm.stl_export(filepath=filepath, export_selected_objects=True)
                 total_exported += 1
 
+        # Restore original selection
         bpy.ops.object.select_all(action="DESELECT")
+        for obj in original_selected:
+            obj.select_set(True)
+        if original_active:
+            context.view_layer.objects.active = original_active
+
         self.report(
             {'INFO'},
             f"Successfully exported {total_exported} STLs using preset '{preset.name}' to {root_dir}",
@@ -265,8 +275,8 @@ class BATCH_STL_UL_items(bpy.types.UIList):
     """Custom UI List to draw the collection/sub-path pairs for the active preset."""
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
         if self.layout_type in {'DEFAULT', 'COMPACT'}:
-            if item.collection:
-                layout.label(text=item.collection.name, icon='OUTLINER_COLLECTION')
+            if item.collection_name:
+                layout.label(text=item.collection_name, icon='OUTLINER_COLLECTION')
                 if item.sub_path:
                     layout.label(text=f"/{item.sub_path}", icon='FILE_FOLDER')
             else:
@@ -336,7 +346,8 @@ class VIEW3D_PT_batch_export_stl_multi(bpy.types.Panel):
             active_item = active_preset.mappings[active_preset.mapping_index]
 
             sub_box = box.box()
-            sub_box.prop(active_item, "collection")
+            # FIX: Use prop_search to populate a dropdown menu with scene collections, safely!
+            sub_box.prop_search(active_item, "collection_name", bpy.data, "collections", text="Collection")
             sub_box.prop(active_item, "sub_path")
 
         layout.separator()
@@ -367,7 +378,6 @@ def register():
     for cls in classes:
         bpy.utils.register_class(cls)
 
-    # Global root directory property (shared across all presets)
     bpy.types.Scene.batch_stl_root_dir = bpy.props.StringProperty(
         name="Root Export Directory",
         description="The base directory. Preset sub-paths will be added to this.",
@@ -375,7 +385,6 @@ def register():
         subtype="DIR_PATH",
     )
 
-    # Global presets, each holding its own collection -> sub-path mappings
     bpy.types.Scene.batch_stl_presets = bpy.props.CollectionProperty(type=BatchSTLExportPreset)
     bpy.types.Scene.batch_stl_preset_index = bpy.props.IntProperty(name="Active Preset Index", default=0)
 
