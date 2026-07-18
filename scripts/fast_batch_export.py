@@ -1,15 +1,53 @@
 bl_info = {
-    "name": "Batch STL Exporter (Multi-Collection, Presets & Versioning)",
+    "name": "Fast Batch STL Exporter (Multi-Collection, Presets & Versioning)",
     "author": "AI",
     "version": (4, 1),
     "blender": (4, 1, 0),
     "location": "View3D > Sidebar > Export",
-    "description": "Export collections to a dynamic root directory with relative sub-paths, switchable via global presets.",
+    "description": "High-performance export of collections to a dynamic root directory using viewport evaluated data.",
     "category": "Import-Export",
 }
 
 import os
 import bpy
+import struct
+
+
+# --- FAST EXPORT FUNCTION ---
+
+def write_fast_binary_stl(filepath, mesh, matrix_world):
+    """Writes a Blender mesh directly to a Binary STL file."""
+    mesh.calc_loop_triangles()
+    tris = mesh.loop_triangles
+
+    if len(tris) == 0:
+        return # Skip empty meshes
+
+    # Pre-transform vertices to world space to save time in the loop
+    verts = [matrix_world @ v.co for v in mesh.vertices]
+
+    # Calculate normal transformation matrix (inverse transpose)
+    mat_norm = matrix_world.to_3x3().inverted_safe().transposed()
+
+    with open(filepath, 'wb') as f:
+        # STL Header (80 bytes)
+        f.write(b'Batch STL Fast Export' + b'\x00' * 59)
+
+        # Triangle Count (unsigned int)
+        f.write(struct.pack('<I', len(tris)))
+
+        for tri in tris:
+            # Face Normal
+            n = (mat_norm @ tri.normal).normalized()
+            f.write(struct.pack('<3f', n.x, n.y, n.z))
+
+            # 3 Vertices
+            for loop_idx in tri.vertices:
+                v = verts[loop_idx]
+                f.write(struct.pack('<3f', v.x, v.y, v.z))
+
+            # Attribute Byte Count (standard STL requirement)
+            f.write(b'\x00\x00')
 
 
 # --- HELPER FUNCTIONS ---
@@ -56,7 +94,6 @@ def get_active_preset(scene):
 class BatchSTLExportItem(bpy.types.PropertyGroup):
     """Group of properties representing a single collection -> sub-path mapping."""
 
-    # FIX: Use StringProperty instead of PointerProperty to prevent Depsgraph lag
     collection_name: bpy.props.StringProperty(
         name="Collection",
         description="Select the root collection to export",
@@ -179,7 +216,7 @@ class BATCH_STL_OT_remove_item(bpy.types.Operator):
         return {'FINISHED'}
 
 
-# --- EXPORT OPERATOR ---
+# --- FAST EXPORT OPERATOR ---
 
 class EXPORT_OT_batch_stl_multi(bpy.types.Operator):
     bl_idname = "export_scene.batch_stl_multi"
@@ -208,11 +245,10 @@ class EXPORT_OT_batch_stl_multi(bpy.types.Operator):
         if context.active_object and context.mode != "OBJECT":
             bpy.ops.object.mode_set(mode="OBJECT")
 
-        # Save active selection state to restore later
-        original_selected = context.selected_objects
-        original_active = context.active_object
-
         total_exported = 0
+
+        # Grab the currently evaluated scene state
+        depsgraph = context.evaluated_depsgraph_get()
 
         for item in preset.mappings:
             if not item.collection_name:
@@ -235,20 +271,27 @@ class EXPORT_OT_batch_stl_multi(bpy.types.Operator):
             objects_to_export = list(set(objects_to_export))
 
             for obj in objects_to_export:
-                bpy.ops.object.select_all(action="DESELECT")
-                obj.select_set(True)
+                # Get the evaluated object based on viewport data
+                obj_eval = obj.evaluated_get(depsgraph)
+
+                try:
+                    # Bake modifiers virtually to a raw mesh
+                    mesh = obj_eval.to_mesh()
+                except RuntimeError:
+                    continue # Skip objects that fail to generate a mesh (e.g., Empties)
+
+                if not mesh:
+                    continue
 
                 filepath = os.path.join(out_dir, f"{bpy.path.clean_name(obj.name)}.stl")
 
-                bpy.ops.wm.stl_export(filepath=filepath, export_selected_objects=True)
-                total_exported += 1
+                # Write fast binary STL, completely bypassing bpy.ops
+                write_fast_binary_stl(filepath, mesh, obj.matrix_world)
 
-        # Restore original selection
-        bpy.ops.object.select_all(action="DESELECT")
-        for obj in original_selected:
-            obj.select_set(True)
-        if original_active:
-            context.view_layer.objects.active = original_active
+                # Clear the temporary mesh from memory
+                obj_eval.to_mesh_clear()
+
+                total_exported += 1
 
         self.report(
             {'INFO'},
@@ -292,7 +335,7 @@ class VIEW3D_PT_batch_export_stl_multi(bpy.types.Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = "Export"
-    bl_label = "Batch STL Export"
+    bl_label = "Fast Batch STL Export"
 
     def draw(self, context):
         layout = self.layout
@@ -346,7 +389,6 @@ class VIEW3D_PT_batch_export_stl_multi(bpy.types.Panel):
             active_item = active_preset.mappings[active_preset.mapping_index]
 
             sub_box = box.box()
-            # FIX: Use prop_search to populate a dropdown menu with scene collections, safely!
             sub_box.prop_search(active_item, "collection_name", bpy.data, "collections", text="Collection")
             sub_box.prop(active_item, "sub_path")
 
