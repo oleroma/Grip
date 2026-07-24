@@ -1,3 +1,12 @@
+<h1 align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset=".logo_dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset=".logo_light.svg">
+    <!-- The fallback image for older browsers -->
+    <img alt="Project Title" src="./logo_light.svg" width="200">
+  </picture>
+  <br>
+</h1>
 # GRIP
 (Work in progress... release is soon)
 
