@@ -8,7 +8,7 @@ maintainer = "AI"
 type = "add-on"
 build_date = "2026-07-24"
 license = [
-    "SPDX-License-Identifier: GPL-3.0-or-later"
+    "SPDX:GPL-3.0-or-later"
 ]
 tags = ["Import-Export"]
 blender_version_min = "5.2.0"
