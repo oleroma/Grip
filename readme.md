@@ -45,7 +45,7 @@ All shapes will come with an optional "hollow" version (generated using Signed D
 
 ### **NO-SCREWS OPTION**
 
-The solid version is designed to be held together with screws. The hollow version does not require screws for assembly, though you can still add them if preferred.
+The solid version is designed to be held together with screws. The hollow version does not require screws for assembly, though you can still have them if preferred.
 
 ### **PRINTING**
 
