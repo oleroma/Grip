@@ -38,15 +38,19 @@ In the end **BLENDER** project that realized with **GEOMETRY NODES** will be rel
 
 7. Customizable scrollwheel diameter and width.
 
-## PROCEDURAL SDF SHELL OPTIONS
+## **PROCEDURAL SHELL OPTIONS**
 
 
-All shapes will come with optional "hollow" version that will be either shell like structure or lattice like structure with holes.
-Hollow version will be a 3 part assembly from top/bottom  case and middle plate that holds pcb. 
-Solid version would also have optional peroidic surface style grip texturing that will include: gyroid, cubic, primitive, diamond, voronoi, FischerKoch CY/S.
+All shapes will come with optional "hollow" version (made using signed distance fields)that will be either shell like structure or lattice like structure with holes.
 
+Hollow version will be a 3 part assembly from top/bottom case and middle plate that holds pcb. 
+Solid version would also have optional grip texturing that will include such **periodic surface patterns** as: gyroid, cubic, primitive, diamond, voronoi, FischerKoch CY/S.
 
-All versions would be released as separate 3mf for orca slicer as soon as they tested out sufficiently starting from solid versions and then following the complexity.
+## **Release**
+
+All versions would be released as separate 3mf for orca slicer with STLs as soon as they tested out sufficiently starting from solid versions and then following the complexity.
+
+## **PRINTING**
 Project is tuned for FDM 3D printers, but potentially is good for SLA, SLA, especially hollow version.
 
 ## **CURRENT STATE**
