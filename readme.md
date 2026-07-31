@@ -31,9 +31,13 @@ In the end **BLENDER** project that realized with **GEOMETRY NODES** will be rel
 1. **Procedural buttons** vertically printed or horizontally printed (very smooth, much quieter, less sqeaky, tighter tolerances) with snap-on **caps**. Customizable tolerances, **cap shapes** (you want star or heart shaped buttons? why not, you can have it, any shape), custom button logos (you can put letter or any symbol on top of your button easily).
 
 2. Procedural sticks with customizable range(you can specify max angle it would tilt), size, height, shape of the  stick top and cutout hole (circle, square, hexagon,or octagon), customizable top texture and shape(convex, concave or flat, square or circle)
+
 3. Customizable bumpers, size, shape, tolerances, etc (width, height and depth of the button)
-4. Cutomizable arch triggers R2R4, size, shape, postions, press angles, tolerances (you can move them more inward or outward, up and down exactly where your fingertips arrive and where you want them)
+
+4. Cutomizable arch shaped R2R4 triggers (that **do not require screws**), tunable size, shape, postions, press angles, tolerances (you can move them more inward or outward, up and down exactly where your fingertips arrive and where you want them)
+
 5. Procedural battery cover, customizable battery size, thickness etc.
+
 6. Case shape can be changed easily for your own shape just putting it into corresponding "basemesh" collection (you just drop it into collection, and it gets sliced and cut)
 
 7. Customizable scrollwheel diameter and width.
@@ -45,6 +49,10 @@ All shapes will come with optional "hollow" version (made using signed distance 
 
 Hollow version will be a 3 part assembly from top/bottom case and middle plate that holds pcb. 
 Solid version would also have optional grip texturing that will include such **periodic surface patterns** as: gyroid, cubic, primitive, diamond, voronoi, FischerKoch CY/S.
+
+## **NO SCREWS OPTION**
+
+Solid version would be held with screws but hollow version, does not require them, though you could still have them if you want. 
 
 ## **Release**
 
@@ -63,9 +71,12 @@ Hollow version 80% complete. Tuning assembly tolerances.
 
 Blender project 80% percent ready. Logic is robust, everything works. A bit messy UI and might be overwhelming because it has a lot of parameters. Neet to pretty everything, and make simplified controls that will include most used parameters like tolerances for example or trigger positions. 
 
-## **TO DO**: 
-1. Documentation, video guide on printing, cleaning and assembly.
+## **TO DO**
+ 
+1. Documentation, video guide on printing, cleaning and assembly
+
 2. Create .3mf for each version
+
 3. Pretty .blend project
 
 ## **NOTE**: first release would be "beta", and anyone who is willing to be a tester, let me know.
