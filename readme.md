@@ -35,7 +35,7 @@ The final **BLENDER** project, built with **GEOMETRY NODES**, will be released a
 1. **Buttons:** Vertically or horizontally printed (very smooth, much quieter, less squeaky, and with tighter tolerances) with snap-on **caps**. Features customizable tolerances, **cap shapes** (want star- or heart-shaped buttons? You can have any shape!), and custom button logos (easily add any letter or symbol to the top of your buttons).
 2. **Sticks:** Customizable range (specify the maximum tilt angle), size, height, stick-top shape, and cutout hole (circle, square, hexagon, or octagon). Also features customizable top texture and profile (convex, concave, or flat; square or circle).
 3. **Bumpers (L1/R1):** Tunable size, shape, tolerances, and dimensions (width, height, and depth of the button).
-4. **Arch-Shaped Triggers (L2/R2):** Tunable size, shape, positions, press angles, and tolerances (**no screws required**). You can move them inward, outward, up, or down to match your exact fingertip resting positions.
+4. **Arch-Shaped Triggers (L2/R2, L4/R4):** Tunable size, shape, positions, press angles, and tolerances (**no screws required**). You can move them inward, outward, up, or down to match your exact fingertip resting positions.
 5. **Battery Cover:** Customizable battery compartment size, thickness, etc.
 6. **Scroll Wheel:** Customizable diameter and width.
 
