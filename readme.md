@@ -20,9 +20,9 @@
 
 The project will include the following **CASE SHAPES**: 
 1. 2 smooth, classic shapes in Xbox and DualSense styles.
-2. Custom ergonomic "pistol-like" shape with stock-style bumpers (or just stock—no cursor jumping on this version).
+2. Custom ergonomic "pistol-like" shape.
 3. SNES-style shape for portability (bonus shape).
-4. Experimental custom ergonomic "pistol-like" shape with compliant bumpers (will be released as experimental; currently exhibits cursor jumping).
+4. Experimental custom ergonomic "pistol-like" shape with compliant bumpers L1R1 (will be released as experimental; currently exhibits cursor jumping).
 
 ### HORIZONTALLY PRINTED BUTTONS
 
