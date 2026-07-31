@@ -24,6 +24,8 @@ The project will include the following **CASE SHAPES**:
 3. SNES-style shape for portability (bonus shape).
 4. Experimental custom ergonomic "pistol-like" shape with compliant bumpers L1R1 (will be released as experimental; currently exhibits cursor jumping).
 
+> **NOTE:** You can easily swap the case for your own custom shape by placing your mesh into the corresponding "basemesh" collection—just drop it into the collection, and it will automatically be sliced and cut.
+
 ### HORIZONTALLY PRINTED BUTTONS
 
 By default, the custom ergonomic shape (and possibly the classic shape) will use horizontally printed buttons with caps, as they provide a better feel, tighter tolerances, and less squeak. 
@@ -62,8 +64,6 @@ The final **BLENDER** project, built with **GEOMETRY NODES**, will be released a
 5. **Battery Cover:** Customizable battery compartment size, thickness, etc.
 6. **Scroll Wheel:** Customizable diameter and width.
 
-> **Tip:** You can easily swap the case for your own custom shape by placing your mesh into the corresponding "basemesh" collection—just drop it into the collection, and it will automatically be sliced and cut.
-
 ### **RELEASE PLAN**
 
 All versions will be released as separate `.3mf` files for OrcaSlicer, along with `.stl` files. Releases will roll out as soon as testing is complete, starting with the solid versions and progressing to the more complex models.
@@ -86,7 +86,7 @@ Everything is functional, assembles properly, and fits well.
 2. Create `.3mf` files for each version.
 3. Polish the `.blend` project UI.
 
-> **NOTE:** The initial release will be a **beta**. If you are willing to be a tester, please let us know!
+# **NOTE:** The initial release will be a **beta**. If you are willing to be a tester, please let us know!
 
 **Credits:** Oleroma, Milwud
 
