@@ -28,12 +28,14 @@ By default custom ergo (and maybe classic shape) will go with horizontally print
 
 In the end **BLENDER** project that realized with **GEOMETRY NODES** will be released and **WILL FEATURE**:
 
-1. Procedural buttons vertically printed or horizontally printed (very smooth, much quieter, less sqeaky, tighter tolerances) with snap-on caps. Customizable tolerances, cap shapes, base shapes, custom button logos.
-2. Procedural sticks with customizable range, size, height, shape of the  stick top and cutout hole, customizable top texture.
-3. Customizable bumpers, size, shape, tolerances, etc.
-4. Cutomizable arch triggers R2R4, size, shape, postions, press angles, tolerances.
+1. **Procedural buttons** vertically printed or horizontally printed (very smooth, much quieter, less sqeaky, tighter tolerances) with snap-on **caps**. Customizable tolerances, **cap shapes** (you want star or heart shaped buttons? why not, you can have it, any shape), custom button logos (you can put letter or any symbol on top of your button easily).
+
+2. Procedural sticks with customizable range(you can specify max angle it would tilt), size, height, shape of the  stick top and cutout hole (circle, square, hexagon,or octagon), customizable top texture and shape(convex, concave or flat, square or circle)
+3. Customizable bumpers, size, shape, tolerances, etc (width, height and depth of the button)
+4. Cutomizable arch triggers R2R4, size, shape, postions, press angles, tolerances (you can move them more inward or outward, up and down exactly where your fingertips arrive and where you want them)
 5. Procedural battery cover, customizable battery size, thickness etc.
-6. Case shape can be changed easily for your own shape just putting it into corresponding "basemesh" collection.
+6. Case shape can be changed easily for your own shape just putting it into corresponding "basemesh" collection (you just drop it into collection, and it gets sliced and cut)
+
 7. Customizable scrollwheel diameter and width.
 
 ## PROCEDURAL SDF SHELL OPTIONS
