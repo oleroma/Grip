@@ -18,7 +18,9 @@ Project will include such **CASE SHAPES**:
 2. Custom ergo "pistol like" shape with stock style bumpers (or just with stock, no cursor jumping on this version)
 3. SNES style shape, for portability (bonus shape)
 4. experimental custom ergo "pistol like" with compliant bumpers (will be released as experimental, exhibits cursor jumping)
-By default custom ergo (and maybe classic shape) will go with horizontally printed buttons with caps, since they provide better feel, tighter tolerances and less squeak.
+
+By default custom ergo (and maybe classic shape) will go with horizontally printed buttons with caps, since they provide better feel, tighter tolerances and less squeak.Cool thing about horizontal buttons is that if used with caps, their shafts are much smaller, and when combined with thinner scroll wheel and new custom wheel support, it allows to have **full size right stick** with shield. That means you can have identical left and right sticks.
+
 
 In the end **BLENDER** project will be released that **WILL FEATURE**:
 1. Procedural buttons vertically printed or horizontally printed (very smooth, much quieter, less sqeaky, tighter tolerances) with snap-on caps. Customizable tolerances, cap shapes, base shapes, custom button logos.
@@ -36,8 +38,6 @@ Solid version would also have optional peroidic surface style grip texturing tha
 
 All versions would be released as separate 3mf for orca slicer as soon as they tested out sufficiently starting from solid versions and then following the complexity.
 Project is tuned for FDM 3D printers, but potentially is good for SLA, SLA, especially hollow version.
-
-Cool thing about sticks, they can be full size and with shields, same for left and right stick on this mod thanks to capped buttons and thinner wheel that will feature custom wheel support. Smaller button shafts and thinner wheel gives just enough space to feature full size Right stick with shield.
 
 **CURRENT STATE**: 
 Everything is working, assembles and fits.
