@@ -7,11 +7,14 @@
   </picture>
   <br>
 </h1>
+
 # GRIP
+
 (Work in progress... release is soon)
 
 
 # **FEATURES AND PROGRESS**
+
 ## CASE SHAPES
 
 Project will include such **CASE SHAPES**: 
