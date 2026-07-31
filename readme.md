@@ -30,7 +30,7 @@ By default, the custom ergonomic shape (and possibly the classic shape) will use
 
 ### BLENDER PROJECT WITH NODES
 
-The final **BLENDER** project, built with **GEOMETRY NODES**, will be released and **WILL FEATURE** procedural generation for:
+The final **BLENDER** project, built with **GEOMETRY NODES**, will be released and will feature **PROCEDURAL GENERATION** for:
 
 1. **Buttons:** Vertically or horizontally printed (very smooth, much quieter, less squeaky, and with tighter tolerances) with snap-on **caps**. Features customizable tolerances, **cap shapes** (want star- or heart-shaped buttons? You can have any shape!), and custom button logos (easily add any letter or symbol to the top of your buttons).
 2. **Sticks:** Customizable range (specify the maximum tilt angle), size, height, stick-top shape, and cutout hole (circle, square, hexagon, or octagon). Also features customizable top texture and profile (convex, concave, or flat; square or circle).
