@@ -19,7 +19,7 @@ Project will include such **CASE SHAPES**:
 3. SNES style shape, for portability (bonus shape)
 4. experimental custom ergo "pistol like" with compliant bumpers (will be released as experimental, exhibits cursor jumping)
 
-By default custom ergo (and maybe classic shape) will go with horizontally printed buttons with caps, since they provide better feel, tighter tolerances and less squeak.Cool thing about horizontal buttons is that if used with caps, their shafts are much smaller, and when combined with thinner scroll wheel and new custom wheel support, it allows to have **full size right stick** with shield. That means you can have identical left and right sticks.
+By default custom ergo (and maybe classic shape) will go with horizontally printed buttons with caps, since they provide better feel, tighter tolerances and less squeak.Cool thing about horizontal buttons is that if used with caps, their shafts are much smaller, and when combined with thinner scroll wheel and new custom wheel support, it allows to have **FULL SIZE RIGHT STICK** with shield. That means you can have identical left and right sticks.
 
 
 In the end **BLENDER** project will be released that **WILL FEATURE**:
