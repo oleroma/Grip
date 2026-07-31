@@ -59,7 +59,8 @@ Solid version would be held with screws but hollow version, does not require the
 All versions would be released as separate 3mf for orca slicer with STLs as soon as they tested out sufficiently starting from solid versions and then following the complexity.
 
 ## **PRINTING**
-Project is tuned for FDM 3D printers, but potentially is good for SLA, SLA, especially hollow version.
+
+Project is tuned for FDM 3D printers, but potentially is good for SLS, SLA, especially hollow version.
 
 ## **CURRENT STATE**
 
