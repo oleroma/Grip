@@ -24,9 +24,32 @@ The project will include the following **CASE SHAPES**:
 3. SNES-style shape for portability (bonus shape).
 4. Experimental custom ergonomic "pistol-like" shape with compliant bumpers (will be released as experimental; currently exhibits cursor jumping).
 
+### HORIZONTALLY PRINTED BUTTONS
+
+By default, the custom ergonomic shape (and possibly the classic shape) will use horizontally printed buttons with caps, as they provide a better feel, tighter tolerances, and less squeak. 
+
 ### FULL-SIZE RIGHT STICK
 
-By default, the custom ergonomic shape (and possibly the classic shape) will use horizontally printed buttons with caps, as they provide a better feel, tighter tolerances, and less squeak. A great advantage of horizontal buttons is that when used with caps, their shafts are much smaller. Combined with a thinner scroll wheel and a new custom wheel support, this allows for a **FULL-SIZE RIGHT STICK** with a shield. This means you can have identical left and right sticks.
+A great advantage of horizontal buttons is that when used with caps, their shafts are much smaller. Combined with a thinner scroll wheel and a new custom wheel support, this allows for a **FULL-SIZE RIGHT STICK** with a shield. This means you can have identical left and right sticks.
+
+### ADJUSTABLE TRIGGERS
+
+Arch shaped triggers for L2R2 L4R4 does not require any screws to work and can be adjusted to fit different hands.
+
+### **PROCEDURAL SHELL OPTIONS**
+
+All shapes will come with an optional "hollow" version (generated using Signed Distance Fields, or SDFs) that can be either a shell-like structure or a lattice-like structure with holes.
+
+* **Hollow Version:** A 3-part assembly consisting of a top case, a bottom case, and a middle plate that holds the PCB. 
+* **Solid Version:** Includes optional grip texturing featuring **periodic surface patterns** such as: Gyroid, Cubic, Primitive, Diamond, Voronoi, and Fischer-Koch S/CY.
+
+### **NO-SCREWS OPTION**
+
+The solid version is designed to be held together with screws. The hollow version does not require screws for assembly, though you can still add them if preferred.
+
+### **PRINTING**
+
+The project is optimized for FDM 3D printers, but it is also suitable for SLS and SLA printing—especially the hollow version.
 
 ### BLENDER PROJECT WITH NODES
 
@@ -41,24 +64,9 @@ The final **BLENDER** project, built with **GEOMETRY NODES**, will be released a
 
 > **Tip:** You can easily swap the case for your own custom shape by placing your mesh into the corresponding "basemesh" collection—just drop it into the collection, and it will automatically be sliced and cut.
 
-### **PROCEDURAL SHELL OPTIONS**
-
-All shapes will come with an optional "hollow" version (generated using Signed Distance Fields, or SDFs) that can be either a shell-like structure or a lattice-like structure with holes.
-
-* **Hollow Version:** A 3-part assembly consisting of a top case, a bottom case, and a middle plate that holds the PCB. 
-* **Solid Version:** Includes optional grip texturing featuring **periodic surface patterns** such as: Gyroid, Cubic, Primitive, Diamond, Voronoi, and Fischer-Koch S/CY.
-
-### **NO-SCREWS OPTION**
-
-The solid version is designed to be held together with screws. The hollow version does not require screws for assembly, though you can still add them if preferred.
-
 ### **RELEASE PLAN**
 
 All versions will be released as separate `.3mf` files for OrcaSlicer, along with `.stl` files. Releases will roll out as soon as testing is complete, starting with the solid versions and progressing to the more complex models.
-
-### **PRINTING**
-
-The project is optimized for FDM 3D printers, but it is also suitable for SLS and SLA printing—especially the hollow version.
 
 ---
 
