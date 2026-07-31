@@ -34,11 +34,11 @@ A great advantage of horizontal buttons is that when used with caps, their shaft
 
 ### ADJUSTABLE TRIGGERS
 
-Arch shaped triggers for L2R2 L4R4 does not require any screws to work and can be adjusted to fit different hands.
+Arch shaped triggers for L2R2 L4R4 do not require any screws to work and can be adjusted to fit different hands.
 
 ### **PROCEDURAL SHELL OPTIONS**
 
-All shapes will come with an optional "hollow" version (generated using Signed Distance Fields, or SDFs) that can be either a shell-like structure or a lattice-like structure with holes.
+All shapes will come with an optional "hollow" version (made using Signed Distance Fields, or SDFs) that can be either a shell-like structure or a lattice-like structure with holes.
 
 * **Hollow Version:** A 3-part assembly consisting of a top case, a bottom case, and a middle plate that holds the PCB. 
 * **Solid Version:** Includes optional grip texturing featuring **periodic surface patterns** such as: Gyroid, Cubic, Primitive, Diamond, Voronoi, and Fischer-Koch S/CY.
