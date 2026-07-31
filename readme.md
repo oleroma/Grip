@@ -15,7 +15,7 @@
 
 Project will include such **CASE SHAPES**: 
 1. 2 smooth classic case shapes, Xbox and Dualsense  style.
-2. Custom ergo "pistol like" shape with stock style triggers (or just with stock). No jumping on this version.
+2. Custom ergo "pistol like" shape with stock style bumpers (or just with stock, no cursor jumping on this version)
 3. SNES style shape, for portability (bonus shape)
 4. experimental custom ergo "pistol like" with compliant bumpers (will be released as experimental, exhibits cursor jumping)
 By default custom ergo (and maybe classic shape) will go with horizontally printed buttons with caps, since they provide better feel, tighter tolerances and less squeak.
