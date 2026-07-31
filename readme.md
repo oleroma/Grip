@@ -21,7 +21,7 @@ Project will include such **CASE SHAPES**:
 By default custom ergo (and maybe classic shape) will go with horizontally printed buttons with caps, since they provide better feel, tighter tolerances and less squeak.
 
 In the end **BLENDER** project will be released that **WILL FEATURE**:
-1. Procedural buttons vertically printed or horizontally printed with snap-on caps. Customizable tolerances, cap shapes, base shapes, custom button logos.
+1. Procedural buttons vertically printed or horizontally printed (very smooth, much quieter, less sqeaky, tighter tolerances) with snap-on caps. Customizable tolerances, cap shapes, base shapes, custom button logos.
 2. Procedural sticks with customizable range, size, height, shape of the  stick top and cutout hole, customizable top texture.
 3. Customizable bumpers, size, shape, tolerances, etc.
 4. Cutomizable arch triggers R2R4, size, shape, postions, press angles, tolerances.
