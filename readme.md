@@ -12,6 +12,7 @@
 
 
 # **FEATURES AND PROGRESS**
+## SHAPES
 
 Project will include such **CASE SHAPES**: 
 1. 2 smooth classic case shapes, Xbox and Dualsense  style.
