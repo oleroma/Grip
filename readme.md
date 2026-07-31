@@ -12,7 +12,7 @@
 
 
 # **FEATURES AND PROGRESS**
-## SHAPES
+## CASE SHAPES
 
 Project will include such **CASE SHAPES**: 
 1. 2 smooth classic case shapes, Xbox and Dualsense  style.
@@ -20,10 +20,14 @@ Project will include such **CASE SHAPES**:
 3. SNES style shape, for portability (bonus shape)
 4. experimental custom ergo "pistol like" with compliant bumpers (will be released as experimental, exhibits cursor jumping)
 
+## FULL SIZE RIGHT STICK
+
 By default custom ergo (and maybe classic shape) will go with horizontally printed buttons with caps, since they provide better feel, tighter tolerances and less squeak.Cool thing about horizontal buttons is that if used with caps, their shafts are much smaller, and when combined with thinner scroll wheel and new custom wheel support, it allows to have **FULL SIZE RIGHT STICK** with shield. That means you can have identical left and right sticks.
 
+## BLENDER PROJECT WITH NODES
 
-In the end **BLENDER** project will be released that **WILL FEATURE**:
+In the end **BLENDER** project that realized with **GEOMETRY NODES** will be released and **WILL FEATURE**:
+
 1. Procedural buttons vertically printed or horizontally printed (very smooth, much quieter, less sqeaky, tighter tolerances) with snap-on caps. Customizable tolerances, cap shapes, base shapes, custom button logos.
 2. Procedural sticks with customizable range, size, height, shape of the  stick top and cutout hole, customizable top texture.
 3. Customizable bumpers, size, shape, tolerances, etc.
@@ -31,6 +35,9 @@ In the end **BLENDER** project will be released that **WILL FEATURE**:
 5. Procedural battery cover, customizable battery size, thickness etc.
 6. Case shape can be changed easily for your own shape just putting it into corresponding "basemesh" collection.
 7. Customizable scrollwheel diameter and width.
+
+## PROCEDURAL SDF SHELL OPTIONS
+
 
 All shapes will come with optional "hollow" version that will be either shell like structure or lattice like structure with holes.
 Hollow version will be a 3 part assembly from top/bottom  case and middle plate that holds pcb. 
@@ -40,7 +47,8 @@ Solid version would also have optional peroidic surface style grip texturing tha
 All versions would be released as separate 3mf for orca slicer as soon as they tested out sufficiently starting from solid versions and then following the complexity.
 Project is tuned for FDM 3D printers, but potentially is good for SLA, SLA, especially hollow version.
 
-**CURRENT STATE**: 
+## **CURRENT STATE**
+
 Everything is working, assembles and fits.
 
 Solid version 90% complete. Tuning case shapes and button positions.
@@ -49,12 +57,12 @@ Hollow version 80% complete. Tuning assembly tolerances.
 
 Blender project 80% percent ready. Logic is robust, everything works. A bit messy UI and might be overwhelming because it has a lot of parameters. Neet to pretty everything, and make simplified controls that will include most used parameters like tolerances for example or trigger positions. 
 
-**TO DO**: 
+## **TO DO**: 
 1. Documentation, video guide on printing, cleaning and assembly.
 2. Create .3mf for each version
 3. Pretty .blend project
 
-**NOTE**: first release would be "beta", and anyone who is willing to be a tester, let me know.
+## **NOTE**: first release would be "beta", and anyone who is willing to be a tester, let me know.
 
 Oleroma 
 Milwud 
