@@ -9,7 +9,7 @@
 </h1>
 
 # GRIP
-![GripV](media/dev/GropV.jpg)
+![GripV](media/dev/GripV.jpg)
 
 *(Work in progress... release coming soon)*
 
