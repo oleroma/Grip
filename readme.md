@@ -27,6 +27,9 @@ The project will include the following **CASE SHAPES**:
 
 > **NOTE:** You can easily swap the case for your own custom shape by placing your mesh into the corresponding "basemesh" collection—just drop it into the collection, and it will automatically be sliced and cut.
 
+![GripX](media/dev/1.jpg)
+
+
 ### HORIZONTALLY PRINTED BUTTONS
 
 By default, the custom ergonomic shape (and possibly the classic shape) will use horizontally printed buttons with caps, as they provide a better feel, tighter tolerances, and less squeak. 
@@ -34,6 +37,9 @@ By default, the custom ergonomic shape (and possibly the classic shape) will use
 ### FULL-SIZE RIGHT STICK
 
 A great advantage of horizontal buttons is that when used with caps, their shafts are much smaller. Combined with a thinner scroll wheel and a new custom wheel support, this allows for a **FULL-SIZE RIGHT STICK** with a shield. This means you can have identical left and right sticks.
+
+![detail](media/dev/detail1.jpg)
+
 
 ### ADJUSTABLE TRIGGERS
 
@@ -50,6 +56,8 @@ All shapes will come with an optional "hollow" version (made using Signed Distan
 
 The solid version is designed to be held together with screws. The hollow version does not require screws for assembly, though you can still have them if preferred.
 
+![detail](media/dev/detail2.jpg)
+
 ### **PRINTING**
 
 The project is optimized for FDM 3D printers, but it is also suitable for SLS and SLA printing—especially the hollow version.
@@ -64,6 +72,9 @@ The final **BLENDER** project, built with **GEOMETRY NODES**, will be released a
 4. **Arch-Shaped Triggers (L2/R2, L4/R4):** Tunable size, shape, positions, press angles, and tolerances (**no screws required**). You can move them inward, outward, up, or down to match your exact fingertip resting positions.
 5. **Battery Cover:** Customizable battery compartment size, thickness, etc.
 6. **Scroll Wheel:** Customizable diameter and width.
+
+![side](media/dev/side.jpg)
+
 
 ### **RELEASE PLAN**
 
@@ -81,6 +92,9 @@ Everything is functional, assembles properly, and fits well.
 
 ---
 
+![goobiewoobies](media/dev/666.jpg)
+
+
 ## **TO DO**
  
 1. Create documentation and a video guide on printing, cleaning, and assembly.
@@ -92,6 +106,8 @@ Everything is functional, assembles properly, and fits well.
 **Credits:** Oleroma, Milwud
 
 ---
+
+
 
 ## **DEPENDENCIES**
 * Git LFS
