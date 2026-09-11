@@ -1,0 +1,1581 @@
+[
+    {
+        "name": "parts",
+        "preset_prefix": "parts",
+        "mappings": [
+            {
+                "collection_name": "caps",
+                "sub_path": "buttons_default/caps_default"
+            },
+            {
+                "collection_name": "buttons",
+                "sub_path": "buttons_default"
+            },
+            {
+                "collection_name": "capacitive plate",
+                "sub_path": "capacitive_plate"
+            },
+            {
+                "collection_name": "sticks",
+                "sub_path": "sticks"
+            },
+            {
+                "collection_name": "scrollwheel",
+                "sub_path": "scrollwheel"
+            },
+            {
+                "collection_name": "bumpers",
+                "sub_path": "bumpers/press_default"
+            },
+            {
+                "collection_name": "triggers",
+                "sub_path": "triggers_default/press_default"
+            },
+            {
+                "collection_name": "battery cover",
+                "sub_path": "battery_cover"
+            },
+            {
+                "collection_name": "cable holder",
+                "sub_path": "cable_holder"
+            },
+            {
+                "collection_name": "pins",
+                "sub_path": "case"
+            },
+            {
+                "collection_name": "nut lock",
+                "sub_path": "case"
+            }
+        ],
+        "overrides": []
+    },
+    {
+        "name": "dpad stick",
+        "preset_prefix": "parts",
+        "mappings": [
+            {
+                "collection_name": "dpad stick",
+                "sub_path": "dpad_stick"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "dpad stick outputs",
+                "node_name": "Group Output",
+                "inputs": [
+                    {
+                        "input_name": "dpad stick",
+                        "override_type": "BOOLEAN",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": ""
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "capacitive plate",
+        "preset_prefix": "parts",
+        "mappings": [
+            {
+                "collection_name": "capacitive plate",
+                "sub_path": "capacitive_plate"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "cap plate outputs",
+                "node_name": "Group Output",
+                "inputs": [
+                    {
+                        "input_name": "capacitive plate",
+                        "override_type": "BOOLEAN",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": ""
+                    },
+                    {
+                        "input_name": "capacitive knob",
+                        "override_type": "BOOLEAN",
+                        "value_bool": false,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": ""
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "case standart",
+        "preset_prefix": "case_standart",
+        "mappings": [
+            {
+                "collection_name": "case top",
+                "sub_path": "case_top"
+            },
+            {
+                "collection_name": "case bottom",
+                "sub_path": "case_bottom"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "subdivision level",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "very high"
+                    },
+                    {
+                        "input_name": "body type",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "standart"
+                    },
+                    {
+                        "input_name": "voxel resolution",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "high"
+                    }
+                ]
+            },
+            {
+                "parent_group": "stick outputs",
+                "node_name": "Group Output",
+                "inputs": [
+                    {
+                        "input_name": "range degrees",
+                        "override_type": "FLOAT",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 16.0,
+                        "value_string": ""
+                    },
+                    {
+                        "input_name": "hole radius",
+                        "override_type": "FLOAT",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 10.0,
+                        "value_string": ""
+                    },
+                    {
+                        "input_name": "stick hole subdivision",
+                        "override_type": "INT",
+                        "value_bool": true,
+                        "value_int": 128,
+                        "value_float": 0.0,
+                        "value_string": ""
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "case top standart with dpad stick",
+        "preset_prefix": "case_standart",
+        "mappings": [
+            {
+                "collection_name": "case top",
+                "sub_path": "case_top_with_dpad_stick"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "subdivision level",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "very high"
+                    },
+                    {
+                        "input_name": "body type",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "standart"
+                    },
+                    {
+                        "input_name": "voxel resolution",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "high"
+                    }
+                ]
+            },
+            {
+                "parent_group": "stick outputs",
+                "node_name": "Group Output",
+                "inputs": [
+                    {
+                        "input_name": "range degrees",
+                        "override_type": "FLOAT",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 16.0,
+                        "value_string": ""
+                    },
+                    {
+                        "input_name": "hole radius",
+                        "override_type": "FLOAT",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 10.0,
+                        "value_string": ""
+                    },
+                    {
+                        "input_name": "stick hole subdivision",
+                        "override_type": "INT",
+                        "value_bool": true,
+                        "value_int": 128,
+                        "value_float": 0.0,
+                        "value_string": ""
+                    }
+                ]
+            },
+            {
+                "parent_group": "dpad stick outputs",
+                "node_name": "Group Output",
+                "inputs": [
+                    {
+                        "input_name": "dpad stick",
+                        "override_type": "BOOLEAN",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": ""
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "case top standart with capacitive plate",
+        "preset_prefix": "case_standart",
+        "mappings": [
+            {
+                "collection_name": "case top",
+                "sub_path": "case_top_with_capacitive_plate"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "subdivision level",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "very high"
+                    },
+                    {
+                        "input_name": "body type",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "standart"
+                    },
+                    {
+                        "input_name": "voxel resolution",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "high"
+                    }
+                ]
+            },
+            {
+                "parent_group": "stick outputs",
+                "node_name": "Group Output",
+                "inputs": [
+                    {
+                        "input_name": "range degrees",
+                        "override_type": "FLOAT",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 16.0,
+                        "value_string": ""
+                    },
+                    {
+                        "input_name": "hole radius",
+                        "override_type": "FLOAT",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 10.0,
+                        "value_string": ""
+                    },
+                    {
+                        "input_name": "stick hole subdivision",
+                        "override_type": "INT",
+                        "value_bool": true,
+                        "value_int": 128,
+                        "value_float": 0.0,
+                        "value_string": ""
+                    }
+                ]
+            },
+            {
+                "parent_group": "cap plate outputs",
+                "node_name": "Group Output",
+                "inputs": [
+                    {
+                        "input_name": "capacitive plate",
+                        "override_type": "BOOLEAN",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": ""
+                    },
+                    {
+                        "input_name": "capacitive knob",
+                        "override_type": "BOOLEAN",
+                        "value_bool": false,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": ""
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "case top standart with dpad stick and capacitive plate",
+        "preset_prefix": "case_standart",
+        "mappings": [
+            {
+                "collection_name": "case top",
+                "sub_path": "case_top_with_dpad_stick_and_cap_plate"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "subdivision level",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "very high"
+                    },
+                    {
+                        "input_name": "body type",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "standart"
+                    },
+                    {
+                        "input_name": "voxel resolution",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "high"
+                    }
+                ]
+            },
+            {
+                "parent_group": "stick outputs",
+                "node_name": "Group Output",
+                "inputs": [
+                    {
+                        "input_name": "range degrees",
+                        "override_type": "FLOAT",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 16.0,
+                        "value_string": ""
+                    },
+                    {
+                        "input_name": "hole radius",
+                        "override_type": "FLOAT",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 10.0,
+                        "value_string": ""
+                    },
+                    {
+                        "input_name": "stick hole subdivision",
+                        "override_type": "INT",
+                        "value_bool": true,
+                        "value_int": 128,
+                        "value_float": 0.0,
+                        "value_string": ""
+                    }
+                ]
+            },
+            {
+                "parent_group": "dpad stick outputs",
+                "node_name": "Group Output",
+                "inputs": [
+                    {
+                        "input_name": "dpad stick",
+                        "override_type": "BOOLEAN",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": ""
+                    }
+                ]
+            },
+            {
+                "parent_group": "cap plate outputs",
+                "node_name": "Group Output",
+                "inputs": [
+                    {
+                        "input_name": "capacitive plate",
+                        "override_type": "BOOLEAN",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": ""
+                    },
+                    {
+                        "input_name": "capacitive knob",
+                        "override_type": "BOOLEAN",
+                        "value_bool": false,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": ""
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "shell case",
+        "preset_prefix": "case_shell",
+        "mappings": [
+            {
+                "collection_name": "case top",
+                "sub_path": "case_top"
+            },
+            {
+                "collection_name": "case bottom",
+                "sub_path": "case_bottom"
+            },
+            {
+                "collection_name": "case middle plate",
+                "sub_path": "case_middle_plate"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "subdivision level",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "very high"
+                    },
+                    {
+                        "input_name": "body type",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "shell"
+                    },
+                    {
+                        "input_name": "voxel resolution",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "high"
+                    }
+                ]
+            },
+            {
+                "parent_group": "stick outputs",
+                "node_name": "Group Output",
+                "inputs": [
+                    {
+                        "input_name": "range degrees",
+                        "override_type": "FLOAT",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 16.0,
+                        "value_string": ""
+                    },
+                    {
+                        "input_name": "hole radius",
+                        "override_type": "FLOAT",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 10.0,
+                        "value_string": ""
+                    },
+                    {
+                        "input_name": "stick hole subdivision",
+                        "override_type": "INT",
+                        "value_bool": true,
+                        "value_int": 128,
+                        "value_float": 0.0,
+                        "value_string": ""
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "shell case top with dpad stick",
+        "preset_prefix": "case_shell",
+        "mappings": [
+            {
+                "collection_name": "case top",
+                "sub_path": "case_top_with_dpad_stick"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "subdivision level",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "very high"
+                    },
+                    {
+                        "input_name": "body type",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "shell"
+                    },
+                    {
+                        "input_name": "voxel resolution",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "high"
+                    }
+                ]
+            },
+            {
+                "parent_group": "stick outputs",
+                "node_name": "Group Output",
+                "inputs": [
+                    {
+                        "input_name": "range degrees",
+                        "override_type": "FLOAT",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 16.0,
+                        "value_string": ""
+                    },
+                    {
+                        "input_name": "hole radius",
+                        "override_type": "FLOAT",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 10.0,
+                        "value_string": ""
+                    },
+                    {
+                        "input_name": "stick hole subdivision",
+                        "override_type": "INT",
+                        "value_bool": true,
+                        "value_int": 128,
+                        "value_float": 0.0,
+                        "value_string": ""
+                    }
+                ]
+            },
+            {
+                "parent_group": "dpad stick outputs",
+                "node_name": "Group Output",
+                "inputs": [
+                    {
+                        "input_name": "dpad stick",
+                        "override_type": "BOOLEAN",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": ""
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "shell case top with capacitive plate",
+        "preset_prefix": "case_shell",
+        "mappings": [
+            {
+                "collection_name": "case top",
+                "sub_path": "case_top_with_capacitive_plate"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "subdivision level",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "very high"
+                    },
+                    {
+                        "input_name": "body type",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "shell"
+                    },
+                    {
+                        "input_name": "voxel resolution",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "high"
+                    }
+                ]
+            },
+            {
+                "parent_group": "stick outputs",
+                "node_name": "Group Output",
+                "inputs": [
+                    {
+                        "input_name": "range degrees",
+                        "override_type": "FLOAT",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 16.0,
+                        "value_string": ""
+                    },
+                    {
+                        "input_name": "hole radius",
+                        "override_type": "FLOAT",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 10.0,
+                        "value_string": ""
+                    },
+                    {
+                        "input_name": "stick hole subdivision",
+                        "override_type": "INT",
+                        "value_bool": true,
+                        "value_int": 128,
+                        "value_float": 0.0,
+                        "value_string": ""
+                    }
+                ]
+            },
+            {
+                "parent_group": "cap plate outputs",
+                "node_name": "Group Output",
+                "inputs": [
+                    {
+                        "input_name": "capacitive plate",
+                        "override_type": "BOOLEAN",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": ""
+                    },
+                    {
+                        "input_name": "capacitive knob",
+                        "override_type": "BOOLEAN",
+                        "value_bool": false,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": ""
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "shell case top with dpad stick and capacitive plate",
+        "preset_prefix": "case_shell",
+        "mappings": [
+            {
+                "collection_name": "case top",
+                "sub_path": "case_top_with_dpad_stick_and_cap_plate"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "subdivision level",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "very high"
+                    },
+                    {
+                        "input_name": "body type",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "shell"
+                    },
+                    {
+                        "input_name": "voxel resolution",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "high"
+                    }
+                ]
+            },
+            {
+                "parent_group": "stick outputs",
+                "node_name": "Group Output",
+                "inputs": [
+                    {
+                        "input_name": "range degrees",
+                        "override_type": "FLOAT",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 16.0,
+                        "value_string": ""
+                    },
+                    {
+                        "input_name": "hole radius",
+                        "override_type": "FLOAT",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 10.0,
+                        "value_string": ""
+                    },
+                    {
+                        "input_name": "stick hole subdivision",
+                        "override_type": "INT",
+                        "value_bool": true,
+                        "value_int": 128,
+                        "value_float": 0.0,
+                        "value_string": ""
+                    }
+                ]
+            },
+            {
+                "parent_group": "dpad stick outputs",
+                "node_name": "Group Output",
+                "inputs": [
+                    {
+                        "input_name": "dpad stick",
+                        "override_type": "BOOLEAN",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": ""
+                    }
+                ]
+            },
+            {
+                "parent_group": "cap plate outputs",
+                "node_name": "Group Output",
+                "inputs": [
+                    {
+                        "input_name": "capacitive plate",
+                        "override_type": "BOOLEAN",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": ""
+                    },
+                    {
+                        "input_name": "capacitive knob",
+                        "override_type": "BOOLEAN",
+                        "value_bool": false,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": ""
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "triggers default press tight",
+        "preset_prefix": "parts/triggers_default",
+        "mappings": [
+            {
+                "collection_name": "triggers",
+                "sub_path": "press_tight"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "default"
+                    },
+                    {
+                        "input_name": "press tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "tight"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "triggers default press loose",
+        "preset_prefix": "parts/triggers_default",
+        "mappings": [
+            {
+                "collection_name": "triggers",
+                "sub_path": "press_loose"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "default"
+                    },
+                    {
+                        "input_name": "press tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "loose"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "triggers tight press loose",
+        "preset_prefix": "parts/triggers_tight",
+        "mappings": [
+            {
+                "collection_name": "triggers",
+                "sub_path": "press_loose"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "tight"
+                    },
+                    {
+                        "input_name": "press tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "loose"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "triggers tight press default",
+        "preset_prefix": "parts/triggers_tight",
+        "mappings": [
+            {
+                "collection_name": "triggers",
+                "sub_path": "press_default"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "tight"
+                    },
+                    {
+                        "input_name": "press tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "default"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "triggers tight press tight",
+        "preset_prefix": "parts/triggers_tight",
+        "mappings": [
+            {
+                "collection_name": "triggers",
+                "sub_path": "press_tight"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "tight"
+                    },
+                    {
+                        "input_name": "press tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "tight"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "triggers loose press loose",
+        "preset_prefix": "parts/triggers_loose",
+        "mappings": [
+            {
+                "collection_name": "triggers",
+                "sub_path": "press_loose"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "loose"
+                    },
+                    {
+                        "input_name": "press tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "loose"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "triggers loose press default",
+        "preset_prefix": "parts/triggers_loose",
+        "mappings": [
+            {
+                "collection_name": "triggers",
+                "sub_path": "press_default"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "loose"
+                    },
+                    {
+                        "input_name": "press tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "loose"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "triggers loose press tight",
+        "preset_prefix": "parts/triggers_loose",
+        "mappings": [
+            {
+                "collection_name": "triggers",
+                "sub_path": "press_tight"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "loose"
+                    },
+                    {
+                        "input_name": "press tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "tight"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "buttons loose",
+        "preset_prefix": "parts",
+        "mappings": [
+            {
+                "collection_name": "buttons",
+                "sub_path": "buttons_loose"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "loose"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "buttons tight",
+        "preset_prefix": "parts",
+        "mappings": [
+            {
+                "collection_name": "buttons",
+                "sub_path": "buttons_tight"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "tight"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "caps loose for buttons default",
+        "preset_prefix": "parts/buttons_default",
+        "mappings": [
+            {
+                "collection_name": "caps",
+                "sub_path": "caps_loose"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "cap tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "loose"
+                    },
+                    {
+                        "input_name": "tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "default"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "caps tight for buttons default",
+        "preset_prefix": "parts/buttons_default",
+        "mappings": [
+            {
+                "collection_name": "caps",
+                "sub_path": "caps_tight"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "cap tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "tight"
+                    },
+                    {
+                        "input_name": "tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "default"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "caps loose for buttons loose",
+        "preset_prefix": "parts/buttons_loose",
+        "mappings": [
+            {
+                "collection_name": "caps",
+                "sub_path": "caps_loose"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "cap tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "loose"
+                    },
+                    {
+                        "input_name": "tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "loose"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "caps default for buttons loose",
+        "preset_prefix": "parts/buttons_loose",
+        "mappings": [
+            {
+                "collection_name": "caps",
+                "sub_path": "caps_default"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "cap tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "default"
+                    },
+                    {
+                        "input_name": "tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "loose"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "caps tight for buttons loose",
+        "preset_prefix": "parts/buttons_loose",
+        "mappings": [
+            {
+                "collection_name": "caps",
+                "sub_path": "caps_tight"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "cap tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "tight"
+                    },
+                    {
+                        "input_name": "tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "loose"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "caps loose for buttons tight",
+        "preset_prefix": "parts/buttons_tight",
+        "mappings": [
+            {
+                "collection_name": "caps",
+                "sub_path": "caps_loose"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "cap tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "loose"
+                    },
+                    {
+                        "input_name": "tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "tight"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "caps default for buttons tight",
+        "preset_prefix": "parts/buttons_tight",
+        "mappings": [
+            {
+                "collection_name": "caps",
+                "sub_path": "caps_default"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "cap tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "default"
+                    },
+                    {
+                        "input_name": "tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "tight"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "caps tight for buttons tight",
+        "preset_prefix": "parts/buttons_tight",
+        "mappings": [
+            {
+                "collection_name": "caps",
+                "sub_path": "caps_tight"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "cap tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "tight"
+                    },
+                    {
+                        "input_name": "tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "tight"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "bumpers press loose",
+        "preset_prefix": "parts/bumpers",
+        "mappings": [
+            {
+                "collection_name": "bumpers",
+                "sub_path": "press_loose"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "press tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "loose"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "bumpers press tight",
+        "preset_prefix": "parts/bumpers",
+        "mappings": [
+            {
+                "collection_name": "bumpers",
+                "sub_path": "press_tight"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "press tolerance",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "tight"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "za3tarani setup",
+        "preset_prefix": "za3tarani",
+        "mappings": [
+            {
+                "collection_name": "case",
+                "sub_path": "case"
+            },
+            {
+                "collection_name": "case middle plate",
+                "sub_path": "case"
+            },
+            {
+                "collection_name": "sticks",
+                "sub_path": "sticks"
+            }
+        ],
+        "overrides": [
+            {
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "subdivision level",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "very high"
+                    },
+                    {
+                        "input_name": "body type",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "shell"
+                    },
+                    {
+                        "input_name": "voxel resolution",
+                        "override_type": "STRING",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "high"
+                    },
+                    {
+                        "input_name": "stock bumpers",
+                        "override_type": "BOOLEAN",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": ""
+                    }
+                ]
+            },
+            {
+                "parent_group": "stick outputs",
+                "node_name": "Group Output",
+                "inputs": [
+                    {
+                        "input_name": "range degrees",
+                        "override_type": "FLOAT",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 12.0,
+                        "value_string": ""
+                    },
+                    {
+                        "input_name": "hole radius",
+                        "override_type": "FLOAT",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 8.0,
+                        "value_string": ""
+                    },
+                    {
+                        "input_name": "stick hole subdivision",
+                        "override_type": "INT",
+                        "value_bool": true,
+                        "value_int": 128,
+                        "value_float": 0.0,
+                        "value_string": ""
+                    }
+                ]
+            }
+        ]
+    }
+]
