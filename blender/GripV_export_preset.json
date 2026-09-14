@@ -1,5 +1,104 @@
 [
     {
+        "name": "parts",
+        "preset_prefix": "parts",
+        "mappings": [
+            {
+                "collection_name": "capacitive",
+                "sub_path": "capacitive/knob",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "cap plate outputs",
+                        "node_name": "Group Output",
+                        "inputs": [
+                            {
+                                "input_name": "capacitive knob",
+                                "override_type": "BOOLEAN",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": ""
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "capacitive",
+                "sub_path": "capacitive/plate",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "cap plate outputs",
+                        "node_name": "Group Output",
+                        "inputs": [
+                            {
+                                "input_name": "capacitive plate",
+                                "override_type": "BOOLEAN",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": ""
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "dpad stick",
+                "sub_path": "dpad stick",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick outputs",
+                        "node_name": "Group Output",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": ""
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "sticks",
+                "sub_path": "sticks",
+                "overrides": []
+            },
+            {
+                "collection_name": "scrollwheel",
+                "sub_path": "scrollwheel",
+                "overrides": []
+            },
+            {
+                "collection_name": "battery cover",
+                "sub_path": "battery cover",
+                "overrides": []
+            },
+            {
+                "collection_name": "cable holder",
+                "sub_path": "cable holder",
+                "overrides": []
+            },
+            {
+                "collection_name": "pins",
+                "sub_path": "pins",
+                "overrides": []
+            },
+            {
+                "collection_name": "nut lock",
+                "sub_path": "nut lock",
+                "overrides": []
+            }
+        ]
+    },
+    {
         "name": "triggers multi export",
         "preset_prefix": "parts",
         "mappings": [
@@ -666,8 +765,8 @@
         ]
     },
     {
-        "name": "case standart multi export (long processing!)",
-        "preset_prefix": "case_standart",
+        "name": "case standard multi export (long processing!)",
+        "preset_prefix": "case_standard",
         "mappings": [
             {
                 "collection_name": "case bottom",
@@ -692,7 +791,7 @@
                                 "value_bool": true,
                                 "value_int": 0,
                                 "value_float": 0.0,
-                                "value_string": "standart"
+                                "value_string": "standard"
                             },
                             {
                                 "input_name": "voxel resolution",
@@ -729,7 +828,7 @@
                                 "value_bool": true,
                                 "value_int": 0,
                                 "value_float": 0.0,
-                                "value_string": "standart"
+                                "value_string": "standard"
                             },
                             {
                                 "input_name": "voxel resolution",
@@ -738,44 +837,6 @@
                                 "value_int": 0,
                                 "value_float": 0.0,
                                 "value_string": "high"
-                            }
-                        ]
-                    },
-                    {
-                        "override_target": "NODE",
-                        "parent_group": "cap plate outputs",
-                        "node_name": "Group Output",
-                        "inputs": [
-                            {
-                                "input_name": "capacitive plate",
-                                "override_type": "BOOLEAN",
-                                "value_bool": true,
-                                "value_int": 0,
-                                "value_float": 0.0,
-                                "value_string": ""
-                            },
-                            {
-                                "input_name": "capacitive knob",
-                                "override_type": "BOOLEAN",
-                                "value_bool": true,
-                                "value_int": 0,
-                                "value_float": 0.0,
-                                "value_string": ""
-                            }
-                        ]
-                    },
-                    {
-                        "override_target": "NODE",
-                        "parent_group": "dpad stick outputs",
-                        "node_name": "Group Output",
-                        "inputs": [
-                            {
-                                "input_name": "dpad stick",
-                                "override_type": "BOOLEAN",
-                                "value_bool": false,
-                                "value_int": 0,
-                                "value_float": 0.0,
-                                "value_string": ""
                             }
                         ]
                     }
@@ -804,7 +865,7 @@
                                 "value_bool": true,
                                 "value_int": 0,
                                 "value_float": 0.0,
-                                "value_string": "standart"
+                                "value_string": "standard"
                             },
                             {
                                 "input_name": "voxel resolution",
@@ -856,7 +917,7 @@
                                 "value_bool": true,
                                 "value_int": 0,
                                 "value_float": 0.0,
-                                "value_string": "standart"
+                                "value_string": "standard"
                             },
                             {
                                 "input_name": "voxel resolution",
@@ -877,14 +938,6 @@
                                 "input_name": "capacitive plate",
                                 "override_type": "BOOLEAN",
                                 "value_bool": true,
-                                "value_int": 0,
-                                "value_float": 0.0,
-                                "value_string": ""
-                            },
-                            {
-                                "input_name": "capacitive knob",
-                                "override_type": "BOOLEAN",
-                                "value_bool": false,
                                 "value_int": 0,
                                 "value_float": 0.0,
                                 "value_string": ""
@@ -916,7 +969,7 @@
                                 "value_bool": true,
                                 "value_int": 0,
                                 "value_float": 0.0,
-                                "value_string": "standart"
+                                "value_string": "standard"
                             },
                             {
                                 "input_name": "voxel resolution",
@@ -937,14 +990,6 @@
                                 "input_name": "capacitive plate",
                                 "override_type": "BOOLEAN",
                                 "value_bool": true,
-                                "value_int": 0,
-                                "value_float": 0.0,
-                                "value_string": ""
-                            },
-                            {
-                                "input_name": "capacitive knob",
-                                "override_type": "BOOLEAN",
-                                "value_bool": false,
                                 "value_int": 0,
                                 "value_float": 0.0,
                                 "value_string": ""
@@ -975,6 +1020,43 @@
         "preset_prefix": "case_hollow",
         "mappings": [
             {
+                "collection_name": "case middle plate",
+                "sub_path": "case_middle_plate",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "subdivision level",
+                                "override_type": "STRING",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "very high"
+                            },
+                            {
+                                "input_name": "body type",
+                                "override_type": "STRING",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "hollow"
+                            },
+                            {
+                                "input_name": "voxel resolution",
+                                "override_type": "STRING",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "high"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
                 "collection_name": "case bottom",
                 "sub_path": "case_bottom",
                 "overrides": [
@@ -1043,44 +1125,6 @@
                                 "value_int": 0,
                                 "value_float": 0.0,
                                 "value_string": "high"
-                            }
-                        ]
-                    },
-                    {
-                        "override_target": "NODE",
-                        "parent_group": "cap plate outputs",
-                        "node_name": "Group Output",
-                        "inputs": [
-                            {
-                                "input_name": "capacitive plate",
-                                "override_type": "BOOLEAN",
-                                "value_bool": true,
-                                "value_int": 0,
-                                "value_float": 0.0,
-                                "value_string": ""
-                            },
-                            {
-                                "input_name": "capacitive knob",
-                                "override_type": "BOOLEAN",
-                                "value_bool": true,
-                                "value_int": 0,
-                                "value_float": 0.0,
-                                "value_string": ""
-                            }
-                        ]
-                    },
-                    {
-                        "override_target": "NODE",
-                        "parent_group": "dpad stick outputs",
-                        "node_name": "Group Output",
-                        "inputs": [
-                            {
-                                "input_name": "dpad stick",
-                                "override_type": "BOOLEAN",
-                                "value_bool": false,
-                                "value_int": 0,
-                                "value_float": 0.0,
-                                "value_string": ""
                             }
                         ]
                     }
@@ -1185,14 +1229,6 @@
                                 "value_int": 0,
                                 "value_float": 0.0,
                                 "value_string": ""
-                            },
-                            {
-                                "input_name": "capacitive knob",
-                                "override_type": "BOOLEAN",
-                                "value_bool": false,
-                                "value_int": 0,
-                                "value_float": 0.0,
-                                "value_string": ""
                             }
                         ]
                     }
@@ -1245,14 +1281,6 @@
                                 "value_int": 0,
                                 "value_float": 0.0,
                                 "value_string": ""
-                            },
-                            {
-                                "input_name": "capacitive knob",
-                                "override_type": "BOOLEAN",
-                                "value_bool": false,
-                                "value_int": 0,
-                                "value_float": 0.0,
-                                "value_string": ""
                             }
                         ]
                     },
@@ -1276,78 +1304,12 @@
         ]
     },
     {
-        "name": "all parts default",
-        "preset_prefix": "release_0.99/default/parts",
+        "name": "case hollow za3tarani",
+        "preset_prefix": "za3tarani",
         "mappings": [
             {
-                "collection_name": "caps",
-                "sub_path": "caps",
-                "overrides": []
-            },
-            {
-                "collection_name": "buttons",
-                "sub_path": "buttons",
-                "overrides": []
-            },
-            {
-                "collection_name": "capacitive plate",
-                "sub_path": "capacitive plate",
-                "overrides": []
-            },
-            {
-                "collection_name": "dpad stick",
-                "sub_path": "dpad stick",
-                "overrides": []
-            },
-            {
-                "collection_name": "sticks",
-                "sub_path": "sticks",
-                "overrides": []
-            },
-            {
-                "collection_name": "scrollwheel",
-                "sub_path": "scrollwheel",
-                "overrides": []
-            },
-            {
-                "collection_name": "bumpers",
-                "sub_path": "bumpers",
-                "overrides": []
-            },
-            {
-                "collection_name": "triggers",
-                "sub_path": "triggers",
-                "overrides": []
-            },
-            {
-                "collection_name": "battery cover",
-                "sub_path": "battery cover",
-                "overrides": []
-            },
-            {
-                "collection_name": "cable holder",
-                "sub_path": "cable holder",
-                "overrides": []
-            },
-            {
-                "collection_name": "pins",
-                "sub_path": "pins",
-                "overrides": []
-            },
-            {
-                "collection_name": "nut lock",
-                "sub_path": "nut lock",
-                "overrides": []
-            }
-        ]
-    },
-    {
-        "name": "case default",
-        "preset_prefix": "release_0.99/default/",
-        "mappings": [
-            {
-                "collection_name": "case",
-                "sub_path": "case",
+                "collection_name": "case top",
+                "sub_path": "case_top",
                 "overrides": [
                     {
                         "override_target": "NODE",
@@ -1368,7 +1330,7 @@
                                 "value_bool": true,
                                 "value_int": 0,
                                 "value_float": 0.0,
-                                "value_string": "standart"
+                                "value_string": "hollow"
                             },
                             {
                                 "input_name": "voxel resolution",
@@ -1377,6 +1339,134 @@
                                 "value_int": 0,
                                 "value_float": 0.0,
                                 "value_string": "high"
+                            },
+                            {
+                                "input_name": "stock bumpers",
+                                "override_type": "BOOLEAN",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": ""
+                            }
+                        ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "cap plate outputs",
+                        "node_name": "Group Output",
+                        "inputs": [
+                            {
+                                "input_name": "capacitive knob",
+                                "override_type": "BOOLEAN",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": ""
+                            }
+                        ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick outputs",
+                        "node_name": "Group Output",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": false,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": ""
+                            }
+                        ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "stick outputs",
+                        "node_name": "Group Output",
+                        "inputs": [
+                            {
+                                "input_name": "hole radius",
+                                "override_type": "FLOAT",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 8.399999618530273,
+                                "value_string": ""
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "case middle plate",
+                "sub_path": "case_middle_plate",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "subdivision level",
+                                "override_type": "STRING",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "very high"
+                            },
+                            {
+                                "input_name": "body type",
+                                "override_type": "STRING",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "hollow"
+                            },
+                            {
+                                "input_name": "voxel resolution",
+                                "override_type": "STRING",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "high"
+                            },
+                            {
+                                "input_name": "stock bumpers",
+                                "override_type": "BOOLEAN",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": ""
+                            }
+                        ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "cap plate outputs",
+                        "node_name": "Group Output",
+                        "inputs": [
+                            {
+                                "input_name": "capacitive knob",
+                                "override_type": "BOOLEAN",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": ""
+                            }
+                        ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick outputs",
+                        "node_name": "Group Output",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": false,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": ""
                             }
                         ]
                     }
