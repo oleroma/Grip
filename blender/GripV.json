@@ -4,47 +4,6 @@
         "preset_prefix": "case_standard",
         "mappings": [
             {
-                "collection_name": "case top",
-                "tag": "",
-                "sub_path": "",
-                "overrides": [
-                    {
-                        "override_target": "NODE",
-                        "parent_group": "global",
-                        "node_name": "global parameters",
-                        "inputs": [
-                            {
-                                "input_name": "subdivision level",
-                                "override_type": "MENU",
-                                "value_bool": true,
-                                "value_int": 0,
-                                "value_float": 0.0,
-                                "value_string": "very high",
-                                "value_menu": "very high"
-                            },
-                            {
-                                "input_name": "body type",
-                                "override_type": "MENU",
-                                "value_bool": true,
-                                "value_int": 0,
-                                "value_float": 0.0,
-                                "value_string": "hollow",
-                                "value_menu": "standard"
-                            },
-                            {
-                                "input_name": "voxel resolution",
-                                "override_type": "MENU",
-                                "value_bool": true,
-                                "value_int": 0,
-                                "value_float": 0.0,
-                                "value_string": "high",
-                                "value_menu": "high"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
                 "collection_name": "case bottom",
                 "tag": "",
                 "sub_path": "",
@@ -80,6 +39,65 @@
                                 "value_float": 0.0,
                                 "value_string": "high",
                                 "value_menu": "high"
+                            },
+                            {
+                                "input_name": "hollow top",
+                                "override_type": "BOOLEAN",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "case top",
+                "tag": "",
+                "sub_path": "",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "subdivision level",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "very high",
+                                "value_menu": "very high"
+                            },
+                            {
+                                "input_name": "body type",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "hollow",
+                                "value_menu": "standard"
+                            },
+                            {
+                                "input_name": "voxel resolution",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "high",
+                                "value_menu": "high"
+                            },
+                            {
+                                "input_name": "hollow top",
+                                "override_type": "BOOLEAN",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
                             }
                         ]
                     }
@@ -121,6 +139,15 @@
                                 "value_float": 0.0,
                                 "value_string": "high",
                                 "value_menu": "high"
+                            },
+                            {
+                                "input_name": "hollow top",
+                                "override_type": "BOOLEAN",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
                             }
                         ]
                     },
@@ -178,6 +205,15 @@
                                 "value_float": 0.0,
                                 "value_string": "high",
                                 "value_menu": "high"
+                            },
+                            {
+                                "input_name": "hollow top",
+                                "override_type": "BOOLEAN",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
                             }
                         ]
                     },
@@ -235,6 +271,15 @@
                                 "value_float": 0.0,
                                 "value_string": "high",
                                 "value_menu": "high"
+                            },
+                            {
+                                "input_name": "hollow top",
+                                "override_type": "BOOLEAN",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
                             }
                         ]
                     },
@@ -279,7 +324,7 @@
         "preset_prefix": "case_hollow",
         "mappings": [
             {
-                "collection_name": "case top",
+                "collection_name": "case middle plate",
                 "tag": "",
                 "sub_path": "",
                 "overrides": [
@@ -321,6 +366,47 @@
             },
             {
                 "collection_name": "case bottom",
+                "tag": "",
+                "sub_path": "",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "subdivision level",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "very high",
+                                "value_menu": "very high"
+                            },
+                            {
+                                "input_name": "body type",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "hollow",
+                                "value_menu": "hollow"
+                            },
+                            {
+                                "input_name": "voxel resolution",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "high",
+                                "value_menu": "high"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "case top",
                 "tag": "",
                 "sub_path": "",
                 "overrides": [
@@ -684,6 +770,22 @@
                                 "value_menu": "loose"
                             }
                         ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": false,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
+                            }
+                        ]
                     }
                 ]
             },
@@ -714,6 +816,22 @@
                                 "value_float": 0.0,
                                 "value_string": "",
                                 "value_menu": "loose"
+                            }
+                        ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": false,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
                             }
                         ]
                     }
@@ -748,6 +866,22 @@
                                 "value_menu": "default"
                             }
                         ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": false,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
+                            }
+                        ]
                     }
                 ]
             },
@@ -780,6 +914,22 @@
                                 "value_menu": "tight"
                             }
                         ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": false,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
+                            }
+                        ]
                     }
                 ]
             },
@@ -801,6 +951,22 @@
                                 "value_float": 0.0,
                                 "value_string": "",
                                 "value_menu": "default"
+                            }
+                        ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": false,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
                             }
                         ]
                     }
@@ -835,6 +1001,22 @@
                                 "value_menu": "loose"
                             }
                         ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": false,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
+                            }
+                        ]
                     }
                 ]
             },
@@ -865,6 +1047,22 @@
                                 "value_float": 0.0,
                                 "value_string": "",
                                 "value_menu": "default"
+                            }
+                        ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": false,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
                             }
                         ]
                     }
@@ -899,6 +1097,22 @@
                                 "value_menu": "tight"
                             }
                         ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": false,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
+                            }
+                        ]
                     }
                 ]
             },
@@ -920,6 +1134,22 @@
                                 "value_float": 0.0,
                                 "value_string": "",
                                 "value_menu": "tight"
+                            }
+                        ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": false,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
                             }
                         ]
                     }
@@ -954,6 +1184,22 @@
                                 "value_menu": "loose"
                             }
                         ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": false,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
+                            }
+                        ]
                     }
                 ]
             },
@@ -986,6 +1232,22 @@
                                 "value_menu": "default"
                             }
                         ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": false,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
+                            }
+                        ]
                     }
                 ]
             },
@@ -1016,6 +1278,22 @@
                                 "value_float": 0.0,
                                 "value_string": "",
                                 "value_menu": "tight"
+                            }
+                        ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": false,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
                             }
                         ]
                     }
