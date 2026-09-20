@@ -1,0 +1,1598 @@
+[
+    {
+        "name": "Case standard",
+        "preset_prefix": "case_standard",
+        "pinned_overrides": [
+            {
+                "override_target": "NODE",
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "subdivision level",
+                        "override_type": "MENU",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "very high",
+                        "value_menu": "very high"
+                    },
+                    {
+                        "input_name": "body type",
+                        "override_type": "MENU",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "hollow",
+                        "value_menu": "standard"
+                    },
+                    {
+                        "input_name": "voxel resolution",
+                        "override_type": "MENU",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "high",
+                        "value_menu": "high"
+                    },
+                    {
+                        "input_name": "hollow top",
+                        "override_type": "BOOLEAN",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "",
+                        "value_menu": ""
+                    }
+                ]
+            },
+            {
+                "override_target": "NODE",
+                "parent_group": "top face parameters",
+                "node_name": "Combine Bundle",
+                "inputs": [
+                    {
+                        "input_name": "top grid",
+                        "override_type": "BOOLEAN",
+                        "value_bool": false,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "",
+                        "value_menu": ""
+                    },
+                    {
+                        "input_name": "top thickness",
+                        "override_type": "FLOAT",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.9599999785423279,
+                        "value_string": "",
+                        "value_menu": ""
+                    }
+                ]
+            }
+        ],
+        "mappings": [
+            {
+                "collection_name": "case bottom",
+                "use_tag": false,
+                "tag": "_default",
+                "sub_path": "",
+                "overrides": []
+            },
+            {
+                "collection_name": "case top",
+                "use_tag": false,
+                "tag": "_default",
+                "sub_path": "",
+                "overrides": []
+            },
+            {
+                "collection_name": "case top",
+                "use_tag": true,
+                "tag": "_dpad_stick",
+                "sub_path": "",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "plate",
+                                "value_menu": "plate"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "case top",
+                "use_tag": true,
+                "tag": "_cap_plate",
+                "sub_path": "",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "capacitive plate parameters",
+                        "node_name": "Menu Switch",
+                        "inputs": [
+                            {
+                                "input_name": "capacitive",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "plate",
+                                "value_menu": "plate"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "case top",
+                "use_tag": true,
+                "tag": "_cap_plate_dpad_stick",
+                "sub_path": "",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "capacitive plate parameters",
+                        "node_name": "Menu Switch",
+                        "inputs": [
+                            {
+                                "input_name": "capacitive",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "plate",
+                                "value_menu": "plate"
+                            }
+                        ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "plate",
+                                "value_menu": "plate"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Case hollow",
+        "preset_prefix": "case_hollow",
+        "pinned_overrides": [
+            {
+                "override_target": "NODE",
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "subdivision level",
+                        "override_type": "MENU",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "very high",
+                        "value_menu": "very high"
+                    },
+                    {
+                        "input_name": "body type",
+                        "override_type": "MENU",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "hollow",
+                        "value_menu": "hollow"
+                    },
+                    {
+                        "input_name": "voxel resolution",
+                        "override_type": "MENU",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "high",
+                        "value_menu": "high"
+                    },
+                    {
+                        "input_name": "hollow top",
+                        "override_type": "BOOLEAN",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "",
+                        "value_menu": ""
+                    }
+                ]
+            },
+            {
+                "override_target": "NODE",
+                "parent_group": "top face parameters",
+                "node_name": "Combine Bundle",
+                "inputs": [
+                    {
+                        "input_name": "top grid",
+                        "override_type": "BOOLEAN",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "",
+                        "value_menu": ""
+                    },
+                    {
+                        "input_name": "top thickness",
+                        "override_type": "FLOAT",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 2.4000000953674316,
+                        "value_string": "",
+                        "value_menu": ""
+                    }
+                ]
+            }
+        ],
+        "mappings": [
+            {
+                "collection_name": "case middle plate",
+                "use_tag": false,
+                "tag": "_default",
+                "sub_path": "",
+                "overrides": []
+            },
+            {
+                "collection_name": "case bottom",
+                "use_tag": false,
+                "tag": "_default",
+                "sub_path": "",
+                "overrides": []
+            },
+            {
+                "collection_name": "case top",
+                "use_tag": false,
+                "tag": "_default",
+                "sub_path": "",
+                "overrides": []
+            },
+            {
+                "collection_name": "case top",
+                "use_tag": true,
+                "tag": "_dpad_stick",
+                "sub_path": "",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "plate",
+                                "value_menu": "plate"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "case top",
+                "use_tag": true,
+                "tag": "_cap_plate",
+                "sub_path": "",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "capacitive plate parameters",
+                        "node_name": "Menu Switch",
+                        "inputs": [
+                            {
+                                "input_name": "capacitive",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "plate",
+                                "value_menu": "plate"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "case top",
+                "use_tag": true,
+                "tag": "_cap_plate_dpad_stick",
+                "sub_path": "",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "capacitive plate parameters",
+                        "node_name": "Menu Switch",
+                        "inputs": [
+                            {
+                                "input_name": "capacitive",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "plate",
+                                "value_menu": "plate"
+                            }
+                        ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "plate",
+                                "value_menu": "plate"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Parts",
+        "preset_prefix": "parts",
+        "pinned_overrides": [],
+        "mappings": [
+            {
+                "collection_name": "capacitive",
+                "use_tag": true,
+                "tag": "_plate",
+                "sub_path": "",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "capacitive plate parameters",
+                        "node_name": "Menu Switch",
+                        "inputs": [
+                            {
+                                "input_name": "capacitive",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "plate",
+                                "value_menu": "plate"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "capacitive",
+                "use_tag": true,
+                "tag": "_knob",
+                "sub_path": "",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "capacitive plate parameters",
+                        "node_name": "Menu Switch",
+                        "inputs": [
+                            {
+                                "input_name": "capacitive",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "plate",
+                                "value_menu": "knob"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "dpad stick",
+                "use_tag": false,
+                "tag": "",
+                "sub_path": "dpad_stick",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "plate",
+                                "value_menu": "plate"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "sticks",
+                "use_tag": false,
+                "tag": "",
+                "sub_path": "",
+                "overrides": []
+            },
+            {
+                "collection_name": "scrollwheel",
+                "use_tag": false,
+                "tag": "",
+                "sub_path": "scrollwheel",
+                "overrides": []
+            },
+            {
+                "collection_name": "battery cover",
+                "use_tag": false,
+                "tag": "",
+                "sub_path": "",
+                "overrides": []
+            },
+            {
+                "collection_name": "cable holder",
+                "use_tag": false,
+                "tag": "",
+                "sub_path": "",
+                "overrides": []
+            },
+            {
+                "collection_name": "pins",
+                "use_tag": false,
+                "tag": "",
+                "sub_path": "",
+                "overrides": []
+            },
+            {
+                "collection_name": "nut lock",
+                "use_tag": false,
+                "tag": "",
+                "sub_path": "",
+                "overrides": []
+            }
+        ]
+    },
+    {
+        "name": "Buttons",
+        "preset_prefix": "parts/buttons",
+        "pinned_overrides": [],
+        "mappings": [
+            {
+                "collection_name": "buttons",
+                "use_tag": false,
+                "tag": "loose",
+                "sub_path": "loose",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "loose"
+                            }
+                        ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": false,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "caps",
+                "use_tag": false,
+                "tag": "loose_loose",
+                "sub_path": "loose/caps_loose",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "loose"
+                            },
+                            {
+                                "input_name": "cap tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "loose"
+                            }
+                        ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": false,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "caps",
+                "use_tag": false,
+                "tag": "loose_defaul",
+                "sub_path": "loose/caps_default",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "loose"
+                            },
+                            {
+                                "input_name": "cap tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "default"
+                            }
+                        ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": false,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "caps",
+                "use_tag": false,
+                "tag": "loose_tight",
+                "sub_path": "loose/caps_tight",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "loose"
+                            },
+                            {
+                                "input_name": "cap tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "tight"
+                            }
+                        ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": false,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "buttons",
+                "use_tag": false,
+                "tag": "default",
+                "sub_path": "default",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "default"
+                            }
+                        ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": false,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "caps",
+                "use_tag": false,
+                "tag": "defafult_loose",
+                "sub_path": "default/caps_loose",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "default"
+                            },
+                            {
+                                "input_name": "cap tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "loose"
+                            }
+                        ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": false,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "caps",
+                "use_tag": false,
+                "tag": "default_default",
+                "sub_path": "default/caps_default",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "default"
+                            },
+                            {
+                                "input_name": "cap tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "default"
+                            }
+                        ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": false,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "caps",
+                "use_tag": false,
+                "tag": "default_tight",
+                "sub_path": "default/caps_tight",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "default"
+                            },
+                            {
+                                "input_name": "cap tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "tight"
+                            }
+                        ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": false,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "buttons",
+                "use_tag": false,
+                "tag": "tight",
+                "sub_path": "tight",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "tight"
+                            }
+                        ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": false,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "caps",
+                "use_tag": false,
+                "tag": "tight_loose",
+                "sub_path": "tight/caps_loose",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "tight"
+                            },
+                            {
+                                "input_name": "cap tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "loose"
+                            }
+                        ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": false,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "caps",
+                "use_tag": false,
+                "tag": "tight_default",
+                "sub_path": "tight/caps_default",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "tight"
+                            },
+                            {
+                                "input_name": "cap tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "default"
+                            }
+                        ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": false,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "caps",
+                "use_tag": false,
+                "tag": "tight_tight",
+                "sub_path": "tight/caps_tight",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "tight"
+                            },
+                            {
+                                "input_name": "cap tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "tight"
+                            }
+                        ]
+                    },
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "dpad stick parameters",
+                        "node_name": "Combine Bundle",
+                        "inputs": [
+                            {
+                                "input_name": "dpad stick",
+                                "override_type": "BOOLEAN",
+                                "value_bool": false,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": ""
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Triggers",
+        "preset_prefix": "parts/triggers",
+        "pinned_overrides": [],
+        "mappings": [
+            {
+                "collection_name": "triggers",
+                "use_tag": false,
+                "tag": "loose press loose",
+                "sub_path": "loose/press_loose",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "loose"
+                            },
+                            {
+                                "input_name": "press tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "loose"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "triggers",
+                "use_tag": false,
+                "tag": "loose press default",
+                "sub_path": "loose/press_default",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "loose"
+                            },
+                            {
+                                "input_name": "press tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "default"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "triggers",
+                "use_tag": false,
+                "tag": "loose press tight",
+                "sub_path": "loose/press_tight",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "loose"
+                            },
+                            {
+                                "input_name": "press tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "tight"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "triggers",
+                "use_tag": false,
+                "tag": "defautl press loose",
+                "sub_path": "default/press_loose",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "default"
+                            },
+                            {
+                                "input_name": "press tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "loose"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "triggers",
+                "use_tag": false,
+                "tag": "default press default",
+                "sub_path": "default/press_default",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "default"
+                            },
+                            {
+                                "input_name": "press tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "default"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "triggers",
+                "use_tag": false,
+                "tag": "defautl press tight",
+                "sub_path": "default/press_tight",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "default"
+                            },
+                            {
+                                "input_name": "press tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "tight"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "triggers",
+                "use_tag": false,
+                "tag": "tight press loose",
+                "sub_path": "tight/press_loose",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "tight"
+                            },
+                            {
+                                "input_name": "press tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "loose"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "triggers",
+                "use_tag": false,
+                "tag": "tight press default",
+                "sub_path": "tight/press_default",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "tight"
+                            },
+                            {
+                                "input_name": "press tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "default"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "triggers",
+                "use_tag": false,
+                "tag": "tight press tight",
+                "sub_path": "tight/press_tight",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "tight"
+                            },
+                            {
+                                "input_name": "press tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "tight"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Bumpers",
+        "preset_prefix": "parts/bumpers",
+        "pinned_overrides": [],
+        "mappings": [
+            {
+                "collection_name": "bumpers",
+                "use_tag": false,
+                "tag": "press loose",
+                "sub_path": "press_loose",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "press tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "loose"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "bumpers",
+                "use_tag": false,
+                "tag": "press default",
+                "sub_path": "press_default",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "press tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "default"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "collection_name": "bumpers",
+                "use_tag": false,
+                "tag": "press tight",
+                "sub_path": "press_tight",
+                "overrides": [
+                    {
+                        "override_target": "NODE",
+                        "parent_group": "global",
+                        "node_name": "global parameters",
+                        "inputs": [
+                            {
+                                "input_name": "press tolerance",
+                                "override_type": "MENU",
+                                "value_bool": true,
+                                "value_int": 0,
+                                "value_float": 0.0,
+                                "value_string": "",
+                                "value_menu": "tight"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "za3tarani",
+        "preset_prefix": "za3tarani",
+        "pinned_overrides": [
+            {
+                "override_target": "NODE",
+                "parent_group": "global",
+                "node_name": "global parameters",
+                "inputs": [
+                    {
+                        "input_name": "subdivision level",
+                        "override_type": "MENU",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "very high",
+                        "value_menu": "very high"
+                    },
+                    {
+                        "input_name": "body type",
+                        "override_type": "MENU",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "hollow",
+                        "value_menu": "hollow"
+                    },
+                    {
+                        "input_name": "voxel resolution",
+                        "override_type": "MENU",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "high",
+                        "value_menu": "high"
+                    },
+                    {
+                        "input_name": "hollow top",
+                        "override_type": "BOOLEAN",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "",
+                        "value_menu": ""
+                    },
+                    {
+                        "input_name": "stock bumpers",
+                        "override_type": "BOOLEAN",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "",
+                        "value_menu": ""
+                    }
+                ]
+            },
+            {
+                "override_target": "NODE",
+                "parent_group": "top face parameters",
+                "node_name": "Combine Bundle",
+                "inputs": [
+                    {
+                        "input_name": "top grid",
+                        "override_type": "BOOLEAN",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "",
+                        "value_menu": ""
+                    },
+                    {
+                        "input_name": "top thickness",
+                        "override_type": "FLOAT",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 2.4000000953674316,
+                        "value_string": "",
+                        "value_menu": ""
+                    }
+                ]
+            },
+            {
+                "override_target": "NODE",
+                "parent_group": "capacitive plate parameters",
+                "node_name": "Menu Switch",
+                "inputs": [
+                    {
+                        "input_name": "capacitive",
+                        "override_type": "MENU",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 0.0,
+                        "value_string": "plate",
+                        "value_menu": "knob"
+                    }
+                ]
+            },
+            {
+                "override_target": "NODE",
+                "parent_group": "advanced stick parameters",
+                "node_name": "Combine Bundle",
+                "inputs": [
+                    {
+                        "input_name": "hole radius",
+                        "override_type": "FLOAT",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 8.0,
+                        "value_string": "",
+                        "value_menu": ""
+                    }
+                ]
+            },
+            {
+                "override_target": "NODE",
+                "parent_group": "basic stick parameters",
+                "node_name": "Combine Bundle",
+                "inputs": [
+                    {
+                        "input_name": "range degrees",
+                        "override_type": "FLOAT",
+                        "value_bool": true,
+                        "value_int": 0,
+                        "value_float": 15.0,
+                        "value_string": "",
+                        "value_menu": ""
+                    }
+                ]
+            }
+        ],
+        "mappings": [
+            {
+                "collection_name": "case middle plate",
+                "use_tag": false,
+                "tag": "",
+                "sub_path": "",
+                "overrides": []
+            },
+            {
+                "collection_name": "case bottom",
+                "use_tag": false,
+                "tag": "",
+                "sub_path": "",
+                "overrides": []
+            },
+            {
+                "collection_name": "case top",
+                "use_tag": false,
+                "tag": "",
+                "sub_path": "",
+                "overrides": []
+            },
+            {
+                "collection_name": "sticks",
+                "use_tag": true,
+                "tag": "",
+                "sub_path": "sticks",
+                "overrides": []
+            }
+        ]
+    }
+]
