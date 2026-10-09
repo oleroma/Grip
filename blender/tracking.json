@@ -7726,13 +7726,13 @@
         ],
         "capacitive plate parameters": [
             "[Combine Bundle] Bundle -> Bundle [Group Output]",
-            "[Group Input] capacitive -> capacitive [capacitive]",
+            "[Group Input] capacitive -> Menu [Menu Switch]",
             "[Group Input] capacitive plate stem tolerance -> capacitive plate stem tolerance [Combine Bundle]",
             "[Group Input] capacitive plate tolerance -> capacitive plate tolerance [Combine Bundle]",
             "[Group Input] plate button offset -> plate button offset [Combine Bundle]",
             "[Group Input] screw hole -> screw hole [Combine Bundle]",
-            "[capacitive] capacitive -> capacitive [Combine Bundle]",
-            "[capacitive] knob -> knob [Combine Bundle]"
+            "[Menu Switch] Output -> capacitive [Combine Bundle]",
+            "[Menu Switch] knob -> knob [Combine Bundle]"
         ],
         "caps": [
             "[Boolean Math.001] Boolean -> Selection [Extrude Mesh.001]",
