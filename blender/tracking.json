@@ -13694,7 +13694,7 @@
                         "inputs": {
                             "bottom xy correction": 0.0,
                             "bottom z correction": 1.0,
-                            "grid curvature offset": 10.0,
+                            "grid curvature offset": 0.0,
                             "scale": 1.0,
                             "texture height": 0.4,
                             "texture sharpness": 0.4,
@@ -13727,7 +13727,7 @@
                             "square top subd": 4,
                             "swap top rotation": true,
                             "texture type": "grid",
-                            "top curvature": "convex",
+                            "top curvature": "concave",
                             "top shape": "square"
                         }
                     }
@@ -13831,11 +13831,11 @@
                             "screws": true,
                             "screws hollow": false,
                             "stock bumpers": false,
-                            "style": "dualsense",
+                            "style": "xbox",
                             "subdivision level": "low ",
                             "tolerance": "default",
                             "top wire cutouts": false,
-                            "variant": "GripX",
+                            "variant": "GripV",
                             "voxel resolution": "low"
                         }
                     }
@@ -15607,11 +15607,11 @@
                             "screws": true,
                             "screws hollow": false,
                             "stock bumpers": false,
-                            "style": "dualsense",
+                            "style": "xbox",
                             "subdivision level": "low ",
                             "tolerance": "default",
                             "top wire cutouts": false,
-                            "variant": "GripX",
+                            "variant": "GripV",
                             "voxel resolution": "low"
                         }
                     }
