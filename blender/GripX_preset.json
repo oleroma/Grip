@@ -1,1061 +1,1083 @@
-[
-    {
-        "name": "Case hollow",
-        "preset_prefix": "case_hollow",
-        "collections": [
-            {
-                "collection_name": "case",
-                "use_tag": false,
-                "tag": "",
-                "sub_path": "",
-                "objects": [
-                    {
-                        "name": "case_top",
-                        "export": true,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": [
-                            {
-                                "group": "dpad stick parameters",
-                                "nodes": [
-                                    {
-                                        "name": "Combine Bundle [NodeCombineBundle]",
-                                        "inputs": [
-                                            {
-                                                "name": "dpad stick",
-                                                "override_type": "BOOLEAN",
-                                                "values": [
-                                                    {
-                                                        "value_string": "",
-                                                        "value_menu": "True",
-                                                        "use_tag": true,
-                                                        "tag": "dpad_stick",
-                                                        "use_dir": false,
-                                                        "use_sweep": false,
-                                                        "sweep_range": "",
-                                                        "sweep_start": "0",
-                                                        "sweep_step": "1",
-                                                        "sweep_count": "2"
-                                                    },
-                                                    {
-                                                        "value_string": "",
-                                                        "value_menu": "False",
-                                                        "use_tag": false,
-                                                        "tag": "",
-                                                        "use_dir": false,
-                                                        "use_sweep": false,
-                                                        "sweep_range": "",
-                                                        "sweep_start": "0",
-                                                        "sweep_step": "1",
-                                                        "sweep_count": "2"
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "group": "capacitive plate parameters",
-                                "nodes": [
-                                    {
-                                        "name": "Menu Switch [MENU_SWITCH]",
-                                        "inputs": [
-                                            {
-                                                "name": "Menu",
-                                                "override_type": "MENU",
-                                                "values": [
-                                                    {
-                                                        "value_string": "",
-                                                        "value_menu": "plate",
-                                                        "use_tag": true,
-                                                        "tag": "cap_",
-                                                        "use_dir": false,
-                                                        "use_sweep": false,
-                                                        "sweep_range": "",
-                                                        "sweep_start": "0",
-                                                        "sweep_step": "1",
-                                                        "sweep_count": "2"
-                                                    },
-                                                    {
-                                                        "value_string": "",
-                                                        "value_menu": "knob",
-                                                        "use_tag": true,
-                                                        "tag": "cap_",
-                                                        "use_dir": false,
-                                                        "use_sweep": false,
-                                                        "sweep_range": "",
-                                                        "sweep_start": "0",
-                                                        "sweep_step": "1",
-                                                        "sweep_count": "2"
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "name": "case_bottom",
-                        "export": true,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": []
-                    }
-                ],
-                "nodegroups": [
-                    {
-                        "group": "global",
-                        "nodes": [
-                            {
-                                "name": "global parameters [global parameters]",
-                                "inputs": [
-                                    {
-                                        "name": "body type",
-                                        "override_type": "MENU",
-                                        "values": [
-                                            {
-                                                "value_string": "",
-                                                "value_menu": "hollow",
-                                                "use_tag": true,
-                                                "tag": "",
-                                                "use_dir": false,
-                                                "use_sweep": false,
-                                                "sweep_range": "",
-                                                "sweep_start": "0",
-                                                "sweep_step": "1",
-                                                "sweep_count": "2"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "name": "voxel resolution",
-                                        "override_type": "MENU",
-                                        "values": [
-                                            {
-                                                "value_string": "",
-                                                "value_menu": "high",
-                                                "use_tag": false,
-                                                "tag": "",
-                                                "use_dir": true,
-                                                "use_sweep": false,
-                                                "sweep_range": "",
-                                                "sweep_start": "0",
-                                                "sweep_step": "1",
-                                                "sweep_count": "2"
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "collection_name": "case middle plate",
-                "use_tag": false,
-                "tag": "",
-                "sub_path": "",
-                "objects": [
-                    {
-                        "name": "case_middle_plate",
-                        "export": true,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": []
-                    }
-                ],
-                "nodegroups": []
-            }
-        ],
-        "nodegroups": [
-            {
-                "group": "global",
-                "nodes": [
-                    {
-                        "name": "global parameters [global parameters]",
-                        "inputs": [
-                            {
-                                "name": "subdivision level",
-                                "override_type": "MENU",
-                                "values": [
-                                    {
-                                        "value_string": "",
-                                        "value_menu": "very high",
-                                        "use_tag": false,
-                                        "tag": "",
-                                        "use_dir": true,
-                                        "use_sweep": false,
-                                        "sweep_range": "",
-                                        "sweep_start": "0",
-                                        "sweep_step": "1",
-                                        "sweep_count": "2"
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "name": "Case standard",
-        "preset_prefix": "case_standard",
-        "collections": [
-            {
-                "collection_name": "case",
-                "use_tag": false,
-                "tag": "",
-                "sub_path": "",
-                "objects": [
-                    {
-                        "name": "case_top",
-                        "export": true,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": [
-                            {
-                                "group": "global",
-                                "nodes": [
-                                    {
-                                        "name": "global parameters [global parameters]",
-                                        "inputs": [
-                                            {
-                                                "name": "hollow top",
-                                                "override_type": "BOOLEAN",
-                                                "values": [
-                                                    {
-                                                        "value_string": "",
-                                                        "value_menu": "True",
-                                                        "use_tag": true,
-                                                        "tag": "",
-                                                        "use_dir": false,
-                                                        "use_sweep": false,
-                                                        "sweep_range": "",
-                                                        "sweep_start": "0",
-                                                        "sweep_step": "1",
-                                                        "sweep_count": "2"
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "group": "dpad stick parameters",
-                                "nodes": [
-                                    {
-                                        "name": "Combine Bundle [NodeCombineBundle]",
-                                        "inputs": [
-                                            {
-                                                "name": "dpad stick",
-                                                "override_type": "BOOLEAN",
-                                                "values": [
-                                                    {
-                                                        "value_string": "",
-                                                        "value_menu": "True",
-                                                        "use_tag": true,
-                                                        "tag": "dpad_stick",
-                                                        "use_dir": false,
-                                                        "use_sweep": false,
-                                                        "sweep_range": "",
-                                                        "sweep_start": "0",
-                                                        "sweep_step": "1",
-                                                        "sweep_count": "2"
-                                                    },
-                                                    {
-                                                        "value_string": "",
-                                                        "value_menu": "False",
-                                                        "use_tag": false,
-                                                        "tag": "",
-                                                        "use_dir": false,
-                                                        "use_sweep": false,
-                                                        "sweep_range": "",
-                                                        "sweep_start": "0",
-                                                        "sweep_step": "1",
-                                                        "sweep_count": "2"
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "group": "capacitive plate parameters",
-                                "nodes": [
-                                    {
-                                        "name": "Menu Switch [MENU_SWITCH]",
-                                        "inputs": [
-                                            {
-                                                "name": "Menu",
-                                                "override_type": "MENU",
-                                                "values": [
-                                                    {
-                                                        "value_string": "",
-                                                        "value_menu": "plate",
-                                                        "use_tag": true,
-                                                        "tag": "cap_",
-                                                        "use_dir": false,
-                                                        "use_sweep": false,
-                                                        "sweep_range": "",
-                                                        "sweep_start": "0",
-                                                        "sweep_step": "1",
-                                                        "sweep_count": "2"
-                                                    },
-                                                    {
-                                                        "value_string": "",
-                                                        "value_menu": "knob",
-                                                        "use_tag": false,
-                                                        "tag": "",
-                                                        "use_dir": false,
-                                                        "use_sweep": false,
-                                                        "sweep_range": "",
-                                                        "sweep_start": "0",
-                                                        "sweep_step": "1",
-                                                        "sweep_count": "2"
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "name": "case_bottom",
-                        "export": true,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": []
-                    }
-                ],
-                "nodegroups": [
-                    {
-                        "group": "global",
-                        "nodes": [
-                            {
-                                "name": "global parameters [global parameters]",
-                                "inputs": [
-                                    {
-                                        "name": "body type",
-                                        "override_type": "MENU",
-                                        "values": [
-                                            {
-                                                "value_string": "",
-                                                "value_menu": "standard",
-                                                "use_tag": true,
-                                                "tag": "",
-                                                "use_dir": false,
-                                                "use_sweep": false,
-                                                "sweep_range": "",
-                                                "sweep_start": "0",
-                                                "sweep_step": "1",
-                                                "sweep_count": "2"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "name": "subdivision level",
-                                        "override_type": "MENU",
-                                        "values": [
-                                            {
-                                                "value_string": "",
-                                                "value_menu": "very high",
-                                                "use_tag": true,
-                                                "tag": "",
-                                                "use_dir": false,
-                                                "use_sweep": false,
-                                                "sweep_range": "",
-                                                "sweep_start": "0",
-                                                "sweep_step": "1",
-                                                "sweep_count": "2"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "name": "voxel resolution",
-                                        "override_type": "MENU",
-                                        "values": [
-                                            {
-                                                "value_string": "",
-                                                "value_menu": "high",
-                                                "use_tag": false,
-                                                "tag": "",
-                                                "use_dir": true,
-                                                "use_sweep": false,
-                                                "sweep_range": "",
-                                                "sweep_start": "0",
-                                                "sweep_step": "1",
-                                                "sweep_count": "2"
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            }
-        ],
-        "nodegroups": []
-    },
-    {
-        "name": "Parts",
-        "preset_prefix": "parts",
-        "collections": [
-            {
-                "collection_name": "capacitive",
-                "use_tag": false,
-                "tag": "",
-                "sub_path": "capacitive",
-                "objects": [
-                    {
-                        "name": "capacitive",
-                        "export": true,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": [
-                            {
-                                "group": "GripX abxy",
-                                "nodes": [
-                                    {
-                                        "name": "capacitive plate parameters [capacitive plate parameters]",
-                                        "inputs": [
-                                            {
-                                                "name": "capacitive",
-                                                "override_type": "MENU",
-                                                "values": [
-                                                    {
-                                                        "value_string": "",
-                                                        "value_menu": "plate",
-                                                        "use_tag": true,
-                                                        "tag": "",
-                                                        "use_dir": false,
-                                                        "use_sweep": false,
-                                                        "sweep_range": "",
-                                                        "sweep_start": "0",
-                                                        "sweep_step": "1",
-                                                        "sweep_count": "2"
-                                                    },
-                                                    {
-                                                        "value_string": "",
-                                                        "value_menu": "knob",
-                                                        "use_tag": true,
-                                                        "tag": "",
-                                                        "use_dir": false,
-                                                        "use_sweep": false,
-                                                        "sweep_range": "",
-                                                        "sweep_start": "0",
-                                                        "sweep_step": "1",
-                                                        "sweep_count": "2"
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ],
-                "nodegroups": []
-            },
-            {
-                "collection_name": "bumpers",
-                "use_tag": false,
-                "tag": "",
-                "sub_path": "bumpers",
-                "objects": [
-                    {
-                        "name": "R1",
-                        "export": true,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": []
-                    },
-                    {
-                        "name": "L1",
-                        "export": true,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": []
-                    }
-                ],
-                "nodegroups": [
-                    {
-                        "group": "global",
-                        "nodes": [
-                            {
-                                "name": "global parameters [global parameters]",
-                                "inputs": [
-                                    {
-                                        "name": "tolerance",
-                                        "override_type": "MENU",
-                                        "values": [
-                                            {
-                                                "value_string": "",
-                                                "value_menu": "tight",
-                                                "use_tag": false,
-                                                "tag": "press_",
-                                                "use_dir": true,
-                                                "use_sweep": true,
-                                                "sweep_range": "",
-                                                "sweep_start": "0",
-                                                "sweep_step": "1",
-                                                "sweep_count": "2"
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "collection_name": "dpad stick",
-                "use_tag": false,
-                "tag": "",
-                "sub_path": "dpad_stick",
-                "objects": [
-                    {
-                        "name": "rocker ball",
-                        "export": true,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": []
-                    },
-                    {
-                        "name": "rocker",
-                        "export": true,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": []
-                    },
-                    {
-                        "name": "dpad stick cap",
-                        "export": true,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": []
-                    },
-                    {
-                        "name": "rocker support",
-                        "export": true,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": []
-                    },
-                    {
-                        "name": "ball support",
-                        "export": true,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": []
-                    },
-                    {
-                        "name": "stick",
-                        "export": true,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": []
-                    }
-                ],
-                "nodegroups": [
-                    {
-                        "group": "dpad stick parameters",
-                        "nodes": [
-                            {
-                                "name": "Combine Bundle [NodeCombineBundle]",
-                                "inputs": [
-                                    {
-                                        "name": "dpad stick",
-                                        "override_type": "BOOLEAN",
-                                        "values": [
-                                            {
-                                                "value_string": "",
-                                                "value_menu": "True",
-                                                "use_tag": false,
-                                                "tag": "",
-                                                "use_dir": true,
-                                                "use_sweep": false,
-                                                "sweep_range": "",
-                                                "sweep_start": "0",
-                                                "sweep_step": "1",
-                                                "sweep_count": "2"
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "collection_name": "battery cover",
-                "use_tag": false,
-                "tag": "",
-                "sub_path": "battery_cover",
-                "objects": [
-                    {
-                        "name": "battery cover",
-                        "export": true,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": []
-                    }
-                ],
-                "nodegroups": []
-            },
-            {
-                "collection_name": "cable holder",
-                "use_tag": false,
-                "tag": "",
-                "sub_path": "cable_holder",
-                "objects": [
-                    {
-                        "name": "cable holder",
-                        "export": true,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": []
-                    }
-                ],
-                "nodegroups": []
-            },
-            {
-                "collection_name": "pins",
-                "use_tag": false,
-                "tag": "",
-                "sub_path": "pins",
-                "objects": [
-                    {
-                        "name": "pin",
-                        "export": true,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": []
-                    }
-                ],
-                "nodegroups": []
-            }
-        ],
-        "nodegroups": []
-    },
-    {
-        "name": "Sticks",
-        "preset_prefix": "parts",
-        "collections": [
-            {
-                "collection_name": "sticks",
-                "use_tag": false,
-                "tag": "",
-                "sub_path": "sticks",
-                "objects": [
-                    {
-                        "name": "StickL",
-                        "export": true,
-                        "tag": "stick",
-                        "sub_path": "",
-                        "nodegroups": [
-                            {
-                                "group": "GripX stick L parameters",
-                                "nodes": [
-                                    {
-                                        "name": "stick top parameters [stick top parameters]",
-                                        "inputs": [
-                                            {
-                                                "name": "top shape",
-                                                "override_type": "MENU",
-                                                "values": [
-                                                    {
-                                                        "value_string": "",
-                                                        "value_menu": "square",
-                                                        "use_tag": false,
-                                                        "tag": "",
-                                                        "use_dir": true,
-                                                        "use_sweep": true,
-                                                        "sweep_range": "",
-                                                        "sweep_start": "0",
-                                                        "sweep_step": "1",
-                                                        "sweep_count": "2"
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                "name": "top curvature",
-                                                "override_type": "MENU",
-                                                "values": [
-                                                    {
-                                                        "value_string": "",
-                                                        "value_menu": "convex",
-                                                        "use_tag": false,
-                                                        "tag": "",
-                                                        "use_dir": true,
-                                                        "use_sweep": true,
-                                                        "sweep_range": "",
-                                                        "sweep_start": "0",
-                                                        "sweep_step": "1",
-                                                        "sweep_count": "2"
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                "name": "texture type",
-                                                "override_type": "MENU",
-                                                "values": [
-                                                    {
-                                                        "value_string": "",
-                                                        "value_menu": "grid",
-                                                        "use_tag": false,
-                                                        "tag": "",
-                                                        "use_dir": true,
-                                                        "use_sweep": true,
-                                                        "sweep_range": "",
-                                                        "sweep_start": "0",
-                                                        "sweep_step": "1",
-                                                        "sweep_count": "2"
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "name": "basic stick parameters [basic stick parameters]",
-                                        "inputs": [
-                                            {
-                                                "name": "range degrees",
-                                                "override_type": "FLOAT",
-                                                "values": [
-                                                    {
-                                                        "value_string": "18.0",
-                                                        "value_menu": "",
-                                                        "use_tag": true,
-                                                        "tag": "",
-                                                        "use_dir": false,
-                                                        "use_sweep": true,
-                                                        "sweep_range": "",
-                                                        "sweep_start": "10",
-                                                        "sweep_step": "2",
-                                                        "sweep_count": "6"
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "name": "StickR",
-                        "export": false,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": []
-                    }
-                ],
-                "nodegroups": []
-            }
-        ],
-        "nodegroups": []
-    },
-    {
-        "name": "Buttons",
-        "preset_prefix": "parts",
-        "collections": [
-            {
-                "collection_name": "abxy",
-                "use_tag": false,
-                "tag": "",
-                "sub_path": "buttons",
-                "objects": [
-                    {
-                        "name": "abxy button",
-                        "export": true,
-                        "tag": "button",
-                        "sub_path": "",
-                        "nodegroups": []
-                    }
-                ],
-                "nodegroups": [
-                    {
-                        "group": "global",
-                        "nodes": [
-                            {
-                                "name": "global parameters [global parameters]",
-                                "inputs": [
-                                    {
-                                        "name": "tolerance",
-                                        "override_type": "MENU",
-                                        "values": [
-                                            {
-                                                "value_string": "",
-                                                "value_menu": "tight",
-                                                "use_tag": false,
-                                                "tag": "",
-                                                "use_dir": true,
-                                                "use_sweep": true,
-                                                "sweep_range": "",
-                                                "sweep_start": "0",
-                                                "sweep_step": "1",
-                                                "sweep_count": "2"
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "collection_name": "caps",
-                "use_tag": false,
-                "tag": "",
-                "sub_path": "buttons",
-                "objects": [
-                    {
-                        "name": "dpad cap left",
-                        "export": false,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": []
-                    },
-                    {
-                        "name": "select cap top right",
-                        "export": false,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": []
-                    },
-                    {
-                        "name": "dpad cap down",
-                        "export": false,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": []
-                    },
-                    {
-                        "name": "select cap down right",
-                        "export": true,
-                        "tag": "select",
-                        "sub_path": "",
-                        "nodegroups": []
-                    },
-                    {
-                        "name": "dpad cap up",
-                        "export": false,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": []
-                    },
-                    {
-                        "name": "abxy cap left",
-                        "export": true,
-                        "tag": "square",
-                        "sub_path": "",
-                        "nodegroups": []
-                    },
-                    {
-                        "name": "home cap",
-                        "export": true,
-                        "tag": "home",
-                        "sub_path": "",
-                        "nodegroups": []
-                    },
-                    {
-                        "name": "abxy cap down",
-                        "export": true,
-                        "tag": "cross",
-                        "sub_path": "",
-                        "nodegroups": []
-                    },
-                    {
-                        "name": "dpad cap right",
-                        "export": true,
-                        "tag": "dpad",
-                        "sub_path": "",
-                        "nodegroups": []
-                    },
-                    {
-                        "name": "abxy cap up",
-                        "export": true,
-                        "tag": "triangle",
-                        "sub_path": "",
-                        "nodegroups": []
-                    },
-                    {
-                        "name": "abxy cap right",
-                        "export": true,
-                        "tag": "circle",
-                        "sub_path": "",
-                        "nodegroups": []
-                    },
-                    {
-                        "name": "select cap down left",
-                        "export": false,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": []
-                    },
-                    {
-                        "name": "select cap top left",
-                        "export": false,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": []
-                    }
-                ],
-                "nodegroups": [
-                    {
-                        "group": "global",
-                        "nodes": [
-                            {
-                                "name": "global parameters [global parameters]",
-                                "inputs": [
-                                    {
-                                        "name": "tolerance",
-                                        "override_type": "MENU",
-                                        "values": [
-                                            {
-                                                "value_string": "",
-                                                "value_menu": "default",
-                                                "use_tag": false,
-                                                "tag": "",
-                                                "use_dir": true,
-                                                "use_sweep": true,
-                                                "sweep_range": "",
-                                                "sweep_start": "0",
-                                                "sweep_step": "1",
-                                                "sweep_count": "2"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "name": "cap tolerance",
-                                        "override_type": "MENU",
-                                        "values": [
-                                            {
-                                                "value_string": "",
-                                                "value_menu": "tight",
-                                                "use_tag": false,
-                                                "tag": "cap_",
-                                                "use_dir": true,
-                                                "use_sweep": true,
-                                                "sweep_range": "",
-                                                "sweep_start": "0",
-                                                "sweep_step": "1",
-                                                "sweep_count": "2"
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            }
-        ],
-        "nodegroups": []
-    },
-    {
-        "name": "Triggers",
-        "preset_prefix": "parts",
-        "collections": [
-            {
-                "collection_name": "triggers",
-                "use_tag": false,
-                "tag": "",
-                "sub_path": "triggers",
-                "objects": [
-                    {
-                        "name": "R4",
-                        "export": true,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": []
-                    },
-                    {
-                        "name": "L4",
-                        "export": true,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": []
-                    },
-                    {
-                        "name": "L2",
-                        "export": true,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": []
-                    },
-                    {
-                        "name": "R2",
-                        "export": true,
-                        "tag": "",
-                        "sub_path": "",
-                        "nodegroups": []
-                    }
-                ],
-                "nodegroups": [
-                    {
-                        "group": "global",
-                        "nodes": [
-                            {
-                                "name": "global parameters [global parameters]",
-                                "inputs": [
-                                    {
-                                        "name": "tolerance",
-                                        "override_type": "MENU",
-                                        "values": [
-                                            {
-                                                "value_string": "",
-                                                "value_menu": "tight",
-                                                "use_tag": false,
-                                                "tag": "",
-                                                "use_dir": true,
-                                                "use_sweep": true,
-                                                "sweep_range": "",
-                                                "sweep_start": "0",
-                                                "sweep_step": "1",
-                                                "sweep_count": "2"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "name": "press tolerance",
-                                        "override_type": "MENU",
-                                        "values": [
-                                            {
-                                                "value_string": "",
-                                                "value_menu": "tight",
-                                                "use_tag": false,
-                                                "tag": "press_",
-                                                "use_dir": true,
-                                                "use_sweep": true,
-                                                "sweep_range": "",
-                                                "sweep_start": "0",
-                                                "sweep_step": "1",
-                                                "sweep_count": "2"
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            }
-        ],
-        "nodegroups": []
-    }
-]
+{
+    "data_version": 3,
+    "root_dir": "D:\\Grip\\orca_slicer\\GripX\\",
+    "global_nodegroups": [
+        {
+            "group": "global",
+            "sub_path": "",
+            "tag": "",
+            "nodes": [
+                {
+                    "name": "global parameters [global parameters]",
+                    "sub_path": "",
+                    "tag": "",
+                    "inputs": [
+                        {
+                            "name": "variant",
+                            "override_type": "MENU",
+                            "values": [
+                                {
+                                    "value_string": "",
+                                    "value_menu": "GripX",
+                                    "use_tag": false,
+                                    "tag": "",
+                                    "use_dir": false,
+                                    "dir_tag": "",
+                                    "use_sweep": false,
+                                    "sweep_range": "",
+                                    "sweep_start": "0",
+                                    "sweep_step": "1",
+                                    "sweep_count": "2"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Case standard",
+            "data_version": 3,
+            "preset_prefix": "case_standard",
+            "collections": [
+                {
+                    "collection_name": "case",
+                    "use_tag": false,
+                    "tag": "",
+                    "sub_path": "",
+                    "objects": [
+                        {
+                            "name": "case_top",
+                            "name_override": "",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": [
+                                {
+                                    "group": "dpad stick parameters",
+                                    "sub_path": "",
+                                    "tag": "",
+                                    "nodes": [
+                                        {
+                                            "name": "Combine Bundle [NodeCombineBundle]",
+                                            "sub_path": "",
+                                            "tag": "",
+                                            "inputs": [
+                                                {
+                                                    "name": "dpad stick",
+                                                    "override_type": "BOOLEAN",
+                                                    "values": [
+                                                        {
+                                                            "value_string": "",
+                                                            "value_menu": "True",
+                                                            "use_tag": true,
+                                                            "tag": "dpad_stick",
+                                                            "use_dir": false,
+                                                            "dir_tag": "dpad_stick",
+                                                            "use_sweep": false,
+                                                            "sweep_range": "",
+                                                            "sweep_start": "0",
+                                                            "sweep_step": "1",
+                                                            "sweep_count": "2"
+                                                        },
+                                                        {
+                                                            "value_string": "",
+                                                            "value_menu": "False",
+                                                            "use_tag": false,
+                                                            "tag": "*",
+                                                            "use_dir": false,
+                                                            "dir_tag": "*",
+                                                            "use_sweep": false,
+                                                            "sweep_range": "",
+                                                            "sweep_start": "0",
+                                                            "sweep_step": "1",
+                                                            "sweep_count": "2"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "group": "capacitive plate parameters",
+                                    "sub_path": "",
+                                    "tag": "",
+                                    "nodes": [
+                                        {
+                                            "name": "Menu Switch [MENU_SWITCH]",
+                                            "sub_path": "",
+                                            "tag": "",
+                                            "inputs": [
+                                                {
+                                                    "name": "Menu",
+                                                    "override_type": "MENU",
+                                                    "values": [
+                                                        {
+                                                            "value_string": "",
+                                                            "value_menu": "plate",
+                                                            "use_tag": true,
+                                                            "tag": "cap_*",
+                                                            "use_dir": false,
+                                                            "dir_tag": "cap_*",
+                                                            "use_sweep": false,
+                                                            "sweep_range": "",
+                                                            "sweep_start": "0",
+                                                            "sweep_step": "1",
+                                                            "sweep_count": "2"
+                                                        },
+                                                        {
+                                                            "value_string": "",
+                                                            "value_menu": "knob",
+                                                            "use_tag": true,
+                                                            "tag": "cap_*",
+                                                            "use_dir": false,
+                                                            "dir_tag": "",
+                                                            "use_sweep": false,
+                                                            "sweep_range": "",
+                                                            "sweep_start": "0",
+                                                            "sweep_step": "1",
+                                                            "sweep_count": "2"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "case_bottom",
+                            "name_override": "",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        }
+                    ],
+                    "nodegroups": []
+                }
+            ],
+            "nodegroups": [
+                {
+                    "group": "global",
+                    "sub_path": "",
+                    "tag": "",
+                    "nodes": [
+                        {
+                            "name": "global parameters [global parameters]",
+                            "sub_path": "",
+                            "tag": "",
+                            "inputs": [
+                                {
+                                    "name": "body type",
+                                    "override_type": "MENU",
+                                    "values": [
+                                        {
+                                            "value_string": "",
+                                            "value_menu": "standard",
+                                            "use_tag": false,
+                                            "tag": "",
+                                            "use_dir": false,
+                                            "dir_tag": "",
+                                            "use_sweep": false,
+                                            "sweep_range": "",
+                                            "sweep_start": "0",
+                                            "sweep_step": "1",
+                                            "sweep_count": "2"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "subdivision level",
+                                    "override_type": "MENU",
+                                    "values": [
+                                        {
+                                            "value_string": "",
+                                            "value_menu": "very high",
+                                            "use_tag": false,
+                                            "tag": "",
+                                            "use_dir": false,
+                                            "dir_tag": "",
+                                            "use_sweep": false,
+                                            "sweep_range": "",
+                                            "sweep_start": "0",
+                                            "sweep_step": "1",
+                                            "sweep_count": "2"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "voxel resolution",
+                                    "override_type": "MENU",
+                                    "values": [
+                                        {
+                                            "value_string": "",
+                                            "value_menu": "high",
+                                            "use_tag": false,
+                                            "tag": "",
+                                            "use_dir": false,
+                                            "dir_tag": "",
+                                            "use_sweep": false,
+                                            "sweep_range": "",
+                                            "sweep_start": "0",
+                                            "sweep_step": "1",
+                                            "sweep_count": "2"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Parts",
+            "data_version": 3,
+            "preset_prefix": "parts",
+            "collections": [
+                {
+                    "collection_name": "capacitive",
+                    "use_tag": false,
+                    "tag": "",
+                    "sub_path": "capacitive",
+                    "objects": [
+                        {
+                            "name": "capacitive",
+                            "name_override": "",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": [
+                                {
+                                    "group": "GripV abxy",
+                                    "sub_path": "",
+                                    "tag": "",
+                                    "nodes": [
+                                        {
+                                            "name": "capacitive plate parameters [capacitive plate parameters]",
+                                            "sub_path": "",
+                                            "tag": "",
+                                            "inputs": [
+                                                {
+                                                    "name": "capacitive",
+                                                    "override_type": "MENU",
+                                                    "values": [
+                                                        {
+                                                            "value_string": "",
+                                                            "value_menu": "plate",
+                                                            "use_tag": true,
+                                                            "tag": "*",
+                                                            "use_dir": false,
+                                                            "dir_tag": "",
+                                                            "use_sweep": false,
+                                                            "sweep_range": "",
+                                                            "sweep_start": "0",
+                                                            "sweep_step": "1",
+                                                            "sweep_count": "2"
+                                                        },
+                                                        {
+                                                            "value_string": "",
+                                                            "value_menu": "knob",
+                                                            "use_tag": true,
+                                                            "tag": "*",
+                                                            "use_dir": false,
+                                                            "dir_tag": "",
+                                                            "use_sweep": false,
+                                                            "sweep_range": "",
+                                                            "sweep_start": "0",
+                                                            "sweep_step": "1",
+                                                            "sweep_count": "2"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "nodegroups": []
+                },
+                {
+                    "collection_name": "bumpers",
+                    "use_tag": false,
+                    "tag": "",
+                    "sub_path": "bumpers",
+                    "objects": [
+                        {
+                            "name": "R1",
+                            "name_override": "",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        },
+                        {
+                            "name": "L1",
+                            "name_override": "",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        }
+                    ],
+                    "nodegroups": [
+                        {
+                            "group": "global",
+                            "sub_path": "",
+                            "tag": "",
+                            "nodes": [
+                                {
+                                    "name": "global parameters [global parameters]",
+                                    "sub_path": "",
+                                    "tag": "",
+                                    "inputs": [
+                                        {
+                                            "name": "tolerance",
+                                            "override_type": "MENU",
+                                            "values": [
+                                                {
+                                                    "value_string": "",
+                                                    "value_menu": "tight",
+                                                    "use_tag": false,
+                                                    "tag": "",
+                                                    "use_dir": true,
+                                                    "dir_tag": "*",
+                                                    "use_sweep": false,
+                                                    "sweep_range": "",
+                                                    "sweep_start": "0",
+                                                    "sweep_step": "1",
+                                                    "sweep_count": "2"
+                                                },
+                                                {
+                                                    "value_string": "",
+                                                    "value_menu": "default",
+                                                    "use_tag": false,
+                                                    "tag": "",
+                                                    "use_dir": true,
+                                                    "dir_tag": "*",
+                                                    "use_sweep": false,
+                                                    "sweep_range": "",
+                                                    "sweep_start": "0",
+                                                    "sweep_step": "1",
+                                                    "sweep_count": "2"
+                                                },
+                                                {
+                                                    "value_string": "",
+                                                    "value_menu": "loose",
+                                                    "use_tag": false,
+                                                    "tag": "",
+                                                    "use_dir": true,
+                                                    "dir_tag": "*",
+                                                    "use_sweep": false,
+                                                    "sweep_range": "",
+                                                    "sweep_start": "0",
+                                                    "sweep_step": "1",
+                                                    "sweep_count": "2"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "collection_name": "dpad stick",
+                    "use_tag": false,
+                    "tag": "",
+                    "sub_path": "dpad_stick",
+                    "objects": [
+                        {
+                            "name": "rocker ball",
+                            "name_override": "",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        },
+                        {
+                            "name": "rocker",
+                            "name_override": "",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        },
+                        {
+                            "name": "dpad stick cap",
+                            "name_override": "",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        },
+                        {
+                            "name": "rocker support",
+                            "name_override": "",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        },
+                        {
+                            "name": "ball support",
+                            "name_override": "",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        },
+                        {
+                            "name": "stick",
+                            "name_override": "",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        }
+                    ],
+                    "nodegroups": [
+                        {
+                            "group": "dpad stick parameters",
+                            "sub_path": "",
+                            "tag": "",
+                            "nodes": [
+                                {
+                                    "name": "Combine Bundle [NodeCombineBundle]",
+                                    "sub_path": "",
+                                    "tag": "",
+                                    "inputs": [
+                                        {
+                                            "name": "dpad stick",
+                                            "override_type": "BOOLEAN",
+                                            "values": [
+                                                {
+                                                    "value_string": "",
+                                                    "value_menu": "True",
+                                                    "use_tag": false,
+                                                    "tag": "",
+                                                    "use_dir": false,
+                                                    "dir_tag": "",
+                                                    "use_sweep": false,
+                                                    "sweep_range": "",
+                                                    "sweep_start": "0",
+                                                    "sweep_step": "1",
+                                                    "sweep_count": "2"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "collection_name": "battery cover",
+                    "use_tag": false,
+                    "tag": "",
+                    "sub_path": "battery_cover",
+                    "objects": [
+                        {
+                            "name": "battery cover",
+                            "name_override": "",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        }
+                    ],
+                    "nodegroups": []
+                },
+                {
+                    "collection_name": "cable holder",
+                    "use_tag": false,
+                    "tag": "",
+                    "sub_path": "cable_holder",
+                    "objects": [
+                        {
+                            "name": "cable holder",
+                            "name_override": "",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        }
+                    ],
+                    "nodegroups": []
+                },
+                {
+                    "collection_name": "pins",
+                    "use_tag": false,
+                    "tag": "",
+                    "sub_path": "pins",
+                    "objects": [
+                        {
+                            "name": "pin",
+                            "name_override": "",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        }
+                    ],
+                    "nodegroups": []
+                }
+            ],
+            "nodegroups": []
+        },
+        {
+            "name": "Buttons",
+            "data_version": 3,
+            "preset_prefix": "parts",
+            "collections": [
+                {
+                    "collection_name": "abxy",
+                    "use_tag": false,
+                    "tag": "",
+                    "sub_path": "buttons",
+                    "objects": [
+                        {
+                            "name": "abxy button",
+                            "name_override": "button",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        }
+                    ],
+                    "nodegroups": [
+                        {
+                            "group": "global",
+                            "sub_path": "",
+                            "tag": "",
+                            "nodes": [
+                                {
+                                    "name": "global parameters [global parameters]",
+                                    "sub_path": "",
+                                    "tag": "",
+                                    "inputs": [
+                                        {
+                                            "name": "tolerance",
+                                            "override_type": "MENU",
+                                            "values": [
+                                                {
+                                                    "value_string": "",
+                                                    "value_menu": "tight",
+                                                    "use_tag": false,
+                                                    "tag": "*",
+                                                    "use_dir": true,
+                                                    "dir_tag": "*",
+                                                    "use_sweep": true,
+                                                    "sweep_range": "",
+                                                    "sweep_start": "0",
+                                                    "sweep_step": "1",
+                                                    "sweep_count": "2"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "collection_name": "caps",
+                    "use_tag": false,
+                    "tag": "",
+                    "sub_path": "buttons",
+                    "objects": [
+                        {
+                            "name": "dpad cap left",
+                            "name_override": "",
+                            "export": false,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        },
+                        {
+                            "name": "select cap top right",
+                            "name_override": "",
+                            "export": false,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        },
+                        {
+                            "name": "dpad cap down",
+                            "name_override": "",
+                            "export": false,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        },
+                        {
+                            "name": "select cap down right",
+                            "name_override": "select",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        },
+                        {
+                            "name": "dpad cap up",
+                            "name_override": "",
+                            "export": false,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        },
+                        {
+                            "name": "abxy cap left",
+                            "name_override": "square",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        },
+                        {
+                            "name": "home cap",
+                            "name_override": "home",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        },
+                        {
+                            "name": "abxy cap down",
+                            "name_override": "cross",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        },
+                        {
+                            "name": "dpad cap right",
+                            "name_override": "dpad",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        },
+                        {
+                            "name": "abxy cap up",
+                            "name_override": "triangle",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        },
+                        {
+                            "name": "abxy cap right",
+                            "name_override": "circle",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        },
+                        {
+                            "name": "select cap down left",
+                            "name_override": "",
+                            "export": false,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        },
+                        {
+                            "name": "select cap top left",
+                            "name_override": "",
+                            "export": false,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        }
+                    ],
+                    "nodegroups": [
+                        {
+                            "group": "global",
+                            "sub_path": "",
+                            "tag": "",
+                            "nodes": [
+                                {
+                                    "name": "global parameters [global parameters]",
+                                    "sub_path": "",
+                                    "tag": "",
+                                    "inputs": [
+                                        {
+                                            "name": "tolerance",
+                                            "override_type": "MENU",
+                                            "values": [
+                                                {
+                                                    "value_string": "",
+                                                    "value_menu": "default",
+                                                    "use_tag": false,
+                                                    "tag": "*",
+                                                    "use_dir": true,
+                                                    "dir_tag": "*",
+                                                    "use_sweep": true,
+                                                    "sweep_range": "",
+                                                    "sweep_start": "0",
+                                                    "sweep_step": "1",
+                                                    "sweep_count": "2"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "cap tolerance",
+                                            "override_type": "MENU",
+                                            "values": [
+                                                {
+                                                    "value_string": "",
+                                                    "value_menu": "tight",
+                                                    "use_tag": false,
+                                                    "tag": "cap_*",
+                                                    "use_dir": true,
+                                                    "dir_tag": "cap_*",
+                                                    "use_sweep": true,
+                                                    "sweep_range": "",
+                                                    "sweep_start": "0",
+                                                    "sweep_step": "1",
+                                                    "sweep_count": "2"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "nodegroups": []
+        },
+        {
+            "name": "Sticks",
+            "data_version": 3,
+            "preset_prefix": "parts/sticks",
+            "collections": [
+                {
+                    "collection_name": "sticks",
+                    "use_tag": false,
+                    "tag": "",
+                    "sub_path": "",
+                    "objects": [
+                        {
+                            "name": "StickL",
+                            "name_override": "",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "StickL",
+                            "nodegroups": [
+                                {
+                                    "group": "GripX stick L parameters",
+                                    "sub_path": "",
+                                    "tag": "",
+                                    "nodes": [
+                                        {
+                                            "name": "Menu Switch [MENU_SWITCH]",
+                                            "sub_path": "",
+                                            "tag": "",
+                                            "inputs": [
+                                                {
+                                                    "name": "Menu",
+                                                    "override_type": "MENU",
+                                                    "values": [
+                                                        {
+                                                            "value_string": "",
+                                                            "value_menu": "Xbox cap easy print short (60%)",
+                                                            "use_tag": true,
+                                                            "tag": "Xbox_cap_easy_print_short_(60%)",
+                                                            "use_dir": false,
+                                                            "dir_tag": "*",
+                                                            "use_sweep": false,
+                                                            "sweep_range": "",
+                                                            "sweep_start": "0",
+                                                            "sweep_step": "1",
+                                                            "sweep_count": "2"
+                                                        },
+                                                        {
+                                                            "value_string": "",
+                                                            "value_menu": "Xbox cap easy print tall",
+                                                            "use_tag": true,
+                                                            "tag": "Xbox_cap_easy_print_tall",
+                                                            "use_dir": false,
+                                                            "dir_tag": "*",
+                                                            "use_sweep": false,
+                                                            "sweep_range": "",
+                                                            "sweep_start": "0",
+                                                            "sweep_step": "1",
+                                                            "sweep_count": "2"
+                                                        },
+                                                        {
+                                                            "value_string": "",
+                                                            "value_menu": "Xbox cap",
+                                                            "use_tag": true,
+                                                            "tag": "Xbox_cap",
+                                                            "use_dir": false,
+                                                            "dir_tag": "*",
+                                                            "use_sweep": false,
+                                                            "sweep_range": "",
+                                                            "sweep_start": "0",
+                                                            "sweep_step": "1",
+                                                            "sweep_count": "2"
+                                                        },
+                                                        {
+                                                            "value_string": "",
+                                                            "value_menu": "Octagonal 18d range",
+                                                            "use_tag": true,
+                                                            "tag": "Octagonal_18d_range",
+                                                            "use_dir": false,
+                                                            "dir_tag": "*",
+                                                            "use_sweep": false,
+                                                            "sweep_range": "",
+                                                            "sweep_start": "0",
+                                                            "sweep_step": "1",
+                                                            "sweep_count": "2"
+                                                        },
+                                                        {
+                                                            "value_string": "",
+                                                            "value_menu": "Xbox Elite2 stick base",
+                                                            "use_tag": true,
+                                                            "tag": "Xbox_Elite2_stick_base",
+                                                            "use_dir": false,
+                                                            "dir_tag": "*",
+                                                            "use_sweep": false,
+                                                            "sweep_range": "",
+                                                            "sweep_start": "0",
+                                                            "sweep_step": "1",
+                                                            "sweep_count": "2"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "StickR",
+                            "name_override": "",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "StickR",
+                            "nodegroups": [
+                                {
+                                    "group": "GripX stick R parameters",
+                                    "sub_path": "",
+                                    "tag": "",
+                                    "nodes": [
+                                        {
+                                            "name": "Menu Switch [MENU_SWITCH]",
+                                            "sub_path": "",
+                                            "tag": "",
+                                            "inputs": [
+                                                {
+                                                    "name": "Menu",
+                                                    "override_type": "MENU",
+                                                    "values": [
+                                                        {
+                                                            "value_string": "",
+                                                            "value_menu": "normal",
+                                                            "use_tag": false,
+                                                            "tag": "",
+                                                            "use_dir": true,
+                                                            "dir_tag": "*",
+                                                            "use_sweep": false,
+                                                            "sweep_range": "",
+                                                            "sweep_start": "0",
+                                                            "sweep_step": "1",
+                                                            "sweep_count": "2"
+                                                        },
+                                                        {
+                                                            "value_string": "",
+                                                            "value_menu": "small round",
+                                                            "use_tag": true,
+                                                            "tag": "small_round",
+                                                            "use_dir": false,
+                                                            "dir_tag": "*",
+                                                            "use_sweep": false,
+                                                            "sweep_range": "",
+                                                            "sweep_start": "0",
+                                                            "sweep_step": "1",
+                                                            "sweep_count": "2"
+                                                        },
+                                                        {
+                                                            "value_string": "",
+                                                            "value_menu": "small square",
+                                                            "use_tag": true,
+                                                            "tag": "small_square",
+                                                            "use_dir": false,
+                                                            "dir_tag": "*",
+                                                            "use_sweep": false,
+                                                            "sweep_range": "",
+                                                            "sweep_start": "0",
+                                                            "sweep_step": "1",
+                                                            "sweep_count": "2"
+                                                        },
+                                                        {
+                                                            "value_string": "",
+                                                            "value_menu": "8 dir",
+                                                            "use_tag": true,
+                                                            "tag": "8_dir",
+                                                            "use_dir": false,
+                                                            "dir_tag": "*",
+                                                            "use_sweep": false,
+                                                            "sweep_range": "",
+                                                            "sweep_start": "0",
+                                                            "sweep_step": "1",
+                                                            "sweep_count": "2"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "stick top parameters normal [stick top parameters]",
+                                            "sub_path": "",
+                                            "tag": "",
+                                            "inputs": [
+                                                {
+                                                    "name": "top curvature",
+                                                    "override_type": "MENU",
+                                                    "values": [
+                                                        {
+                                                            "value_string": "",
+                                                            "value_menu": "concave",
+                                                            "use_tag": true,
+                                                            "tag": "*",
+                                                            "use_dir": true,
+                                                            "dir_tag": "normal",
+                                                            "use_sweep": true,
+                                                            "sweep_range": "",
+                                                            "sweep_start": "0",
+                                                            "sweep_step": "1",
+                                                            "sweep_count": "2"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "nodegroups": []
+                }
+            ],
+            "nodegroups": []
+        },
+        {
+            "name": "Triggers",
+            "data_version": 3,
+            "preset_prefix": "parts",
+            "collections": [
+                {
+                    "collection_name": "triggers",
+                    "use_tag": false,
+                    "tag": "",
+                    "sub_path": "triggers",
+                    "objects": [
+                        {
+                            "name": "R4",
+                            "name_override": "",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        },
+                        {
+                            "name": "L4",
+                            "name_override": "",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        },
+                        {
+                            "name": "L2",
+                            "name_override": "",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        },
+                        {
+                            "name": "R2",
+                            "name_override": "",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        }
+                    ],
+                    "nodegroups": [
+                        {
+                            "group": "global",
+                            "sub_path": "",
+                            "tag": "",
+                            "nodes": [
+                                {
+                                    "name": "global parameters [global parameters]",
+                                    "sub_path": "",
+                                    "tag": "",
+                                    "inputs": [
+                                        {
+                                            "name": "tolerance",
+                                            "override_type": "MENU",
+                                            "values": [
+                                                {
+                                                    "value_string": "",
+                                                    "value_menu": "tight",
+                                                    "use_tag": false,
+                                                    "tag": "*",
+                                                    "use_dir": true,
+                                                    "dir_tag": "*",
+                                                    "use_sweep": true,
+                                                    "sweep_range": "",
+                                                    "sweep_start": "0",
+                                                    "sweep_step": "1",
+                                                    "sweep_count": "2"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "press tolerance",
+                                            "override_type": "MENU",
+                                            "values": [
+                                                {
+                                                    "value_string": "",
+                                                    "value_menu": "tight",
+                                                    "use_tag": false,
+                                                    "tag": "press_*",
+                                                    "use_dir": true,
+                                                    "dir_tag": "press_*",
+                                                    "use_sweep": true,
+                                                    "sweep_range": "",
+                                                    "sweep_start": "0",
+                                                    "sweep_step": "1",
+                                                    "sweep_count": "2"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "nodegroups": []
+        }
+    ]
+}
