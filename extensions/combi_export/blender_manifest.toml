@@ -1,0 +1,17 @@
+schema_version = "1.0.0"
+id = "combi_export"
+version = "1.0.0"
+name = "Combi Export"
+tagline = "stl export path mapping with node overrides and permutations"
+description = "STL Export to mapped directories with geometry nodes overrides and combinatorial generation."
+maintainer = "me & AI"
+type = "add-on"
+build_date = "2026-10-07"
+license = [
+    "SPDX:GPL-3.0-or-later"
+]
+tags = ["Import-Export", "Geometry Nodes", "Pipeline"]
+blender_version_min = "5.2.0"
+
+[permissions]
+files = "Write exported STL files and temporary worker files"
