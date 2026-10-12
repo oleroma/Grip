@@ -97,9 +97,11 @@ Everything is functional, assembles properly, and fits well.
 
 ## **TO DO**
  
-1. Create documentation and a video guide on printing, cleaning, and assembly.
+1. Create documentation and a video guide on printing, cleaning, and assembly (a first [printing guide](docs/print-guide.md) is up).
 2. Create `.3mf` files for each version.
 3. Polish the `.blend` project UI.
+
+See the [roadmap](ROADMAP.md) for what comes after the first release.
 
 # **NOTE:** The initial release will be a **beta**. If you are willing to be a tester, please let us know!
 
@@ -110,11 +112,22 @@ Everything is functional, assembles properly, and fits well.
 
 
 ## **DEPENDENCIES**
-* Git LFS
-* Blender >= 4.x
+* [Git LFS](https://git-lfs.github.com)
+* Blender 5.2 or newer (`blender/Grip.blend` was saved in Blender 5.2, and the Combi Export and Blender tracking extensions in [`extensions/`](extensions/) require 5.2+)
 
 ## **LFS AND FILE DOWNLOAD**
 
-If you want to download the Blender and STL files, **DO NOT USE the "Download ZIP" button** on GitHub. It is not compatible with LFS (Large File Storage). Instead, please clone the repository directly.
+The Blender file, the exported `.stl` and `.3mf` files, and the large images are stored with Git LFS (Large File Storage).
 
-To use Git with this project, you must first install [Git Large File Storage](https://git-lfs.github.com).
+**DO NOT USE the "Download ZIP" button** on GitHub. It is not compatible with LFS and gives you small pointer files instead of the real models. Clone the repository instead:
+
+```
+git lfs install
+git clone https://github.com/oleroma/Grip.git
+```
+
+If you cloned before installing Git LFS, run `git lfs pull` inside the repository to download the real files.
+
+## **LICENSE**
+
+Licensed under Creative Commons BY-NC-SA 4.0, see [LICENSE](LICENSE). The Blender extensions in [`extensions/`](extensions/) are GPL and carry their own license files.

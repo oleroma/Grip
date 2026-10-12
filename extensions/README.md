@@ -14,4 +14,4 @@ Preferences > Get Extensions > Repositories > Add Local Repository, then point i
 
 ## License
 
-The add-ons here are GPL, not CC BY-NC-SA like the rest of Grip. Each folder carries its own `LICENSE` file (copied from the source repo by the same action). See [license.md](../license.md).
+The add-ons here are GPL, not CC BY-NC-SA like the rest of Grip. Each folder carries its own `LICENSE` file (copied from the source repo by the same action). The rest of the repository is under CC BY-NC-SA 4.0, see [LICENSE](../LICENSE).
