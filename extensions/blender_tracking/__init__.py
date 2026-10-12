@@ -964,7 +964,7 @@ class GEONODES_JSON_PT_config(bpy.types.Panel):
     bl_label = "Configuration"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = 'GeoJSON'
+    bl_category = 'Tracking'
 
     def draw(self, context):
         layout = self.layout
