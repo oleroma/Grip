@@ -2,8 +2,8 @@ schema_version = "1.0.0"
 
 id = "blender_tracking"
 version = "1.0.0"
-name = "Blender-tracking"
-tagline = "Exports Geometry Nodes inputs to JSON"
+name = "Blender tracking"
+tagline = "Track blender data to JSON"
 maintainer = "Vibecoded"
 type = "add-on"
 
