@@ -1,6 +1,6 @@
 schema_version = "1.0.0"
 
-id = "blender-tracking"
+id = "blender_tracking"
 version = "1.0.0"
 name = "Blender-tracking"
 tagline = "Exports Geometry Nodes inputs to JSON"
