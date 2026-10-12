@@ -2428,41 +2428,40 @@
             "[sticks xy correction] Value -> stick  XY correction [advanced stick parameters]"
         ],
         "GripX stick R parameters": [
-            "[Join Bundle.017] Bundle -> Input [Reroute.002 (connect here)]",
-            "[Reroute.002 (connect here)] Output -> Input [Reroute]",
-            "[Reroute] Output -> Bundle [stick outputs]",
-            "[Reroute] Output -> bundle [Group Output]",
-            "[Stick hole subdivision] Integer -> stick hole subdivision [advanced stick parameters]",
+            "[Join Bundle.017] Bundle -> Input [Reroute.003]",
+            "[Join Bundle.018] Bundle -> Input [Reroute]",
+            "[Join Bundle.019] Bundle -> Input [Reroute.002]",
+            "[Join Bundle.020] Bundle -> Input [Reroute.001]",
+            "[Menu Switch] Output -> bundle [Group Output]",
+            "[Menu] Menu -> Menu [Menu Switch]",
+            "[Reroute.001] Output -> 8 dir [Menu Switch]",
+            "[Reroute.002] Output -> small square [Menu Switch]",
+            "[Reroute.003] Output -> normal [Menu Switch]",
+            "[Reroute] Output -> small round [Menu Switch]",
             "[advanced stick parameters.001] Bundle -> Bundle [Join Bundle.017]",
             "[advanced stick parameters.002] Bundle -> Bundle [Join Bundle.018]",
             "[advanced stick parameters.003] Bundle -> Bundle [Join Bundle.019]",
             "[advanced stick parameters.004] Bundle -> Bundle [Join Bundle.020]",
-            "[advanced stick parameters] Bundle -> Bundle [Join Bundle.013]",
             "[basic stick parameters.001] Bundle -> Bundle [Join Bundle.017]",
             "[basic stick parameters.002] Bundle -> Bundle [Join Bundle.018]",
             "[basic stick parameters.003] Bundle -> Bundle [Join Bundle.019]",
             "[basic stick parameters.004] Bundle -> Bundle [Join Bundle.020]",
-            "[basic stick parameters] Bundle -> Bundle [Join Bundle.013]",
             "[grid texture parameters.001] Bundle -> Bundle [Join Bundle.017]",
             "[grid texture parameters.002] Bundle -> Bundle [Join Bundle.018]",
             "[grid texture parameters.003] Bundle -> Bundle [Join Bundle.019]",
             "[grid texture parameters.004] Bundle -> Bundle [Join Bundle.020]",
-            "[grid texture parameters] Bundle -> Bundle [Join Bundle.013]",
             "[icosahedron texture parameters.001] Bundle -> Bundle [Join Bundle.017]",
             "[icosahedron texture parameters.002] Bundle -> Bundle [Join Bundle.018]",
             "[icosahedron texture parameters.003] Bundle -> Bundle [Join Bundle.019]",
             "[icosahedron texture parameters.004] Bundle -> Bundle [Join Bundle.020]",
-            "[icosahedron texture parameters] Bundle -> Bundle [Join Bundle.013]",
             "[shield parameters.001] Bundle -> Bundle [Join Bundle.017]",
             "[shield parameters.002] Bundle -> Bundle [Join Bundle.018]",
             "[shield parameters.003] Bundle -> Bundle [Join Bundle.019]",
             "[shield parameters.004] Bundle -> Bundle [Join Bundle.020]",
-            "[shield parameters] Bundle -> Bundle [Join Bundle.013]",
-            "[stick top parameters.001] Bundle -> Bundle [Join Bundle.017]",
             "[stick top parameters.002] Bundle -> Bundle [Join Bundle.018]",
             "[stick top parameters.003] Bundle -> Bundle [Join Bundle.019]",
             "[stick top parameters.004] Bundle -> Bundle [Join Bundle.020]",
-            "[stick top parameters] Bundle -> Bundle [Join Bundle.013]"
+            "[stick top parameters.normal] Bundle -> Bundle [Join Bundle.017]"
         ],
         "GripX voroni indent parameters": [
             "[Join Bundle] Bundle -> Bundle [Group Output]",
@@ -15287,22 +15286,6 @@
             },
             "GripX stick R parameters": {
                 "nodes": {
-                    "advanced stick parameters": {
-                        "inputs": {
-                            "X correction": 0.2,
-                            "Y correction": 0.0,
-                            "case cutout thickness ": 2.5,
-                            "contact angle": 18.1,
-                            "hole bevel": 1.0,
-                            "hole radius": 7.6,
-                            "shaft X correction": 0.0,
-                            "shaft Y correction": 0.0,
-                            "stick  XY correction": true,
-                            "stick hole subdivision": 4,
-                            "stick subdivision": 128,
-                            "swap stick rotation": false
-                        }
-                    },
                     "advanced stick parameters.001": {
                         "inputs": {
                             "X correction": 0.2,
@@ -15365,24 +15348,6 @@
                             "stick hole subdivision": 8,
                             "stick subdivision": 8,
                             "swap stick rotation": false
-                        }
-                    },
-                    "basic stick parameters": {
-                        "inputs": {
-                            "action": false,
-                            "action rotation": 0.0,
-                            "base height": 8.8,
-                            "base size": 3.3,
-                            "contact bottom offset": 1.0,
-                            "contact top offset": 0.7,
-                            "middle bevel": 0.3,
-                            "range degrees": 18.1,
-                            "shaft Z offset": 0.0,
-                            "shaft tolerance": 0.2,
-                            "stick heght": 4.8,
-                            "stick top radius": 5.042,
-                            "top bevel": 0.3,
-                            "topmost offset": 0.4
                         }
                     },
                     "basic stick parameters.001": {
@@ -15457,18 +15422,6 @@
                             "topmost offset": 0.6
                         }
                     },
-                    "grid texture parameters": {
-                        "inputs": {
-                            "bottom xy correction": 0.0,
-                            "bottom z correction": 0.1,
-                            "grid curvature offset": 0.0,
-                            "scale": 1.0,
-                            "texture height": 0.4,
-                            "texture sharpness": 0.4,
-                            "texture subdivisions": 5,
-                            "z offset": 0.0
-                        }
-                    },
                     "grid texture parameters.001": {
                         "inputs": {
                             "bottom xy correction": 0.0,
@@ -15517,14 +15470,6 @@
                             "z offset": 0.0
                         }
                     },
-                    "icosahedron texture parameters": {
-                        "inputs": {
-                            "icosahedron curvature offset": -8.2,
-                            "icosahedron subdivisions": 3,
-                            "texture height": 0.2,
-                            "texture sharpness": 0.4
-                        }
-                    },
                     "icosahedron texture parameters.001": {
                         "inputs": {
                             "icosahedron curvature offset": -9.6,
@@ -15555,16 +15500,6 @@
                             "icosahedron subdivisions": 3,
                             "texture height": 0.5,
                             "texture sharpness": 0.4
-                        }
-                    },
-                    "shield parameters": {
-                        "inputs": {
-                            "FDM Z correction": 2.25,
-                            "FDM shield thickness": 0.1,
-                            "sheild": false,
-                            "sheild height": 12.65,
-                            "sheild radius offset": 0.85,
-                            "shield cutoff height": 5.25
                         }
                     },
                     "shield parameters.001": {
@@ -15607,28 +15542,6 @@
                             "shield cutoff height": 8.4
                         }
                     },
-                    "stick top parameters": {
-                        "inputs": {
-                            "extrude texture": true,
-                            "square morph": 0.1,
-                            "square top subd": 4,
-                            "swap top rotation": false,
-                            "texture type": "grid",
-                            "top curvature": "concave",
-                            "top shape": "circle"
-                        }
-                    },
-                    "stick top parameters.001": {
-                        "inputs": {
-                            "extrude texture": true,
-                            "square morph": 0.08,
-                            "square top subd": 4,
-                            "swap top rotation": false,
-                            "texture type": "icosahedron",
-                            "top curvature": "convex",
-                            "top shape": "circle"
-                        }
-                    },
                     "stick top parameters.002": {
                         "inputs": {
                             "extrude texture": true,
@@ -15660,6 +15573,17 @@
                             "texture type": "grid",
                             "top curvature": "flat",
                             "top shape": "square"
+                        }
+                    },
+                    "stick top parameters.normal": {
+                        "inputs": {
+                            "extrude texture": true,
+                            "square morph": 0.08,
+                            "square top subd": 4,
+                            "swap top rotation": false,
+                            "texture type": "icosahedron",
+                            "top curvature": "convex",
+                            "top shape": "circle"
                         }
                     }
                 }

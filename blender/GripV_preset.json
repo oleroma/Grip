@@ -602,43 +602,17 @@
                                     "tag": "",
                                     "inputs": [
                                         {
-                                            "name": "tolerance",
+                                            "name": "press tolerance",
                                             "override_type": "MENU",
                                             "values": [
-                                                {
-                                                    "value_string": "",
-                                                    "value_menu": "tight",
-                                                    "use_tag": false,
-                                                    "tag": "",
-                                                    "use_dir": true,
-                                                    "dir_tag": "*",
-                                                    "use_sweep": false,
-                                                    "sweep_range": "",
-                                                    "sweep_start": "0",
-                                                    "sweep_step": "1",
-                                                    "sweep_count": "2"
-                                                },
                                                 {
                                                     "value_string": "",
                                                     "value_menu": "default",
                                                     "use_tag": false,
                                                     "tag": "",
                                                     "use_dir": true,
-                                                    "dir_tag": "*",
-                                                    "use_sweep": false,
-                                                    "sweep_range": "",
-                                                    "sweep_start": "0",
-                                                    "sweep_step": "1",
-                                                    "sweep_count": "2"
-                                                },
-                                                {
-                                                    "value_string": "",
-                                                    "value_menu": "loose",
-                                                    "use_tag": false,
-                                                    "tag": "",
-                                                    "use_dir": true,
-                                                    "dir_tag": "*",
-                                                    "use_sweep": false,
+                                                    "dir_tag": "press_*",
+                                                    "use_sweep": true,
                                                     "sweep_range": "",
                                                     "sweep_start": "0",
                                                     "sweep_step": "1",
