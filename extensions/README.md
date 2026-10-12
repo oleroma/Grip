@@ -6,8 +6,12 @@ automatically by a GitHub Action in its source repo whenever that repo's main br
 | Folder | Source |
 | --- | --- |
 | `combi_export/` | https://github.com/oleroma/combi_export |
-| `blender-tracking/` | https://github.com/oleroma/blender-tracking |
+| `blender_tracking/` | https://github.com/oleroma/blender-tracking |
 
 ## Use in Blender
 
 Preferences > Get Extensions > Repositories > Add Local Repository, then point it at this folder.
+
+## License
+
+The add-ons here are GPL, not CC BY-NC-SA like the rest of Grip. Each folder carries its own `LICENSE` file (copied from the source repo by the same action). See [license.md](../license.md).
