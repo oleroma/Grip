@@ -40,7 +40,7 @@
         {
             "name": "Case standard",
             "data_version": 3,
-            "preset_prefix": "case_standard",
+            "preset_prefix": "",
             "collections": [
                 {
                     "collection_name": "case",
@@ -228,6 +228,38 @@
                                             "sweep_count": "2"
                                         }
                                     ]
+                                },
+                                {
+                                    "name": "style",
+                                    "override_type": "MENU",
+                                    "values": [
+                                        {
+                                            "value_string": "",
+                                            "value_menu": "dualsense",
+                                            "use_tag": false,
+                                            "tag": "",
+                                            "use_dir": true,
+                                            "dir_tag": "*_style",
+                                            "use_sweep": false,
+                                            "sweep_range": "",
+                                            "sweep_start": "0",
+                                            "sweep_step": "1",
+                                            "sweep_count": "2"
+                                        },
+                                        {
+                                            "value_string": "",
+                                            "value_menu": "xbox",
+                                            "use_tag": false,
+                                            "tag": "",
+                                            "use_dir": true,
+                                            "dir_tag": "*_style",
+                                            "use_sweep": false,
+                                            "sweep_range": "",
+                                            "sweep_start": "0",
+                                            "sweep_step": "1",
+                                            "sweep_count": "2"
+                                        }
+                                    ]
                                 }
                             ]
                         }
@@ -303,91 +335,6 @@
                         }
                     ],
                     "nodegroups": []
-                },
-                {
-                    "collection_name": "bumpers",
-                    "use_tag": false,
-                    "tag": "",
-                    "sub_path": "bumpers",
-                    "objects": [
-                        {
-                            "name": "R1",
-                            "name_override": "",
-                            "export": true,
-                            "tag": "",
-                            "sub_path": "",
-                            "nodegroups": []
-                        },
-                        {
-                            "name": "L1",
-                            "name_override": "",
-                            "export": true,
-                            "tag": "",
-                            "sub_path": "",
-                            "nodegroups": []
-                        }
-                    ],
-                    "nodegroups": [
-                        {
-                            "group": "global",
-                            "sub_path": "",
-                            "tag": "",
-                            "nodes": [
-                                {
-                                    "name": "global parameters [global parameters]",
-                                    "sub_path": "",
-                                    "tag": "",
-                                    "inputs": [
-                                        {
-                                            "name": "tolerance",
-                                            "override_type": "MENU",
-                                            "values": [
-                                                {
-                                                    "value_string": "",
-                                                    "value_menu": "tight",
-                                                    "use_tag": false,
-                                                    "tag": "",
-                                                    "use_dir": true,
-                                                    "dir_tag": "*",
-                                                    "use_sweep": false,
-                                                    "sweep_range": "",
-                                                    "sweep_start": "0",
-                                                    "sweep_step": "1",
-                                                    "sweep_count": "2"
-                                                },
-                                                {
-                                                    "value_string": "",
-                                                    "value_menu": "default",
-                                                    "use_tag": false,
-                                                    "tag": "",
-                                                    "use_dir": true,
-                                                    "dir_tag": "*",
-                                                    "use_sweep": false,
-                                                    "sweep_range": "",
-                                                    "sweep_start": "0",
-                                                    "sweep_step": "1",
-                                                    "sweep_count": "2"
-                                                },
-                                                {
-                                                    "value_string": "",
-                                                    "value_menu": "loose",
-                                                    "use_tag": false,
-                                                    "tag": "",
-                                                    "use_dir": true,
-                                                    "dir_tag": "*",
-                                                    "use_sweep": false,
-                                                    "sweep_range": "",
-                                                    "sweep_start": "0",
-                                                    "sweep_step": "1",
-                                                    "sweep_count": "2"
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
                 },
                 {
                     "collection_name": "dpad stick",
@@ -980,7 +927,7 @@
         {
             "name": "Triggers",
             "data_version": 3,
-            "preset_prefix": "parts",
+            "preset_prefix": "",
             "collections": [
                 {
                     "collection_name": "triggers",
@@ -1077,7 +1024,194 @@
                     ]
                 }
             ],
-            "nodegroups": []
+            "nodegroups": [
+                {
+                    "group": "global",
+                    "sub_path": "",
+                    "tag": "",
+                    "nodes": [
+                        {
+                            "name": "global parameters [global parameters]",
+                            "sub_path": "",
+                            "tag": "",
+                            "inputs": [
+                                {
+                                    "name": "style",
+                                    "override_type": "MENU",
+                                    "values": [
+                                        {
+                                            "value_string": "",
+                                            "value_menu": "dualsense",
+                                            "use_tag": false,
+                                            "tag": "",
+                                            "use_dir": true,
+                                            "dir_tag": "*_style",
+                                            "use_sweep": false,
+                                            "sweep_range": "",
+                                            "sweep_start": "0",
+                                            "sweep_step": "1",
+                                            "sweep_count": "2"
+                                        },
+                                        {
+                                            "value_string": "",
+                                            "value_menu": "xbox",
+                                            "use_tag": false,
+                                            "tag": "",
+                                            "use_dir": true,
+                                            "dir_tag": "*_style",
+                                            "use_sweep": false,
+                                            "sweep_range": "",
+                                            "sweep_start": "0",
+                                            "sweep_step": "1",
+                                            "sweep_count": "2"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Bumpers",
+            "data_version": 3,
+            "preset_prefix": "",
+            "collections": [
+                {
+                    "collection_name": "bumpers",
+                    "use_tag": false,
+                    "tag": "",
+                    "sub_path": "bumpers",
+                    "objects": [
+                        {
+                            "name": "R1",
+                            "name_override": "",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        },
+                        {
+                            "name": "L1",
+                            "name_override": "",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        }
+                    ],
+                    "nodegroups": [
+                        {
+                            "group": "global",
+                            "sub_path": "",
+                            "tag": "",
+                            "nodes": [
+                                {
+                                    "name": "global parameters [global parameters]",
+                                    "sub_path": "",
+                                    "tag": "",
+                                    "inputs": [
+                                        {
+                                            "name": "tolerance",
+                                            "override_type": "MENU",
+                                            "values": [
+                                                {
+                                                    "value_string": "",
+                                                    "value_menu": "tight",
+                                                    "use_tag": false,
+                                                    "tag": "",
+                                                    "use_dir": true,
+                                                    "dir_tag": "*",
+                                                    "use_sweep": false,
+                                                    "sweep_range": "",
+                                                    "sweep_start": "0",
+                                                    "sweep_step": "1",
+                                                    "sweep_count": "2"
+                                                },
+                                                {
+                                                    "value_string": "",
+                                                    "value_menu": "default",
+                                                    "use_tag": false,
+                                                    "tag": "",
+                                                    "use_dir": true,
+                                                    "dir_tag": "*",
+                                                    "use_sweep": false,
+                                                    "sweep_range": "",
+                                                    "sweep_start": "0",
+                                                    "sweep_step": "1",
+                                                    "sweep_count": "2"
+                                                },
+                                                {
+                                                    "value_string": "",
+                                                    "value_menu": "loose",
+                                                    "use_tag": false,
+                                                    "tag": "",
+                                                    "use_dir": true,
+                                                    "dir_tag": "*",
+                                                    "use_sweep": false,
+                                                    "sweep_range": "",
+                                                    "sweep_start": "0",
+                                                    "sweep_step": "1",
+                                                    "sweep_count": "2"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "nodegroups": [
+                {
+                    "group": "global",
+                    "sub_path": "",
+                    "tag": "",
+                    "nodes": [
+                        {
+                            "name": "global parameters [global parameters]",
+                            "sub_path": "",
+                            "tag": "",
+                            "inputs": [
+                                {
+                                    "name": "style",
+                                    "override_type": "MENU",
+                                    "values": [
+                                        {
+                                            "value_string": "",
+                                            "value_menu": "dualsense",
+                                            "use_tag": false,
+                                            "tag": "",
+                                            "use_dir": true,
+                                            "dir_tag": "*_style",
+                                            "use_sweep": false,
+                                            "sweep_range": "",
+                                            "sweep_start": "0",
+                                            "sweep_step": "1",
+                                            "sweep_count": "2"
+                                        },
+                                        {
+                                            "value_string": "",
+                                            "value_menu": "xbox",
+                                            "use_tag": false,
+                                            "tag": "",
+                                            "use_dir": true,
+                                            "dir_tag": "*_style",
+                                            "use_sweep": false,
+                                            "sweep_range": "",
+                                            "sweep_start": "0",
+                                            "sweep_step": "1",
+                                            "sweep_count": "2"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }
