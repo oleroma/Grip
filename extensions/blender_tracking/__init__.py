@@ -955,7 +955,7 @@ class GEONODES_JSON_PT_diff(bpy.types.Panel):
     bl_label = "Structural Changes (Uncommitted)"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = 'GeoJSON'
+    bl_category = 'Tracking'
 
     def draw(self, context):
         draw_git_diff(self.layout)
