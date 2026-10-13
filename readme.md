@@ -73,6 +73,8 @@ The final **BLENDER** project, built with **GEOMETRY NODES**, will be released a
 5. **Battery Cover:** Customizable battery compartment size, thickness, etc.
 6. **Scroll Wheel:** Customizable diameter and width.
 
+The current `blender/Grip.blend` is documented in [docs/blender](docs/blender/README.md). There is a guide to customizing and exporting parts, and a guide to the node system for contributors.
+
 ![side](media/dev/side.jpg)
 
 
