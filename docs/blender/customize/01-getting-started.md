@@ -45,7 +45,7 @@ The `grip_controls` extension adds a **Grip** tab to the sidebar of the 3D Viewp
 | Features | the global switches such as `cable holder`, `stock bumpers` and `marks` |
 | Parts | for the active variant and style: trigger and back paddle length, width and position, bumper size and position, stick height, tilt range and top, the size of each button family, the battery size |
 
-The fields are the node inputs themselves, so a change there is the same as a change in the node editor: undo works and saving records it in `tracking.json`. Hover the name of a setting to see its tooltip. For GripX the tab edits the node of the current style, and for GripX sticks the preset picked in the stick menu, which it also shows. Each part box names the preset group and node it edits.
+The fields are the node inputs themselves, so a change there is the same as a change in the node editor: undo works and saving records it in `tracking.json`. Hover the name of a setting to see its tooltip (once `scripts/apply_tooltips.py` has written the tooltips into the file). For GripX the tab edits the node of the current style, and for GripX sticks the preset picked in the stick menu, which it also shows. Each part box names the preset group and node it edits.
 
 A greyed row is a value the tab will not edit, with the reason. "set by …" means the input is connected to another node; edit that node in the controls panel. Everything that is not in the tab is still in the controls panel, and each part section ends with the frame to look in. More in the add-on's [README](../../../extensions/grip_controls/README.md).
 

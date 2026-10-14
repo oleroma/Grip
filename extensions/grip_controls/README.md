@@ -4,7 +4,7 @@ A front panel for `blender/Grip.blend`. It adds a **Grip** tab to the 3D Viewpor
 
 It does not replace the controls panel (`GripV controls`, `GripX contols`). Everything else is still there. The tab is a shortcut to the values you reach for most, without going into node groups.
 
-Every field in the tab is the real node input, shown in another place. Changing it is exactly the same as changing it in the node editor: undo works, and `blender_tracking` records it in `blender/tracking.json` when you save. Hover the name of a setting to see what it does: the tab shows the tooltips stored in the file (written by `scripts/apply_tooltips.py`).
+Every field in the tab is the real node input, shown in another place. Changing it is exactly the same as changing it in the node editor: undo works, and `blender_tracking` records it in `blender/tracking.json` when you save. Hover the name of a setting to see what it does. The tab shows the input's tooltip from the file, once `scripts/apply_tooltips.py` has written the tooltips into Grip.blend; until then the tooltip only names the node and input.
 
 ## Enable it
 
