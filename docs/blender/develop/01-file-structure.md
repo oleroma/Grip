@@ -81,6 +81,7 @@ Not everything is generated. Some of the nodes read hand-made objects and collec
 
 - `Auto sync workspaces` (embedded script): once run, it sets the global `variant` when you switch workspace. It is not registered, so it only works after it has been run in the session.
 - `rename.py` (external, `scripts/rename.py`): renames every group node after its node group.
+- `apply_tooltips.py` (external, `scripts/apply_tooltips.py`): writes the tooltips (input descriptions) of `global parameters` and the constructors that decide fit. The texts are a table in the script; run it again after editing the table.
 - The scenes store settings of `combi_export` (export presets on GripV and GripX), `blender_tracking` (on `source`) and an external `w2g` add-on (workspace → variant mapping) that is not in the repository. See [Add-ons](05-add-ons.md).
 
 ## Fonts and materials
