@@ -13,6 +13,17 @@
 
 *(Work in progress... release coming soon)*
 
+## **GETTING STARTED**
+
+| I want to... | Go to |
+| --- | --- |
+| print a controller | [Printing guide](docs/print-guide.md) and the files in [`orca_slicer/`](orca_slicer/) |
+| change a part to fit my hand or my printer | [Customize and export](docs/blender/customize/README.md) |
+| work on the Blender node system | [Contributor guide](docs/blender/develop/README.md) |
+| report how my print fit | [Open a fit report](../../issues/new?template=fit-report.yml) |
+
+Clone with Git LFS, not "Download ZIP" (see [below](#lfs-and-file-download)).
+
 ---
 
 ## **FEATURES AND PROGRESS**
@@ -105,7 +116,7 @@ Everything is functional, assembles properly, and fits well.
 
 See the [roadmap](ROADMAP.md) for what comes after the first release.
 
-# **NOTE:** The initial release will be a **beta**. If you are willing to be a tester, please let us know!
+# **NOTE:** The initial release will be a **beta**. If you are willing to be a tester, print a part and [send a fit report](../../issues/new?template=fit-report.yml)!
 
 **Credits:** Oleroma, Milwud
 
@@ -133,3 +144,5 @@ If you cloned before installing Git LFS, run `git lfs pull` inside the repositor
 ## **LICENSE**
 
 Licensed under Creative Commons BY-NC-SA 4.0, see [LICENSE](LICENSE). The Blender extensions in [`extensions/`](extensions/) are GPL and carry their own license files.
+
+Grip is an independent project, not affiliated with or endorsed by Microsoft or Sony. Xbox and DualSense are trademarks of their owners; the names only describe the case shapes.

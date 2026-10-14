@@ -1,0 +1,62 @@
+name: Fit report
+description: You printed Grip parts. Tell us what fit and what did not, so the tolerances can be tuned.
+title: "Fit report: "
+labels: ["fit report"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for testing Grip. One report per print session is perfect. Photos help a lot.
+  - type: dropdown
+    id: shape
+    attributes:
+      label: Shape
+      options:
+        - GripV
+        - GripX xbox style
+        - GripX dualsense style
+    validations:
+      required: true
+  - type: dropdown
+    id: body
+    attributes:
+      label: Case
+      options:
+        - Standard (solid)
+        - Hollow
+        - Did not print the case
+    validations:
+      required: true
+  - type: input
+    id: printer
+    attributes:
+      label: Printer, nozzle and layer height
+      placeholder: "Bambu Lab A1, 0.4 mm, 0.16 mm"
+    validations:
+      required: true
+  - type: input
+    id: material
+    attributes:
+      label: Filament
+      placeholder: "PLA, brand"
+    validations:
+      required: true
+  - type: textarea
+    id: parts
+    attributes:
+      label: Parts and tolerance folders you printed
+      description: Name the folders, for example buttons/default/cap_tight or triggers/loose/press_default.
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: How did they fit?
+      description: For each part, too tight, good or too loose, and what you noticed (wobble, squeak, sticking, hard to assemble).
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: Photos and anything else
+      description: Drag photos here. Slicer settings that differ from the printing guide are useful too.
