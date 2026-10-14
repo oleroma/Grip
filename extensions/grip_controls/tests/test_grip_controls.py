@@ -800,8 +800,7 @@ class TrackingPathsTest(unittest.TestCase):
     def setUpClass(cls):
         if not os.path.exists(TRACKING):
             raise unittest.SkipTest("blender/tracking.json not found")
-        with open(TRACKING, encoding="utf-8") as f:
-            cls.tracking = json.load(f)
+        cls.tracking = load_tracking()
         enable_addon()
         cls.resolve = submodule("resolve")
 
