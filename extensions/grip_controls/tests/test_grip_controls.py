@@ -603,6 +603,13 @@ class GripControlsTest(unittest.TestCase):
         self.assertIn("abxy", props(log))
         log = draw_panel(self.ui.VIEW3D_PT_grip_features, fake_context())
         self.assertIn(("label", f"marks: {r.NO_INPUT}", False), log)
+        bpy.data.node_groups["global parameters"].interface.items_tree["variant"].name = "shape"
+        log = draw_panel(self.ui.VIEW3D_PT_grip_controller, fake_context())
+        self.assertIn(("label", f"variant: {r.NO_INPUT}", False), log)
+        self.assertFalse(any("None" in e[1] or "variant is not" in e[1] for e in log if e[0] == "label"), log)
+        self.assertFalse(self.ui.GRIP_OT_match_variant.poll(fake_context("GripX")))
+        self.assertEqual(labels(draw_panel(self.ui.VIEW3D_PT_grip_parts, fake_context())),
+                         ["No quick settings for this variant."])
 
     # drawing ------------------------------------------------------------
 

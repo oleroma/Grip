@@ -133,7 +133,7 @@ class VIEW3D_PT_grip_controller(GripPanel, bpy.types.Panel):
         row = layout.row()
         row.enabled = variant == "GripX"
         draw_global(row, "style")
-        if variant not in resolve.VARIANTS:
+        if variant and variant not in resolve.VARIANTS:
             greyed(layout, f"{variant} is legacy; the tab covers GripV and GripX")
 
         draw_global(layout, "body type")
@@ -144,7 +144,7 @@ class VIEW3D_PT_grip_controller(GripPanel, bpy.types.Panel):
         layout.separator()
         target = resolve.variant_for_scene(context.scene.name) if context.scene else None
         col = layout.column()
-        if target and target != variant:
+        if target and variant and target != variant:
             col.alert = True
             col.label(text=f"variant is not {target}, the scene shown", icon='ERROR')
         col.operator(GRIP_OT_match_variant.bl_idname, icon='FILE_REFRESH')
@@ -198,7 +198,7 @@ class VIEW3D_PT_grip_parts(GripFilePanel, bpy.types.Panel):
     def draw(self, context):
         variant = resolve.current_variant()
         if variant not in resolve.VARIANTS:
-            greyed(self.layout, f"No quick settings for {variant}.")
+            greyed(self.layout, f"No quick settings for {variant or 'this variant'}.")
             return
         style = resolve.current_style()
         text = f"{variant} presets" + (f", {style} style" if style else "")
@@ -255,7 +255,8 @@ class GRIP_OT_match_variant(bpy.types.Operator):
     def poll(cls, context):
         def test():
             target = resolve.variant_for_scene(context.scene.name)
-            return resolve.is_grip_file() and target is not None and target != resolve.current_variant()
+            variant = resolve.current_variant()
+            return target is not None and variant is not None and target != variant
         return safe_poll(test)
 
     def execute(self, context):
