@@ -357,6 +357,11 @@ class GitTests(unittest.TestCase):
         _, dots3, _ = self.run_main(f"{self.c1}...HEAD")
         self.assertIn(f"tracking.json: merge base {self.c1} -> HEAD", dots3)
 
+    def test_commit_without_tracking_change_points_to_the_last_one(self):
+        _, out, _ = self.run_main(self.c2)
+        self.assertIn("No changes in tracking.json.\n\nThe last commit that changed it: "
+                      f"{self.c1} presets saved\n", out)
+
     def test_windows_style_path_option(self):
         _, out, _ = self.run_main("--path", "blender\\tracking.json", self.c3)
         self.assertIn('variant: "GripV" -> "GripX"', out)

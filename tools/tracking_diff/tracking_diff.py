@@ -374,6 +374,11 @@ class Report:
     def wiring_count(self):
         return len(self.trees) + len(self.trees_added) + len(self.trees_removed)
 
+    @property
+    def empty(self):
+        return not (self.note or self.sections or self.modifiers or self.meshes or self.wiring_count
+                    or self.versions[0] != self.versions[1])
+
 
 def panel_order(panel):
     keys = list(PANELS)
@@ -467,9 +472,9 @@ def summary_line(report):
         for kind in ("added", "removed", "renamed"):
             if c[(word, kind)]:
                 parts.append(f"{plural(c[(word, kind)], word)} {kind}")
+    if report.empty:
+        return "No changes in tracking.json."
     if not parts:
-        if not (report.meshes or report.wiring_count or report.versions[0] != report.versions[1]):
-            return "No changes in tracking.json."
         parts.append("no parameter changes")
     if report.meshes:
         parts.append(f"{plural(len(report.meshes), 'mesh', 'meshes')} changed")
@@ -882,6 +887,12 @@ def build_report(old, new):
 # Changelog
 
 
+def last_change(repo, ref, path):
+    """'abc1234 subject' of the last commit up to ref that changed the file, or ''."""
+    result = run_git(repo, ["log", "-1", "--format=%h %s", ref, "--", path])
+    return result.stdout.strip() if result.returncode == 0 else ""
+
+
 def log_commits(repo, path, count, rev_range):
     """[(hash, short hash, date, author, subject, first parent or '')], newest first."""
     args = ["log", "--format=%H%x1f%h%x1f%ad%x1f%an%x1f%s%x1f%P", "--date=short"]
@@ -952,6 +963,11 @@ def main(argv=None):
         else:
             report = build_report(*resolve_versions(args.versions, path))
             text = render_markdown(report, args.verbose) if args.markdown else render_text(report, args.verbose)
+            single = args.versions[0] if len(args.versions) == 1 else "HEAD" if not args.versions else None
+            if report.empty and single and ".." not in single and not os.path.isfile(single):
+                last = last_change(find_repo(), single, path)
+                if last:   # this commit did not touch the file: say which one did
+                    text += f"\nThe last commit that changed it: {md_text(last) if args.markdown else last}\n"
     except TrackingError as e:
         print(f"tracking_diff: {e}", file=sys.stderr)
         return 1
