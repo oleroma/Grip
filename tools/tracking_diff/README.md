@@ -33,7 +33,7 @@ The commands below run from the repository folder:
 
 | Command | Shows |
 | --- | --- |
-| `python tools/tracking_diff/tracking_diff.py` | what the last commit changed (`HEAD~1` against `HEAD`) |
+| `python tools/tracking_diff/tracking_diff.py` | what the last commit changed (`HEAD~1` against `HEAD`); if it did not touch `tracking.json`, the report names the commit that last did |
 | `python tools/tracking_diff/tracking_diff.py blender/tracking.json` | what you changed since your last commit (`HEAD` against the file on disk) |
 | `python tools/tracking_diff/tracking_diff.py 99576f6` | what commit `99576f6` changed |
 | `python tools/tracking_diff/tracking_diff.py d552c6d..d478402` | everything from one commit to another, as one list |

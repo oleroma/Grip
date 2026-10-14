@@ -953,7 +953,10 @@ def main(argv=None):
     path = args.path.replace("\\", "/")      # git wants forward slashes, also on Windows
 
     if hasattr(sys.stdout, "reconfigure"):
-        sys.stdout.reconfigure(errors="replace")   # a Windows console cannot print every name
+        if sys.stdout.isatty():
+            sys.stdout.reconfigure(errors="replace")    # a console that cannot show a name gets a '?'
+        else:
+            sys.stdout.reconfigure(encoding="utf-8")    # files get UTF-8, also on Windows
     try:
         if args.log is not None:
             if args.log < 0 or len(args.versions) > 1:
