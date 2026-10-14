@@ -157,6 +157,14 @@ class NodeTests(unittest.TestCase):
         self.assertIn("    stick top parameters.normal: probably renamed from stick top parameters.001\n"
                       "      square morph: 0.08 -> 0.1 (+0.02)", out)
 
+    def test_renamed_preset_group(self):
+        old = tracking({"GripV screw paramters": preset({"screw parameters (FRONT)": {"a": 1, "b": 2}}, {"Index": 0})})
+        new = tracking({"GripV screw parameters": preset({"screw parameters (FRONT)": {"a": 1, "b": 3}}, {"Index": 0})})
+        out = text(old, new)
+        self.assertIn("1 value changed, 1 preset group renamed.", out)
+        self.assertIn("  GripV screw parameters: probably renamed from GripV screw paramters\n"
+                      "    screw parameters (FRONT)\n      b: 2 -> 3 (+1)", out)
+
     def test_different_nodes_are_not_a_rename(self):
         old = tracking({"g": preset({"advanced stick parameters": {"a": 1, "b": 2}})})
         new = tracking({"g": preset({"advanced stick parameters.001": {"a": 5, "b": 6}})})
