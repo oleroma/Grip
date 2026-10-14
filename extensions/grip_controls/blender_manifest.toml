@@ -1,0 +1,13 @@
+schema_version = "1.0.0"
+
+id = "grip_controls"
+version = "1.0.0"
+name = "Grip Controls"
+tagline = "Front panel for the most used settings of Grip.blend"
+maintainer = "Oleroma"
+type = "add-on"
+website = "https://github.com/oleroma/Grip"
+tags = ["3D View", "Geometry Nodes", "User Interface"]
+
+blender_version_min = "5.2.0"
+license = ["SPDX:GPL-3.0-or-later"]
