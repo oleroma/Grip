@@ -1,19 +1,19 @@
 # 7. Known issues
 
-Everything found while documenting the file that is wrong, fragile, misleading or unused. Nothing here has been changed in the file. The numbers are for reference in issues and pull requests.
+Everything found while documenting the file that is wrong, fragile, misleading or unused. Rows marked **Fixed** have been corrected since; the rest is unchanged. The numbers are for reference in issues and pull requests.
 
 ## A. Exports
 
 | # | Issue | Effect | Suggested fix |
 |---|---|---|---|
 | A1 | The GripV view layer excludes the `case middle plate` collection. | "Case hollow" skips the middle plate. | Include the collection, or remove it from the preset until the plate is ready. |
-| A2 | The GripX "Parts" preset switches the capacitive part through `GripV abxy`. | Both GripX capacitive files are the plate. | Point the override at `GripX abxy` › `capacitive plate parameters`. |
+| A2 | **Fixed** in the preset (commit d0bf44d): the GripX "Parts" preset switched the capacitive part through `GripV abxy`. | The GripX `capacitive_knob.stl` in `orca_slicer/` was exported before the fix and is still the plate. | Re-run the GripX "Parts" preset. |
 | A3 | In `GripX lever R1L1` the `tolerance set` is not connected, and `button press tol` is typed 0 on both style nodes. | The three GripX bumper `pres_*` folders are identical. | Connect the set to both style nodes with real values, or drop the sweep. |
 | A4 | GripX cap tolerance is the same value for tight, default and loose. | Three identical GripX `cap_*` folders. | Three values, or no sweep for GripX. |
 | A5 | GripX trigger `tolerance`: default = loose. | Two identical trigger folders. | Give loose its own value. |
 | A6 | The *Index Switch* that picks the mark letter is typed, not linked to a tolerance menu. | Every part prints `T` whatever its tolerance. | Drive it from the tolerance index, or use `type` = `parameter`. |
-| A7 | Six part files on disk use spaces (`battery cover.stl`, `cable holder.stl`, `ball support.stl`, `dpad stick cap.stl`, `rocker ball.stl`, `rocker support.stl`); the exporter writes underscores. | The next export creates duplicates; the 3MF projects point at the old names. | Rename once, files and 3MF references together. |
-| A8 | Not exported by any preset: GripV `StickR`, the scroll wheel parts, `nut lock`, `reinforcers`, `case_middle_plate`. | Those STLs in the repo are older than the file. | Add them to a preset, or confirm they are not released. |
+| A7 | **Fixed:** six part files used spaces (`battery cover.stl`, …) while the exporter writes underscores. Both variants now use the exporter's names. | — | — |
+| A8 | Not exported by any preset: GripV `StickR`, GripX scroll wheel parts and `nut lock`, `reinforcers`, `case_middle_plate`. (GripV has written the scroll wheel to `parts/scrollwheel/` and `nut lock` to `parts/misc/` since commit d478402.) | Those STLs in the repo are older than the file. | Add them to a preset, or confirm they are not released. |
 | A9 | GripV "Case standard" turns on `hollow top` for `case_top`. | The released "standard" tops are shells. | Probably intended; say so in the print guide. |
 | A10 | The export root is an absolute Windows path (`D:\Grip\orca_slicer\…`). | Exports on other machines go to a wrong or missing folder. | Use a path relative to the `.blend` if the add-on supports it. |
 | A11 | GripV bumper folders are `press_*`, GripX `pres_*`. | Two spellings. | Pick one. |

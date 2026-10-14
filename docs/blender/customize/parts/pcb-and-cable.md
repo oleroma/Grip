@@ -37,4 +37,4 @@ The other node in that group, `cable size`, is not used. To fit your cable, meas
 
 ## Export
 
-Both "Parts" presets export the cable holder (still named `cable holder.stl` with a space on disk; see [Exporting](../05-exporting.md#known-problems)).
+Both "Parts" presets export the cable holder as `cable_holder.stl`.
