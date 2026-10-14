@@ -122,6 +122,17 @@ def edit_callback(label, prop, prev_prop):
         return wrapper
     return decorate
 
+_held_keys = {"ctrl": False}
+
+def ctrl_held():
+    """Whether Ctrl is held at the current click. A property setter gets no event, but an operator invoked from it gets
+    the window's event state (batch_stl.read_modifiers). False without a UI (background, or no window)."""
+    if bpy.app.background or getattr(bpy.context, "window", None) is None: return False
+    _held_keys["ctrl"] = False
+    try: bpy.ops.batch_stl.read_modifiers('INVOKE_DEFAULT')
+    except RuntimeError: return False
+    return _held_keys["ctrl"]
+
 def redraw_sidebars(context=None):
     """Redraw only the 3D viewport sidebars (where this add-on lives), not the whole viewports."""
     wm = getattr(context or bpy.context, "window_manager", None)

@@ -27,6 +27,7 @@ def _get_preset_status(scene, preset, g_has_ovr=False, g_has_perm=False):
     has_perm = g_has_perm or php
 
     for c in preset.collections:
+        if not c.export: continue
         cho, chp = check_ng_for_overrides(c.nodegroups)
         has_ovr = has_ovr or cho
         has_perm = has_perm or chp
@@ -81,7 +82,8 @@ def _rebuild_ui_cache():
         preset_metrics[p_idx] = {"has_ovr": ho, "has_perm": hp}
     _ui_cache["preset_metrics"] = preset_metrics
 
-    live = _ui_cache["live"] = live_collection_names(context.view_layer)
+    # What the view layer evaluates no longer decides what is exported; it marks the collections the export switches on
+    _ui_cache["live"] = live_collection_names(context.view_layer)
 
     # "capped": a count stopped at COUNT_LIMIT, so the number is a lower bound
     g_stats = {"presets": len(scene.batch_stl_presets), "cols": 0, "objs": 0, "exp": 0, "capped": False}
@@ -93,7 +95,7 @@ def _rebuild_ui_cache():
         for c in p.collections: sync_collection_objects(c)
         p_stats = preset_stats[p_idx] = {"cols": len(p.collections), "objs": 0, "exp": 0, "capped": False}
         for c_idx in range(len(p.collections)): col_stats[(p_idx, c_idx)] = {"objs": 0, "exp": 0, "capped": False}
-        for c_idx, _c, _obj_prop, _bl_obj, ovrs in iter_export_objects(scene, p, live, global_ovrs):
+        for c_idx, _c, _obj_prop, _bl_obj, ovrs in iter_export_objects(scene, p, global_ovrs):
             n = count_override_combinations(ovrs, count_cache)
             for stats in (col_stats[(p_idx, c_idx)], p_stats, g_stats):
                 stats["objs"] += 1
@@ -106,7 +108,7 @@ def _rebuild_ui_cache():
     if wm.batch_stl_info_tab == 'TREE':
         preset = get_active_preset(scene)
         is_global = wm.batch_stl_info_global
-        _ui_cache["tree"] = build_tree_dict(context, live, is_global) if (preset or is_global) else ({}, set())
+        _ui_cache["tree"] = build_tree_dict(context, is_global) if (preset or is_global) else ({}, set())
 
     redraw_sidebars(context)
     return 0.1
@@ -123,12 +125,12 @@ def refresh_menu_items(scene):
                     if inp.override_type == 'MENU': get_menu_switch_items(ng_ptr, node.name, inp.name)
 
 def mapped_objects_state(scene):
-    """(collection, object name, hidden) of every supported object in a mapped collection: renaming or hiding one
-    changes the object lists, counts and tree."""
+    """(collection, object name) of every supported object in a mapped collection: renaming one changes the object
+    lists and the tree. Hiding one changes nothing: the ticks decide what is exported."""
     state = set()
     for name in {c.collection_name for p in scene.batch_stl_presets for c in p.collections if c.collection_name}:
         col = bpy.data.collections.get(name)
-        if col: state.update((name, o.name, o.hide_viewport) for o in col.all_objects if o.type in SUPPORTED_OBJECT_TYPES)
+        if col: state.update((name, o.name) for o in col.all_objects if o.type in SUPPORTED_OBJECT_TYPES)
     return frozenset(state)
 
 @persistent
@@ -148,9 +150,10 @@ def batch_stl_depsgraph_handler(scene, depsgraph):
         mark_dirty()
         return
 
-    # Renamed or hidden objects; excluded or re-included collections. Only a scene update (exclusion, visibility) or an
-    # object update that re-evaluates nothing (a rename) can change them: every step of a transform drag, and every
-    # geometry or material edit, only re-evaluates objects, so they skip the walk over the mapped objects.
+    # Renamed objects; excluded, re-included or disabled collections (the note icons of the collection list). Only a
+    # scene update (exclusion, visibility) or an object update that re-evaluates nothing (a rename) can change them:
+    # every step of a transform drag, and every geometry or material edit, only re-evaluates objects, so they skip the
+    # walk over the mapped objects.
     if not depsgraph.id_type_updated('SCENE') and not (depsgraph.id_type_updated('OBJECT') and any(
             isinstance(u.id, bpy.types.Object) and not (u.is_updated_transform or u.is_updated_geometry or u.is_updated_shading)
             for u in depsgraph.updates)):
@@ -160,11 +163,10 @@ def batch_stl_depsgraph_handler(scene, depsgraph):
         mark_dirty()
 
 # --- Directory tree preview -------------------------------------------------------------------------------------------
-def build_tree_dict(context, live=None, is_global=False):
+def build_tree_dict(context, is_global=False):
     """Folder tree of the files the active preset (or every preset) writes, and the clash keys of paths written more
     than once. Stops above COUNT_LIMIT files; the export runs its own collision check without a limit."""
     scene = context.scene
-    if live is None: live = live_collection_names(context.view_layer)
     root_name = os.path.normpath(bpy.path.abspath(scene.batch_stl_root_dir) if scene.batch_stl_root_dir else "//")
     tree, all_filepaths, duplicates = {}, set(), set()
     file_count = 0
@@ -174,7 +176,7 @@ def build_tree_dict(context, live=None, is_global=False):
     variants_by_sig = {}  # objects with identical overrides share their variants
 
     for preset in target_presets:
-        for _c_idx, c, obj_prop, bl_obj, ovrs in iter_export_objects(scene, preset, live, global_ovrs):
+        for _c_idx, c, obj_prop, bl_obj, ovrs in iter_export_objects(scene, preset, global_ovrs):
             sig = get_override_signature(ovrs)
             variants = variants_by_sig.get(sig)
             if variants is None:

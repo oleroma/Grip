@@ -10,7 +10,7 @@ import bpy
 from .nodes import (cached_menu_items, clean_node_name, get_modifier_input, get_modifier_socket_identifier,
     set_modifier_input)
 from .engine import MockOverride, count_and_keep_combinations, generate_named_combinations, get_input_value
-from .targets import export_file_parts, group_by_signature, iter_export_objects, live_collection_names
+from .targets import export_file_parts, group_by_signature, is_direct, iter_export_objects, live_collection_names
 from .stl import collect_instance_arrays, export_object_stl
 
 # Variants the worker keeps from counting for the export (about 2 KB each); past this many they are generated again
@@ -55,6 +55,75 @@ def capture_baseline_states(overrides, target_objects):
                                 mod_states.append((mod, ident, orig_val))
                                 processed_mod_sockets.add(key)
     return global_states, mod_states
+
+def link_missing_collections(scene, collections):
+    """Link the mapped collections that are not in `scene` at all (e.g. only in another scene) into its master
+    collection, so that its view layers can evaluate them. One inside another of them comes in with that one. Only ever
+    in the worker's copy. Returns the names of the linked ones."""
+    in_scene = set(scene.collection.children_recursive)
+    missing = sorted((col for col in collections if col not in in_scene), key=lambda col: col.name)
+    nested = {child for col in missing for child in col.children_recursive}
+    linked = []
+    for col in missing:
+        if col in nested: continue
+        scene.collection.children.link(col)
+        linked.append(col.name)
+    return linked
+
+def layer_collection_tree(view_layer):
+    """[(layer collection, parent collection name)] of the view layer in tree order (parents before their children),
+    without the master collection, which cannot be excluded."""
+    out = []
+    def walk(lc, parent):
+        for child in lc.children:
+            out.append((child, parent))
+            walk(child, child.collection.name)
+    walk(view_layer.layer_collection, None)
+    return out
+
+def batch_collections(tree, batch_objects):
+    """Names of the collections a batch needs switched on: those of its objects and their parents (in `tree`, see
+    layer_collection_tree)."""
+    parents = {lc.collection.name: parent for lc, parent in tree}
+    keep = set()
+    for obj in batch_objects:
+        for col in obj.users_collection:
+            name = col.name
+            while name in parents and name not in keep:
+                keep.add(name)
+                name = parents[name]
+    return keep
+
+def isolate_batch(tree, batch_objects):
+    """Switch on what a batch exports, in the worker's copy, and exclude everything else: the collections of its objects
+    and their parents are included and enabled in viewports, and so are the objects. The view layer as saved does not
+    matter, so an excluded or disabled collection is exported like any other. Collections that only a node or modifier
+    reads (a basemesh, cutters) stay excluded: Blender evaluates what is referenced all the same. Every batch sets every
+    layer collection, so exclusion needs nothing restored.
+
+    Returns the collections and objects it enabled in viewports, for restore_disabled after the batch: unlike exclusion,
+    that flag belongs to the collection or object itself, and a collection instance of a later batch reading them
+    leaves out what is disabled in viewports.
+
+    Tree order matters: setting `exclude` on a layer collection sets it on its children too (and including it again
+    restores what they had), so a parent is set before its children."""
+    keep = batch_collections(tree, batch_objects)
+    enabled = []
+    for lc, _parent in tree:
+        on = lc.collection.name in keep
+        if lc.exclude == on: lc.exclude = not on
+        if on and lc.collection.hide_viewport:
+            lc.collection.hide_viewport = False
+            enabled.append(lc.collection)
+    for obj in batch_objects:
+        if obj.hide_viewport:
+            obj.hide_viewport = False
+            enabled.append(obj)
+    return enabled
+
+def restore_disabled(enabled):
+    """Disable in viewports again what isolate_batch enabled."""
+    for id_data in enabled: id_data.hide_viewport = True
 
 _reported_failures = set()
 
@@ -187,24 +256,29 @@ def run_headless_export(job_file_path):
     print("\n  [Phase 0] Evaluating Targets and Building Depsgraph Culling Maps...", flush=True)
     t_phase0_start = time.perf_counter()
 
-    # Objects whose effective overrides are identical share one batch (one set of variants, one depsgraph pass).
-    # Objects without overrides were already written by the main process (skip_direct).
-    targets = iter_export_objects(scene, preset, live_collection_names(view_layer))
-    batches = group_by_signature(t for t in targets if t[4] or not skip_direct)
-
-    layer_collection_map, layer_collection_parents = {}, {}
-    def map_layer_collections(lc, parent=None):
-        if lc.collection:
-            layer_collection_map[lc.collection.name] = lc
-            layer_collection_parents[lc.collection.name] = parent
-        for child in lc.children: map_layer_collections(child, lc)
-    map_layer_collections(view_layer.layer_collection)
-
-    print(f"    ├─ Mapped {len(layer_collection_map)} collections for depsgraph culling in {time.perf_counter() - t_phase0_start:.4f}s", flush=True)
+    # Objects whose effective overrides are identical share one batch (one set of variants, one depsgraph pass). The
+    # main process already wrote the objects without overrides that the job's view layer evaluates (skip_direct): the
+    # same test, on the view layer as saved at the click, before isolate_batch changes it.
+    live = live_collection_names(view_layer)
+    targets = list(iter_export_objects(scene, preset))
+    batches = group_by_signature(t for t in targets if not (skip_direct and is_direct(t[3], t[4], live)))
 
     if not batches:
         print("  └─ No active objects to export.\nBATCH_STL_DONE", flush=True)
         sys.exit(0)
+
+    mapped = {bpy.data.collections[c.collection_name] for _ovrs, items in batches.values() for c, _obj_prop, _bl_obj in items}
+    linked = link_missing_collections(scene, mapped)
+    for name in linked:
+        print(f"    ├─ Linked '{name}' into scene '{scene.name}' to export it (it is not in the scene)", flush=True)
+    tree = layer_collection_tree(view_layer)
+    needed = set().union(*(batch_collections(tree, [item[2] for item in items]) for _ovrs, items in batches.values()))
+    linked_tree = {c.name for name in linked for c in (bpy.data.collections[name], *bpy.data.collections[name].children_recursive)}
+    switched_on = sorted(needed - live - linked_tree)
+    if switched_on:
+        print(f"    ├─ Exporting collections the view layer excludes or disables: {', '.join(switched_on)}", flush=True)
+
+    print(f"    ├─ Mapped {len(tree)} collections for depsgraph culling in {time.perf_counter() - t_phase0_start:.4f}s", flush=True)
 
     # The progress total needs every batch's count first. Variants that only enumerating counts are kept from that pass
     # (up to KEEP_VARIANTS in all) for the export below.
@@ -222,21 +296,7 @@ def run_headless_export(job_file_path):
         num_combinations, variants = batch_variants.pop(signature)
         if variants is None: variants = generate_named_combinations(all_overrides)
         batch_objects = {item[2] for item in batch_items}
-
-        isolated_collections = []
-        if len(all_overrides) > 0:
-            batch_col_names = {col.name for item in batch_items for col in item[2].users_collection}
-            visible_hierarchy = set()
-            for c_name in batch_col_names:
-                curr = c_name
-                while curr in layer_collection_map:
-                    visible_hierarchy.add(curr)
-                    parent_lc = layer_collection_parents.get(curr)
-                    curr = parent_lc.collection.name if (parent_lc and parent_lc.collection) else None
-            for name, lc in layer_collection_map.items():
-                if name not in visible_hierarchy and not lc.exclude:
-                    lc.exclude = True
-                    isolated_collections.append(name)
+        enabled = isolate_batch(tree, batch_objects)
 
         baseline_global_states, baseline_mod_states = capture_baseline_states(all_overrides, batch_objects)
 
@@ -269,8 +329,7 @@ def run_headless_export(job_file_path):
 
         finally:
             revert_overrides(baseline_global_states, baseline_mod_states, batch_objects)
-            for name in isolated_collections:
-                if name in layer_collection_map: layer_collection_map[name].exclude = False
+            restore_disabled(enabled)
             view_layer.update()
 
         batch_counter += 1

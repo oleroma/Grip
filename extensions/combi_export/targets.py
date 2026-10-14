@@ -35,7 +35,8 @@ def filter_overrides_for_object(overrides, bl_obj):
 def live_collection_names(view_layer):
     """Names of the collections Blender evaluates in `view_layer`: not excluded and not disabled in viewports, and
     neither are their parents. A collection linked in several places is live if one occurrence is. Objects outside
-    them are not evaluated, so exporting them would write the mesh without its modifiers."""
+    them are not evaluated (their mesh lacks its modifiers) until the worker switches their collections on, see
+    is_direct and headless.isolate_batch."""
     live = set()
     def traverse(layer_collection):
         if layer_collection.exclude or layer_collection.collection.hide_viewport: return
@@ -47,6 +48,32 @@ def live_collection_names(view_layer):
 def is_object_live(obj, live):
     """Whether Blender evaluates `obj` (see live_collection_names); hiding with the eye icon still evaluates."""
     return not obj.hide_viewport and any(c.name in live for c in obj.users_collection)
+
+def is_direct(bl_obj, ovrs, live):
+    """Whether the open Blender writes `bl_obj` itself (the direct path): no overrides, and evaluated in the view layer
+    of the export (`live`). Everything else goes to the worker, which switches its collections on in its copy. The
+    worker asks the same of the job's view layer, saved at the click, to skip what was written directly."""
+    return not ovrs and is_object_live(bl_obj, live)
+
+def untick_unevaluated(preset, live):
+    """Untick what the view layer kept from exporting before the ticks alone decided (data version 4): collections
+    that are not evaluated in it (`live`), and the objects of the others that are not. Objects without an entry yet
+    get one, unticked when not evaluated, so that the first export after the update writes the same files. A missing
+    collection keeps its tick: the export reports it as not found."""
+    for c in preset.collections:
+        col = bpy.data.collections.get(c.collection_name)
+        if col is None: continue
+        if col.name not in live:
+            c.export = False
+            continue
+        names = {entry.name for entry in c.objects}
+        for entry in c.objects:
+            obj = col.all_objects.get(entry.name)
+            if obj and not is_object_live(obj, live): entry.export = False
+        for obj in col.all_objects:
+            if obj.type in SUPPORTED_OBJECT_TYPES and obj.name not in names and not is_object_live(obj, live):
+                entry = c.objects.add()
+                entry.name, entry.obj_uid, entry.export = obj.name, obj.session_uid, False
 
 def sync_collection_objects(col_prop, col_ptr=None):
     """Match the object entries of a mapped collection to its objects: drop entries of objects that left, add entries
@@ -108,20 +135,22 @@ def export_file_parts(preset, c, obj_prop, bl_obj, tags_by_level=None, paths_by_
     return (build_export_dir_parts(preset.preset_prefix, c.sub_path, obj_prop.sub_path, paths_by_level),
             format_export_filename(obj_prop.export_name, obj_prop.tag, c.use_tag, c.tag, tags_by_level))
 
-def iter_export_objects(scene, preset, live, global_ovrs=None):
+def iter_export_objects(scene, preset, global_ovrs=None):
     """(collection index, collection entry, object entry, object, resolved overrides) of every object the preset
-    exports: in a mapped collection that Blender evaluates (`live`, see live_collection_names), marked for export, and
-    evaluated itself. Call sync_collection_objects() first."""
+    exports: ticked in a ticked collection that exists. The ticks alone decide, not the view layer: an object Blender
+    does not evaluate there is exported by the worker, which switches its collections on (is_direct). Call
+    sync_collection_objects() first."""
     if global_ovrs is None: global_ovrs = get_flat_overrides(scene.batch_stl_global_nodegroups, "GLOBAL")
     preset_ovrs = global_ovrs + get_flat_overrides(preset.nodegroups, "PRESET")
     for c_idx, c in enumerate(preset.collections):
+        if not c.export: continue
         c_ptr = bpy.data.collections.get(c.collection_name)
-        if not c_ptr or c_ptr.name not in live: continue
+        if not c_ptr: continue
         col_ovrs = preset_ovrs + get_flat_overrides(c.nodegroups, "COLLECTION")
         for obj_prop in c.objects:
             if not obj_prop.export: continue
             bl_obj = c_ptr.all_objects.get(obj_prop.name)
-            if not bl_obj or bl_obj.type not in SUPPORTED_OBJECT_TYPES or not is_object_live(bl_obj, live): continue
+            if not bl_obj or bl_obj.type not in SUPPORTED_OBJECT_TYPES: continue
             ovrs = resolve_overrides(col_ovrs + get_flat_overrides(obj_prop.nodegroups, "OBJECT"))
             yield c_idx, c, obj_prop, bl_obj, filter_overrides_for_object(ovrs, bl_obj)
 
@@ -133,11 +162,11 @@ def group_by_signature(export_objects):
         batches.setdefault(get_override_signature(ovrs), (ovrs, []))[1].append((c, obj_prop, bl_obj))
     return batches
 
-def find_export_clashes(scene, preset, live, root):
+def find_export_clashes(scene, preset, root):
     """{clash key: path} of the output paths that more than one file of the preset would be written to. No limit:
     every collision overwrites a file."""
     seen, clashes = set(), {}
-    for ovrs, items in group_by_signature(iter_export_objects(scene, preset, live)).values():
+    for ovrs, items in group_by_signature(iter_export_objects(scene, preset)).values():
         for _combo, tags_by_level, paths_by_level in generate_named_combinations(ovrs):
             for c, obj_prop, bl_obj in items:
                 dir_parts, filename = export_file_parts(preset, c, obj_prop, bl_obj, tags_by_level, paths_by_level)

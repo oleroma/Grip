@@ -5,8 +5,8 @@ import re
 
 import bpy
 
-from .common import (DELETED, MAX_SWEEP_STEPS, edit_callback, in_raw_edits, mark_dirty, nested_edits, push_search_undo,
-    raw_edits)
+from .common import (DELETED, MAX_SWEEP_STEPS, ctrl_held, edit_callback, in_raw_edits, mark_dirty, nested_edits,
+    push_search_undo, raw_edits)
 from .nodes import (clean_node_name, default_value_text, get_menu_switch_items, get_socket_default_value,
     get_supported_inputs, get_target_node_names, infer_input_type)
 from .naming import (SCOPE_KINDS, VALUE_SLOT, legacy_naming_template, split_path_parts, split_tag_parts, underscore_spaces,
@@ -719,6 +719,21 @@ def set_export_name(self, value):
     self.name_override = "" if value == underscore_spaces(self.name) else value
     mark_dirty()
 
+def set_export_tick(self, value):
+    """The export tick of the panel (`export_tick`), on a collection or object entry. A click sets `export`, and so does
+    dragging across several ticks. Ctrl+click ticks this entry alone among its siblings (the preset's collections, or the
+    collection's objects); Ctrl+click on the only ticked one ticks them all again."""
+    if not ctrl_held():
+        self.export = value
+        return
+    path = self.path_from_id()
+    others = [e for e in self.id_data.path_resolve(path[:path.rindex("[")]) if e.as_pointer() != self.as_pointer()]
+    isolated = self.export and not any(e.export for e in others)
+    for e in others: e.export = isolated
+    self.export = True
+
+EXPORT_TICK_HINT = "Click and drag to set several. Ctrl+click to export only this one, Ctrl+click again to tick them all"
+
 class BatchSTLObject(bpy.types.PropertyGroup):
     name: bpy.props.StringProperty()
     name_override: bpy.props.StringProperty(default="", options={'HIDDEN'})
@@ -727,6 +742,7 @@ class BatchSTLObject(bpy.types.PropertyGroup):
     # session_uid of the object, to follow renames (see sync_collection_objects); not an ID pointer, which adds a user
     obj_uid: bpy.props.IntProperty(default=0, options={'HIDDEN'})
     export: bpy.props.BoolProperty(default=True, update=mark_dirty)
+    export_tick: bpy.props.BoolProperty(name="Export", description="Export this object. " + EXPORT_TICK_HINT, get=lambda self: self.export, set=set_export_tick, options={'SKIP_SAVE'})
     tag: bpy.props.StringProperty(name="Tag", default="", description="Filename token(s), '/' between tokens. Placed in hierarchy order: Global, Preset, Collection, Object", update=on_name_field_update("tag"))
     sub_path: bpy.props.StringProperty(name="Sub-folder", default="", update=on_name_field_update("sub_path"))
     nodegroups: bpy.props.CollectionProperty(type=BatchSTLNodeGroup)
@@ -738,6 +754,9 @@ def on_collection_name_update(self, context):
 class BatchSTLCollection(bpy.types.PropertyGroup):
     collection_name: bpy.props.StringProperty(name="Collection", default="", update=on_collection_name_update)
     prev_collection_name: bpy.props.StringProperty(default="", options={'HIDDEN'})
+    # With the object ticks, the only filter of what is exported: the view layer does not decide (iter_export_objects)
+    export: bpy.props.BoolProperty(name="Export", default=True, update=mark_dirty)
+    export_tick: bpy.props.BoolProperty(name="Export", description="Export this collection's ticked objects, even when the view layer excludes or hides it. " + EXPORT_TICK_HINT, get=lambda self: self.export, set=set_export_tick, options={'SKIP_SAVE'})
     use_tag: bpy.props.BoolProperty(name="Use Tag", default=True, update=mark_dirty)
     tag: bpy.props.StringProperty(name="Tag", default="", description="Filename token(s), '/' between tokens. Placed in hierarchy order: Global, Preset, Collection, Object", update=on_name_field_update("tag"))
     sub_path: bpy.props.StringProperty(name="Sub-folder", default="", update=on_name_field_update("sub_path"))

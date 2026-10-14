@@ -195,10 +195,22 @@ class BATCH_STL_UL_presets(bpy.types.UIList):
         if is_exporting:
             row.prop(job, "export_progress", text=job.export_status, slider=True)
 
+def collection_note(scene, item):
+    """Tooltip of the note icon on a ticked collection the view layer does not evaluate (it is exported all the same),
+    or None."""
+    col = bpy.data.collections.get(item.collection_name) if item.export else None
+    if col is None or col.name in _ui_cache.get("live", ()): return None
+    if col not in scene.collection.children_recursive:
+        return "Not in this scene: exported all the same, the export links it into its own copy of the file"
+    return "Excluded or disabled in this view layer: exported all the same (the ticks decide what is exported)"
+
 class BATCH_STL_UL_collections(bpy.types.UIList):
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
         row = layout.row(align=True)
+        row.prop(item, "export_tick", text="", icon=ICONS['CHECK_ON'] if item.export else ICONS['CHECK_OFF'], emboss=False)
         row.prop_search(item, "collection_name", bpy.data, "collections", text="", icon=ICONS['COLLECTION'])
+        note = collection_note(context.scene, item)
+        if note: row.operator("batch_stl.collection_note", text="", icon=ICONS['INFO'], emboss=False).info = note
         row.separator(factor=0.5)
         sub_row = row.row(align=True)
         op = sub_row.operator("batch_stl.table_action", text="", icon=ICONS['TAG'], depress=item.use_tag)
@@ -211,8 +223,7 @@ class BATCH_STL_UL_objects(bpy.types.UIList):
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
         split = layout.split(factor=0.45)
         row = split.row(align=True)
-        op = row.operator("batch_stl.table_action", text="", icon=ICONS['CHECK_ON'] if item.export else ICONS['CHECK_OFF'], emboss=False)
-        op.action = 'TOGGLE_OBJECT_EXPORT'; op.o_idx = index
+        row.prop(item, "export_tick", text="", icon=ICONS['CHECK_ON'] if item.export else ICONS['CHECK_OFF'], emboss=False)
         row.prop(item, "export_name", text="", emboss=False)
 
         tools = split.row(align=True)

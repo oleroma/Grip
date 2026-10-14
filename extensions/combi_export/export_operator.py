@@ -15,7 +15,7 @@ import bpy
 
 from .common import redraw_sidebars
 from .nodes import cached_menu_items
-from .targets import (export_file_parts, find_export_clashes, iter_export_objects, live_collection_names,
+from .targets import (export_file_parts, find_export_clashes, is_direct, iter_export_objects, live_collection_names,
     sync_collection_objects)
 from .stl import collect_instance_arrays, export_object_stl
 from .data import ensure_preset_uids, find_job, find_preset, get_job, log_to_console
@@ -126,11 +126,10 @@ class EXPORT_OT_batch_stl_multi(bpy.types.Operator):
             return {"CANCELLED"}
 
         for c in preset.collections: sync_collection_objects(c)
-        live = live_collection_names(context.view_layer)
         preset_root = os.path.normpath(bpy.path.abspath(scene.batch_stl_root_dir))
         with cached_menu_items():
-            clashes = find_export_clashes(scene, preset, live, preset_root)
-            targets = list(iter_export_objects(scene, preset, live))
+            clashes = find_export_clashes(scene, preset, preset_root)
+            targets = list(iter_export_objects(scene, preset))
         if clashes:
             self.report({'ERROR'}, f"Export aborted: {len(clashes)} files would be written more than once (e.g. {next(iter(clashes.values()))}). Check the tree view.")
             return {"CANCELLED"}
@@ -140,11 +139,15 @@ class EXPORT_OT_batch_stl_multi(bpy.types.Operator):
 
         for c in preset.collections:
             # e.g. the collection was renamed or deleted: say so instead of reporting a complete export
-            if c.collection_name and not bpy.data.collections.get(c.collection_name):
+            if c.export and c.collection_name and not bpy.data.collections.get(c.collection_name):
                 self._log(job, f"SKIPPED (collection not found): {c.collection_name}")
 
-        objects_to_export_directly = [(c, obj_prop, bl_obj) for _c_idx, c, obj_prop, bl_obj, ovrs in targets if not ovrs]
-        needs_headless = any(t[4] for t in targets)
+        # This process writes the objects without overrides that the view layer evaluates; the worker writes the rest,
+        # in its copy, with their collections switched on. It tells them apart with the same test (is_direct) in the
+        # job's view layer, which is this one: context.view_layer, as for the job file.
+        live = live_collection_names(context.view_layer)
+        objects_to_export_directly = [(c, obj_prop, bl_obj) for _c_idx, c, obj_prop, bl_obj, ovrs in targets if is_direct(bl_obj, ovrs, live)]
+        needs_headless = len(objects_to_export_directly) < len(targets)
 
         # The worker goes first: it takes a second or more to boot, while the direct objects are written meanwhile.
         # Its snapshot is taken before the direct export touches the scene (it unhides eye-hidden objects for a moment).
@@ -178,7 +181,7 @@ class EXPORT_OT_batch_stl_multi(bpy.types.Operator):
         self.job_json = os.path.join(self.temp_dir, "job.json")
 
         bpy.ops.wm.save_as_mainfile(filepath=self.temp_blend, copy=True, compress=False)
-        # context.view_layer, as for `live` in _start: the worker must export what was checked for clashes there
+        # context.view_layer, as for `live` in _start: the worker skips the objects written directly by the same test
         write_job_file(self.job_json, scene, context.view_layer, preset, bpy.path.abspath(scene.batch_stl_root_dir), skip_direct=True)
 
         # The worker starts with WORKER_SCRIPT, which loads this package from its folder and runs the job.

@@ -8,7 +8,7 @@ from bpy.app.handlers import persistent
 
 from .common import raw_edits
 from .naming import legacy_naming_template
-from .targets import restamp_object_uids
+from .targets import live_collection_names, restamp_object_uids, untick_unevaluated
 
 # --- Active items and export jobs -------------------------------------------------------------------------------------
 
@@ -97,7 +97,7 @@ def copy_obj_to_dict(o):
     return {"name": o.name, "name_override": o.name_override, "export": o.export, "tag": getattr(o, "tag", ""), "sub_path": getattr(o, "sub_path", ""), "nodegroups": [copy_ng_to_dict(ng) for ng in o.nodegroups]}
 
 def copy_collection_to_dict(c):
-    return {"collection_name": c.collection_name, "use_tag": c.use_tag, "tag": c.tag, "sub_path": c.sub_path, "objects": [copy_obj_to_dict(o) for o in c.objects], "nodegroups": [copy_ng_to_dict(ng) for ng in c.nodegroups]}
+    return {"collection_name": c.collection_name, "export": c.export, "use_tag": c.use_tag, "tag": c.tag, "sub_path": c.sub_path, "objects": [copy_obj_to_dict(o) for o in c.objects], "nodegroups": [copy_ng_to_dict(ng) for ng in c.nodegroups]}
 
 def copy_preset_to_dict(src):
     return {"name": src.name, "data_version": DATA_VERSION, "preset_prefix": src.preset_prefix, "collections": [copy_collection_to_dict(c) for c in src.collections], "nodegroups": [copy_ng_to_dict(ng) for ng in src.nodegroups]}
@@ -196,18 +196,24 @@ def paste_obj_from_dict(new_o, data):
 
 def paste_collection_from_dict(new_c, data):
     new_c.collection_name = data.get("collection_name", "")
+    new_c.export = data.get("export", True)
     new_c.use_tag = data.get("use_tag", True)
     new_c.tag = data.get("tag", "")
     new_c.sub_path = data.get("sub_path", "")
     for o_data in data.get("objects", []): paste_obj_from_dict(new_c.objects.add(), o_data)
     for ng_data in data.get("nodegroups", []): paste_ng_from_dict(new_c.nodegroups, ng_data)
 
-def paste_preset_from_dict(new_p, data):
+def paste_preset_from_dict(new_p, data, view_layer=None):
+    """Fill `new_p` from a dict of copy_preset_to_dict. A preset saved before version 4 has no collection ticks: the
+    view layer decided what it exported, so with `view_layer` (the one of an import) what it does not evaluate comes in
+    unticked (untick_unevaluated), as a file of that version is migrated."""
+    version = data.get("data_version", 0)
     data = upgrade_preset_dict(data)
     new_p.name = data.get("name", "Imported Preset")
     new_p.preset_prefix = data.get("preset_prefix", "")
     for c_data in data.get("collections", []): paste_collection_from_dict(new_p.collections.add(), c_data)
     for ng_data in data.get("nodegroups", []): paste_ng_from_dict(new_p.nodegroups, ng_data)
+    if version < 4 and view_layer is not None: untick_unevaluated(new_p, live_collection_names(view_layer))
 
 
 # --- Data versioning --------------------------------------------------------------------------------------------------
@@ -240,7 +246,9 @@ def sync_prev_values(scene):
 # 2: v1.0.0 typed values and sweeps become text; object entries drop `obj_ptr` (an ID pointer, which kept deleted
 #    objects alive) for `obj_uid`; the UI state moves from the Scene to the WindowManager.
 # 3: value naming fields (dir_tag, tag) hold templates with the value's place (VALUE_SLOT, legacy_naming_template).
-DATA_VERSION = 3
+# 4: collection entries have an export tick, and the ticks alone decide what is exported, not the view layer: what the
+#    view layer did not evaluate comes in unticked (untick_unevaluated).
+DATA_VERSION = 4
 
 # Scene properties of the UI state before it moved to the WindowManager (version 2)
 OLD_SCENE_UI_PROPS = ("batch_stl_ui_global_ovr_main", "batch_stl_ui_preset_ovr", "batch_stl_ui_global_ovr", "batch_stl_ui_local_ovr",
@@ -285,7 +293,18 @@ def migrate_scene_data(scene):
                 for col in preset.collections:
                     for entry in col.objects: del_stored_prop(entry, "obj_ptr")
             for key in OLD_SCENE_UI_PROPS: del_stored_prop(scene, key)
+        if version < 4:
+            live = live_collection_names(migration_view_layer(scene))
+            for preset in scene.batch_stl_presets: untick_unevaluated(preset, live)
         scene.batch_stl_data_version = DATA_VERSION
+
+def migration_view_layer(scene):
+    """The view layer a scene's exports were filtered by: the one a window shows it with (the first such window), else
+    its first view layer."""
+    for wm in bpy.data.window_managers:
+        for window in wm.windows:
+            if window.scene == scene: return window.view_layer
+    return scene.view_layers[0] if scene.view_layers else None
 
 def stamp_data_version(scene):
     """Scenes created in this session hold current data: record that, so a later load does not migrate them."""
