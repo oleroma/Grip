@@ -332,6 +332,26 @@ def resolve_field(socket_owner, spec, problem=None):
     return Field(spec.label, socket, None, None, socket_owner.name)
 
 
+def socket_description(socket):
+    """The tooltip of a group node input: the description of its group's interface socket (apply_tooltips.py)."""
+    tree = getattr(socket.node, "node_tree", None)
+    if tree is None:
+        return ""
+    for item in tree.interface.items_tree:
+        if item.item_type == 'SOCKET' and item.in_out == 'INPUT' and item.identifier == socket.identifier:
+            return item.description
+    return ""
+
+
+def find_socket(tree_name, node_name, identifier):
+    """An input socket by node group, node and socket identifier, or None."""
+    tree = bpy.data.node_groups.get(tree_name)
+    node = tree.nodes.get(node_name) if tree is not None and hasattr(tree, "nodes") else None
+    if node is None:
+        return None
+    return next((s for s in node.inputs if s.identifier == identifier), None)
+
+
 def global_field(name, label=None):
     node = global_node()
     return resolve_field(node, FieldSpec(None, GLOBAL_NODE, name, label or name), NO_GROUP)

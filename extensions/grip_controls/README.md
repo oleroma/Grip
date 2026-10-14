@@ -4,7 +4,7 @@ A front panel for `blender/Grip.blend`. It adds a **Grip** tab to the 3D Viewpor
 
 It does not replace the controls panel (`GripV controls`, `GripX contols`). Everything else is still there. The tab is a shortcut to the values you reach for most, without going into node groups.
 
-Every field in the tab is the real node input, shown in another place. Changing it is exactly the same as changing it in the node editor: undo works, and `blender_tracking` records it in `blender/tracking.json` when you save.
+Every field in the tab is the real node input, shown in another place. Changing it is exactly the same as changing it in the node editor: undo works, and `blender_tracking` records it in `blender/tracking.json` when you save. Hover the name of a setting to see what it does: the tab shows the tooltips stored in the file (written by `scripts/apply_tooltips.py`).
 
 ## Enable it
 
@@ -64,7 +64,7 @@ The code is split so the lookups can be tested without drawing:
 | File | Job |
 |---|---|
 | `resolve.py` | the name tables and the lookups. Reads only, except `set_variant`. |
-| `ui.py` | the panels, the operator and the preferences. Drawing never writes and never raises; an unexpected error becomes a line in the panel. |
+| `ui.py` | the panels, the operators and the preferences. Drawing never writes and never raises; an unexpected error becomes a line in the panel. Each setting's name is a flat button (`grip.input_info`) whose tooltip is the description of the group input, because a plain field in a sidebar would only show Blender's generic socket tooltip. |
 | `sync.py` | the variant sync: a message bus subscription on window scene and workspace switches, renewed after every file load. |
 
 **After renaming** a group, node or input in Grip.blend, update the tables in `resolve.py` and run the tests. The tests check every name against `blender/tracking.json`, so a rename that is saved in the file but not in the tables fails there.
@@ -77,7 +77,7 @@ To **add a field**, add a `FieldSpec` to a block in `SECTIONS` (or a name to one
 python -I extensions/grip_controls/tests/test_grip_controls.py
 ```
 
-Use a Python with the `bpy` module of Blender 5.2 or newer. The tests do not open Grip.blend. They build node groups named like the real ones, enable the add-on from the `extensions/` folder the way a user does, and check what the panels find and draw, that drawing writes nothing, the variant sync and the clean-up when the add-on is disabled. The last group checks every path the add-on reads against `blender/tracking.json`, including which nodes are connected.
+Use a Python with the `bpy` module of Blender 5.2 or newer. The tests do not open Grip.blend. They build node groups named like the real ones, enable the add-on from the `extensions/` folder the way a user does, and check what the panels find and draw, that drawing writes nothing, the variant sync and the clean-up when the add-on is disabled. Two groups follow the real file through `blender/tracking.json`: one checks that every path the add-on reads exists there, the other rebuilds the preset groups from the recorded nodes and links and runs the add-on's lookups on that real wiring (which trigger, bumper and cover node is used, every GripX stick preset, which inputs are linked).
 
 ## License
 

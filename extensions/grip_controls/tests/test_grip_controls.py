@@ -3,8 +3,11 @@
     python -I extensions/grip_controls/tests/test_grip_controls.py
 
 Grip.blend is not opened. The tests build node groups named like the ones in Grip.blend, enable the add-on from
-the extensions folder the way a user does (a local repository), and check what the panels find and draw. A last set
-checks every path the add-on reads against blender/tracking.json, so the names are known to exist in the real file.
+the extensions folder the way a user does (a local repository), and check what the panels find and draw.
+
+Two sets use blender/tracking.json, so they follow the real file: TrackingPathsTest checks that every path the
+add-on reads exists, and RealTopologyTest rebuilds the preset groups from the recorded nodes and links and runs the
+add-on's lookups on them.
 """
 import atexit
 import json
@@ -295,10 +298,15 @@ def snapshot():
 # ---------------------------------------------------------------- a layout that records what the panels draw
 
 class FakeLayout:
-    """Stands in for bpy.types.UILayout. prop() reads the property, so a wrong name fails the test."""
+    """Stands in for bpy.types.UILayout. prop() reads the property, so a wrong name fails the test.
 
-    def __init__(self, log, enabled=True):
+    A field is drawn as a label button (grip.input_info) followed by the value without text; the log records the
+    value under the label shown next to it.
+    """
+
+    def __init__(self, log, enabled=True, state=None):
         self.log = log
+        self.state = state if state is not None else {"label": None}
         self.parent_enabled = enabled
         self.enabled = True
         self.alert = False
@@ -308,7 +316,7 @@ class FakeLayout:
         self.scale_y = 1.0
 
     def _child(self):
-        return FakeLayout(self.log, self.parent_enabled and self.enabled)
+        return FakeLayout(self.log, self.parent_enabled and self.enabled, self.state)
 
     def row(self, align=False, heading=""):
         return self._child()
@@ -323,19 +331,24 @@ class FakeLayout:
 
     def label(self, text="", icon='NONE'):
         self.log.append(("label", text, self.parent_enabled and self.enabled))
+        self.state["label"] = text
 
     def prop(self, data, prop, text=None, **_kwargs):
         if not hasattr(data, prop):
             raise AttributeError(f"{data!r} has no property {prop!r}")
         getattr(data, prop)
+        if text == "":
+            text, self.state["label"] = self.state["label"], None
         self.log.append(("prop", text, self.parent_enabled and self.enabled, data, prop))
 
-    def operator(self, idname, text="", icon='NONE'):
+    def operator(self, idname, text="", icon='NONE', emboss=True):
         category, name = idname.split(".")
         if not hasattr(getattr(bpy.ops, category), name):
             raise AttributeError(f"no operator {idname}")
-        self.log.append(("operator", idname, self.parent_enabled and self.enabled))
-        return SimpleNamespace()
+        props = SimpleNamespace()
+        self.log.append(("operator", idname, self.parent_enabled and self.enabled, text, props))
+        self.state["label"] = text
+        return props
 
 
 def draw_panel(cls, context):
@@ -617,7 +630,7 @@ class GripControlsTest(unittest.TestCase):
                          {"variant", "style", "body type", "hollow top", "screws"})
         self.assertFalse(drawn["style"][2])  # style greyed for GripV
         self.assertTrue(any(e[0] == "prop" and e[4] == "sync_variant" for e in log))
-        self.assertIn(("operator", "grip.match_variant", True), log)
+        self.assertIn(("operator", "grip.match_variant", True), [e[:3] for e in log])
         log = draw_panel(ui.VIEW3D_PT_grip_controller, fake_context("GripX"))
         self.assertIn("variant is not GripX, the scene shown", labels(log))
         self.set_global("variant", "GripX")
@@ -642,6 +655,24 @@ class GripControlsTest(unittest.TestCase):
         self.set_global("stock bumpers", True)
         log = draw_panel(ui.VIEW3D_PT_grip_bumpers, fake_context("GripX"))
         self.assertIn("stock bumpers is on: these values are not used", labels(log))
+
+    def test_label_tooltips(self):
+        """Hovering a label shows the input's description, the tooltip apply_tooltips.py writes into the file."""
+        ui = self.ui
+        items = bpy.data.node_groups["trigger parameters"].interface.items_tree
+        items["trigger length"].description = "Length of the trigger along the arc."
+        log = draw_panel(ui.VIEW3D_PT_grip_triggers, fake_context())
+        infos = [e for e in log if e[0] == "operator" and e[1] == "grip.input_info"]
+        info = next(e[4] for e in infos if e[3] == "trigger length")
+        self.assertEqual((info.tree, info.node), ("GripV R2 parameters", "trigger parameters.001"))
+        describe = ui.GRIP_OT_input_info.description
+        self.assertEqual(describe(bpy.context, info), "Length of the trigger along the arc.")
+        width = next(e[4] for e in infos if e[3] == "width")
+        self.assertEqual(describe(bpy.context, width), "trigger parameters.001 > width")  # no tooltip written
+        gone = SimpleNamespace(tree="GripV R2 parameters", node="renamed", socket="Socket_0")
+        self.assertEqual(describe(bpy.context, gone), "renamed > Socket_0")
+        result = bpy.ops.grip.input_info(tree=info.tree, node=info.node, socket=info.socket)
+        self.assertEqual(result, {'FINISHED'})
 
     def test_editing_through_the_socket(self):
         """Writing the drawn socket changes the node the preset uses, not the alternative."""
@@ -840,6 +871,231 @@ class TrackingPathsTest(unittest.TestCase):
                     for constructor in ("basic stick parameters", "stick top parameters"):
                         self.assertEqual(len([m for m in members if self.resolve.base_name(m) == constructor
                                               or m.startswith(constructor + ".")]), 1, constructor)
+
+
+def load_tracking():
+    with open(TRACKING, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def socket_by_label(sockets, label):
+    """A socket by its tracking.json label: the name, with [n] for the n-th of several sockets of that name."""
+    match = re.match(r"^(.*)\[(\d+)\]$", label)
+    name, index = (match.group(1), int(match.group(2))) if match else (label, 0)
+    found = [s for s in sockets if s.name == name]
+    return found[index] if index < len(found) else None
+
+
+def value_socket_type(value):
+    if isinstance(value, bool):
+        return 'NodeSocketBool'
+    if isinstance(value, int):
+        return 'NodeSocketInt'
+    if isinstance(value, float):
+        return 'NodeSocketFloat'
+    if isinstance(value, list):
+        return 'NodeSocketVector'
+    return 'NodeSocketString'
+
+
+def rebuild_group(tracking, panel, group):
+    """Rebuilds a preset group of Grip.blend from tracking.json: its nodes, by name, and its links.
+
+    Tracked group nodes become instances of constructor stand-ins with the tracked inputs; the nodes the add-on
+    looks at by type (Join Bundle, Switch, Menu Switch, Menu, Reroute, Group Output) become real nodes of that type,
+    and anything else a stand-in group with the sockets its links need. Frames are not in tracking.json.
+    """
+    tracked = tracking["tracked_inputs"][panel][group]["nodes"]
+    links = parse_links(tracking["all_node_trees"][group])
+    keys = list(tracked) + [k for link in links for k in (link[0], link[3])]
+    keys = list(dict.fromkeys(keys))
+    into = {}
+    out_of = {}
+    for from_node, out_socket, in_socket, to_node in links:
+        into.setdefault(to_node, []).append(in_socket)
+        out_of.setdefault(from_node, []).append(out_socket)
+    menu_sources = {f for f, _o, i, t in links if t.startswith("Menu Switch") and i == "Menu"}
+
+    tree = bpy.data.node_groups.new(group, "GeometryNodeTree")
+    nodes = {}
+    for key in keys:
+        name = node_name(key)
+        if name == "Group Output":
+            for socket in dict.fromkeys(into.get(key, [])):
+                tree.interface.new_socket(socket, in_out='OUTPUT', socket_type='NodeSocketBundle')
+            node = tree.nodes.new("NodeGroupOutput")
+        elif name.startswith("Join Bundle"):
+            node = tree.nodes.new("NodeJoinBundle")
+        elif name == "Switch" or name.startswith("Switch."):
+            node = tree.nodes.new("GeometryNodeSwitch")
+            node.input_type = 'BUNDLE'
+        elif name.startswith("Menu Switch"):
+            node = tree.nodes.new("GeometryNodeMenuSwitch")
+            node.data_type = 'BUNDLE'
+            node.enum_definition.enum_items.clear()
+            for item in dict.fromkeys(i for i in into.get(key, []) if i != "Menu"):
+                node.enum_definition.enum_items.new(item)
+        elif key in menu_sources:
+            node = tree.nodes.new("FunctionNodeInputMenu")
+        elif name.startswith("Reroute"):
+            node = tree.nodes.new("NodeReroute")
+        elif key in tracked:
+            base = re.sub(r"\.[^.]+$", "", name) if "." in name else name
+            stand_in = bpy.data.node_groups.get(base) or bpy.data.node_groups.new(base, "GeometryNodeTree")
+            have = {item.name for item in stand_in.interface.items_tree}
+            for socket in dict.fromkeys(["Bundle"] + out_of.get(key, [])):
+                if socket not in have:
+                    socket_type = 'NodeSocketBundle' if "bundle" in socket.lower() else 'NodeSocketFloat'
+                    stand_in.interface.new_socket(socket, in_out='OUTPUT', socket_type=socket_type)
+                    have.add(socket)
+            for socket, value in tracked[key].get("inputs", {}).items():
+                if socket not in have:
+                    stand_in.interface.new_socket(socket, in_out='INPUT', socket_type=value_socket_type(value))
+                    have.add(socket)
+            for socket in into.get(key, []):
+                if socket not in have:
+                    socket_type = 'NodeSocketBundle' if "bundle" in socket.lower() else 'NodeSocketFloat'
+                    stand_in.interface.new_socket(socket, in_out='INPUT', socket_type=socket_type)
+                    have.add(socket)
+            node = tree.nodes.new("GeometryNodeGroup")
+            node.node_tree = stand_in
+        else:
+            stand_in = bpy.data.node_groups.new(f"stand-in {group} {key}", "GeometryNodeTree")
+            for socket in dict.fromkeys(out_of.get(key, [])):
+                socket_type = 'NodeSocketBool' if socket == "gripD" else (
+                    'NodeSocketBundle' if "bundle" in socket.lower() else 'NodeSocketFloat')
+                stand_in.interface.new_socket(socket, in_out='OUTPUT', socket_type=socket_type)
+            for socket in dict.fromkeys(into.get(key, [])):
+                socket_type = 'NodeSocketBundle' if "bundle" in socket.lower() else 'NodeSocketFloat'
+                stand_in.interface.new_socket(socket, in_out='INPUT', socket_type=socket_type)
+            node = tree.nodes.new("GeometryNodeGroup")
+            node.node_tree = stand_in
+        node.name = name
+        if name != key:
+            node.label = key[len(name) + 2:-1]
+        nodes[key] = node
+    skipped = []
+    for from_node, out_socket, in_socket, to_node in links:
+        source = socket_by_label(nodes[from_node].outputs, out_socket)
+        target = socket_by_label(nodes[to_node].inputs, in_socket)
+        if source is None or target is None:
+            skipped.append((from_node, out_socket, in_socket, to_node))
+            continue
+        tree.links.new(source, target)
+    return tree, skipped
+
+
+class RealTopologyTest(unittest.TestCase):
+    """The resolver run on the preset groups of Grip.blend, rebuilt from the links in blender/tracking.json."""
+
+    @classmethod
+    def setUpClass(cls):
+        if not os.path.exists(TRACKING):
+            raise unittest.SkipTest("blender/tracking.json not found")
+        clear_fixture()
+        enable_addon()
+        cls.resolve = submodule("resolve")
+        cls.tracking = load_tracking()
+        cls.skipped = {}
+        for variant in cls.resolve.VARIANTS:
+            for slot, names in cls.resolve.PART_GROUPS.items():
+                tree, skipped = rebuild_group(cls.tracking, PANELS[variant], names[variant])
+                cls.skipped[tree.name] = skipped
+                for node in tree.nodes:
+                    if node.bl_idname == "GeometryNodeMenuSwitch":  # the saved choice is not in tracking.json
+                        menu = submodule("resolve").upstream_node(node.inputs["Menu"])
+                        if menu is not None:
+                            menu.value = node.enum_definition.enum_items[0].name
+
+    @classmethod
+    def tearDownClass(cls):
+        disable_addon()
+        clear_fixture()
+
+    def node_for(self, slot, variant, constructor, style=None):
+        tree = bpy.data.node_groups[self.resolve.PART_GROUPS[slot][variant]]
+        preset = self.resolve.find_preset(tree)
+        node, problem = self.resolve.find_constructor(tree, constructor, style, preset.members if preset else None)
+        self.assertIsNone(problem, (slot, variant, constructor, style))
+        return node.name
+
+    def test_links_rebuilt(self):
+        for group, skipped in self.skipped.items():
+            self.assertEqual(skipped, [], group)
+
+    def test_linked_inputs(self):
+        """Inputs fed by tolerance sets or a Value node are recognised as linked, with their source."""
+        r = self.resolve
+        expected = (
+            ("R2", "GripV", "trigger parameters", None, "x tolerance", "button tolerance"),
+            ("R2", "GripX", "trigger parameters", "dualsense", "button press tolerance", "bp tol"),
+            ("R1L1", "GripV", "R1L1 lever parameters", None, "stem radius", "Value"),
+            ("abxy", "GripV", "button parameters", None, "button tolerance", "button tolerance"),
+        )
+        for slot, variant, constructor, style, name, source in expected:
+            with self.subTest(slot=slot, variant=variant, input=name):
+                tree = bpy.data.node_groups[r.PART_GROUPS[slot][variant]]
+                node, _ = r.find_constructor(tree, constructor, style)
+                field = r.resolve_field(node, r.FieldSpec(slot, constructor, name, name))
+                self.assertEqual(field.source, source)
+
+    def test_every_block_resolves(self):
+        r = self.resolve
+        for variant in r.VARIANTS:
+            for style in ((None,) if variant == "GripV" else ("xbox", "dualsense")):
+                for section in r.SECTIONS:
+                    for block in section.blocks:
+                        for row in r.resolve_block(block, variant, style).rows:
+                            with self.subTest(variant=variant, style=style, block=block.title, row=row.label):
+                                self.assertIsNone(row.problem)
+                                if isinstance(row, r.Field):
+                                    self.assertIsNone(row.source)
+
+    def test_nodes_picked(self):
+        """The nodes the real links say are used: the live GripV triggers, the gripD switch sides, the live cover."""
+        expected = (
+            ("R2", "GripV", "trigger parameters", None, "trigger parameters.001"),
+            ("R4", "GripV", "trigger parameters", None, "trigger parameters.001"),
+            ("R2", "GripX", "trigger parameters", "xbox", "trigger parameters"),
+            ("R2", "GripX", "trigger parameters", "dualsense", "trigger parameters.001"),
+            ("R4", "GripX", "trigger parameters", "xbox", "trigger parameters"),
+            ("R4", "GripX", "trigger parameters", "dualsense", "trigger parameters.001"),
+            ("R1L1", "GripX", "R1L1 lever parameters", "xbox", "R1L1 lever parameters"),
+            ("R1L1", "GripX", "R1L1 lever parameters", "dualsense", "R1L1 lever parameters.001"),
+            ("R1L1", "GripV", "R1L1 lever parameters", None, "R1L1 lever parameters"),
+            ("cover", "GripX", "advanced cover parameters", None, "advanced cover parameters.001"),
+            ("cover", "GripV", "advanced cover parameters", None, "advanced cover parameters"),
+        )
+        for slot, variant, constructor, style, name in expected:
+            with self.subTest(slot=slot, variant=variant, style=style):
+                self.assertEqual(self.node_for(slot, variant, constructor, style), name)
+
+    def test_gripx_stick_presets(self):
+        """Each preset of the GripX stick menus resolves to the set wired to that menu item."""
+        r = self.resolve
+        for slot in ("stick L", "stick R"):
+            group = r.PART_GROUPS[slot]["GripX"]
+            links = parse_links(self.tracking["all_node_trees"][group])
+            into = {}
+            for from_node, _o, to_socket, to_node in links:
+                into.setdefault(to_node, []).append((to_socket, from_node))
+            tree = bpy.data.node_groups[group]
+            menu = next(n for n in tree.nodes if n.bl_idname == "FunctionNodeInputMenu")
+            seen = set()
+            for item, source in into["Menu Switch"]:
+                if item == "Menu":
+                    continue
+                while source.startswith("Reroute"):
+                    source = into[source][0][1]
+                wanted = {node_name(f) for _s, f in into[source] if node_name(f).startswith("basic stick parameters")}
+                menu.value = item
+                with self.subTest(slot=slot, item=item):
+                    preset = r.find_preset(tree)
+                    self.assertEqual(preset.item, item)
+                    node = self.node_for(slot, "GripX", "basic stick parameters")
+                    self.assertEqual({node}, wanted)
+                    seen.add(node)
+            self.assertGreaterEqual(len(seen), 2, slot)  # different presets, different nodes
 
 
 if __name__ == "__main__":

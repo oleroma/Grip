@@ -37,21 +37,40 @@ def greyed(layout, text, icon='NONE'):
     row.label(text=text, icon=icon)
 
 
+def split_row(layout):
+    """A label column and a value column, like property split. Returns (label row, value layout)."""
+    split = layout.split(factor=0.4, align=True)
+    split.use_property_split = False
+    label = split.row()
+    label.alignment = 'RIGHT'
+    return label, split
+
+
 def draw_field(layout, field):
-    """One input: an editable socket, or a greyed line when it is linked or missing."""
+    """One input: an editable socket, or a greyed line when it is linked or missing.
+
+    The label is a flat button whose tooltip is the input's description, so the tooltips written into the file
+    show here too.
+    """
     if field.socket is None:
         greyed(layout, f"{field.label}: {field.problem}")
     elif field.source:
         greyed(layout, f"{field.label}: set by {field.source}", 'LINKED')
     else:
-        layout.prop(field.socket, "default_value", text=field.label)
+        socket = field.socket
+        label, value = split_row(layout)
+        info = label.operator(GRIP_OT_input_info.bl_idname, text=field.label, emboss=False)
+        info.tree, info.node, info.socket = socket.id_data.name, socket.node.name, socket.identifier
+        value.prop(socket, "default_value", text="")
 
 
 def draw_selector(layout, selector):
     if selector.data is None:
         greyed(layout, f"{selector.label}: {selector.problem}")
     else:
-        layout.prop(selector.data, selector.prop, text=selector.label)
+        label, value = split_row(layout)
+        label.label(text=selector.label)
+        value.prop(selector.data, selector.prop, text="")
 
 
 def draw_global(layout, name, label=None):
@@ -72,8 +91,6 @@ def draw_block(layout, resolved):
 
 
 def draw_section(layout, section, variant, style):
-    layout.use_property_split = True
-    layout.use_property_decorate = False
     for text, alert in resolve.section_notes(section.key, variant):
         row = layout.row()
         row.alert = alert
@@ -142,8 +159,6 @@ class VIEW3D_PT_grip_preview(GripFilePanel, bpy.types.Panel):
     @safe_draw
     def draw(self, context):
         layout = self.layout
-        layout.use_property_split = True
-        layout.use_property_decorate = False
         for name in resolve.PREVIEW_INPUTS:
             draw_global(layout, name)
         greyed(layout, HINT_PREVIEW, 'INFO')
@@ -158,8 +173,6 @@ class VIEW3D_PT_grip_fit(GripFilePanel, bpy.types.Panel):
     @safe_draw
     def draw(self, context):
         layout = self.layout
-        layout.use_property_split = True
-        layout.use_property_decorate = False
         for name in resolve.FIT_INPUTS:
             draw_global(layout, name)
         greyed(layout, "Each part decides what tight, default and loose mean.", 'INFO')
@@ -172,8 +185,6 @@ class VIEW3D_PT_grip_features(GripFilePanel, bpy.types.Panel):
     @safe_draw
     def draw(self, context):
         layout = self.layout
-        layout.use_property_split = True
-        layout.use_property_decorate = False
         for name in resolve.FEATURE_INPUTS:
             row = layout.row()
             row.alert = name == "horizontal buttons" and resolve.global_value(name) is False
@@ -255,6 +266,30 @@ class GRIP_OT_match_variant(bpy.types.Operator):
         return {'FINISHED'}
 
 
+class GRIP_OT_input_info(bpy.types.Operator):
+    """What this setting does"""
+    bl_idname = "grip.input_info"
+    bl_label = "About this setting"
+    bl_options = {'INTERNAL'}
+
+    tree: bpy.props.StringProperty()
+    node: bpy.props.StringProperty()
+    socket: bpy.props.StringProperty()
+
+    @classmethod
+    def description(cls, context, properties):
+        socket = resolve.find_socket(properties.tree, properties.node, properties.socket)
+        text = resolve.socket_description(socket) if socket is not None else ""
+        return text or f"{properties.node} > {socket.name if socket else properties.socket}"
+
+    def execute(self, context):
+        socket = resolve.find_socket(self.tree, self.node, self.socket)
+        text = resolve.socket_description(socket) if socket is not None else ""
+        if text:
+            self.report({'INFO'}, text)
+        return {'FINISHED'}
+
+
 def sync_toggled(prefs, context):
     """Turning the sync on matches the variant right away (a property update, never a draw)."""
     if prefs.sync_variant:
@@ -281,6 +316,7 @@ class GripControlsPreferences(bpy.types.AddonPreferences):
 classes = (
     GripControlsPreferences,
     GRIP_OT_match_variant,
+    GRIP_OT_input_info,
     VIEW3D_PT_grip_controller,
     VIEW3D_PT_grip_preview,
     VIEW3D_PT_grip_fit,
