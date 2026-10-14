@@ -64,6 +64,8 @@ Z = 40 is a constant in `cut basemesh`, `plate`, `offset basemesh and slice`, `i
 - From the command line, `bpy` (the Blender Python module, `pip install bpy`) can open the file headless. It can evaluate a scene and read each object's mesh, so you can compare vertex count, bounding box, volume and non-manifold edges before and after a change. Unhide eye-hidden objects first, or their evaluated mesh is empty.
 - Watch for non-manifold meshes after trigger edits. The case is cut with the Manifold boolean solver, which expects closed meshes, and in one Blender build a trigger value made a case half disappear.
 
+To check the numbers, save and run `python tools/tracking_diff/tracking_diff.py blender/tracking.json`. It lists every value that changed since your last commit, by controller, preset group and node, and names edited basemeshes and rewired node groups. That shows whether only the values you meant to change moved, and whether a rename came through as a rename and not as a lost value. Pull requests that change `tracking.json` get the same list on the summary page of the *Parameter changes* workflow run. See [Tracking diff](../../../tools/tracking_diff/README.md).
+
 ## Pitfalls
 
 - **Linked inputs ignore typed values.** Edit the node at the other end. The GripV bumper `stem radius` is the classic case.
