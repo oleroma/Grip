@@ -1,0 +1,253 @@
+{
+  "about": "What to print for each released shape. build_release.py reads this file to build the release zips, to write PRINT_LIST.md and to run --check. See README.md next to this file.",
+  "root": "orca_slicer",
+  "repo_url": "https://github.com/oleroma/Grip",
+  "branch": "main",
+  "license": "LICENSE",
+  "license_name": "Creative Commons BY-NC-SA 4.0",
+  "credits": "Oleroma, Milwud",
+  "notice": "Grip is an independent project, not affiliated with or endorsed by Microsoft or Sony. Xbox and DualSense are trademarks of their owners; the names only describe the case shapes.",
+  "guides": [
+    {"title": "Print list and tolerances", "path": "orca_slicer/README.md"},
+    {"title": "Printing guide", "path": "docs/print-guide.md"},
+    {"title": "Customize and export your own parts", "path": "docs/blender/customize/README.md"},
+    {"title": "Report how your print fit", "url": "https://github.com/oleroma/Grip/issues/new?template=fit-report.yml"}
+  ],
+  "tolerance_levels": ["tight", "default", "loose"],
+  "default_tolerance": "default",
+  "tolerance_placeholders": {
+    "tolerance": "tolerance",
+    "cap": "cap tolerance",
+    "press": "press tolerance"
+  },
+
+  "groups": {
+    "case": {
+      "title": "Case",
+      "items": [
+        {"name": "Case bottom", "file": "{case}/case_bottom.stl", "qty": 1},
+        {"name": "Case top", "qty": 1,
+         "files": [
+           "{case}/case_top_cap_knob.stl",
+           "{case}/case_top_cap_plate.stl",
+           "{case}/case_top_dpad_stick_cap_knob.stl",
+           "{case}/case_top_dpad_stick_cap_plate.stl"
+         ],
+         "note": "Pick one. With `dpad_stick` in the name the top takes the rocker D-pad, without it the four D-pad caps. `cap_knob` or `cap_plate` is the capacitive part you print with it."}
+      ]
+    },
+
+    "middle-plate": {
+      "title": "Middle plate",
+      "items": [
+        {"name": "Middle plate", "file": "case_hollow/case_middle_plate.stl", "qty": 1}
+      ]
+    },
+
+    "buttons": {
+      "title": "Button shafts",
+      "note": "A shaft sits on a switch on the board and its cap clips on from above the case. All button holes are the same for now, so every button uses the one exported shaft.",
+      "items": [
+        {"name": "Shaft for A, B, X, Y, Home and the four Select buttons", "file": "parts/buttons/{tolerance}/button.stl", "qty": 9},
+        {"name": "Shaft for the D-pad", "file": "parts/buttons/{tolerance}/button.stl", "qty": 4,
+         "when": "with a D-pad caps top (no `dpad_stick` in its name)"}
+      ]
+    },
+
+    "caps": {
+      "title": "Caps",
+      "note": "Take the caps from the same tolerance folder as the shafts they go on: each cap is made for that shaft.",
+      "items": [
+        {"name": "Triangle cap (top face button)", "file": "parts/buttons/{tolerance}/cap_{cap}/triangle.stl", "qty": 1},
+        {"name": "Circle cap (right face button)", "file": "parts/buttons/{tolerance}/cap_{cap}/circle.stl", "qty": 1},
+        {"name": "Cross cap (bottom face button)", "file": "parts/buttons/{tolerance}/cap_{cap}/cross.stl", "qty": 1},
+        {"name": "Square cap (left face button)", "file": "parts/buttons/{tolerance}/cap_{cap}/square.stl", "qty": 1},
+        {"name": "D-pad cap", "file": "parts/buttons/{tolerance}/cap_{cap}/dpad.stl", "qty": 4,
+         "when": "with a D-pad caps top (no `dpad_stick` in its name)",
+         "note": "The four D-pad caps are one outline turned four ways."},
+        {"name": "Select cap", "file": "parts/buttons/{tolerance}/cap_{cap}/select.stl", "qty": 4,
+         "unconfirmed": "The file has four Select caps that share one preset and the export writes one of them, so the four are probably the same shape."},
+        {"name": "Home cap", "file": "parts/buttons/{tolerance}/cap_{cap}/home.stl", "qty": 1}
+      ]
+    },
+
+    "capacitive": {
+      "title": "Capacitive part",
+      "items": [
+        {"name": "Capacitive knob or plate", "qty": 1,
+         "files": ["parts/capacitive/capacitive_knob.stl", "parts/capacitive/capacitive_plate.stl"],
+         "note": "The one your case top names: `cap_knob` or `cap_plate`."}
+      ]
+    },
+
+    "triggers": {
+      "title": "Triggers and back paddles",
+      "items": [
+        {"name": "L2", "file": "{triggers}/{tolerance}/press_{press}/L2.stl", "qty": 1},
+        {"name": "R2", "file": "{triggers}/{tolerance}/press_{press}/R2.stl", "qty": 1},
+        {"name": "L4", "file": "{triggers}/{tolerance}/press_{press}/L4.stl", "qty": 1},
+        {"name": "R4", "file": "{triggers}/{tolerance}/press_{press}/R4.stl", "qty": 1}
+      ]
+    },
+
+    "bumpers-GripV": {
+      "title": "Bumpers",
+      "items": [
+        {"name": "L1", "file": "parts/bumpers/press_{press}/L1.stl", "qty": 1},
+        {"name": "R1", "file": "parts/bumpers/press_{press}/R1.stl", "qty": 1}
+      ]
+    },
+
+    "bumpers-GripX": {
+      "title": "Bumpers",
+      "items": [
+        {"name": "L1", "file": "{case}/bumpers/L1.stl", "qty": 1},
+        {"name": "R1", "file": "{case}/bumpers/R1.stl", "qty": 1}
+      ]
+    },
+
+    "sticks-GripV": {
+      "title": "Sticks",
+      "items": [
+        {"name": "Stick", "qty": 2,
+         "file": "parts/sticks/{top}/{curvature}/{texture}/stick_{range}_deg.stl",
+         "choose": {
+           "top": ["circle", "square"],
+           "curvature": ["concave", "convex", "flat"],
+           "texture": ["grid", "icosahedron"],
+           "range": ["10", "12", "14", "16", "18", "20"]
+         },
+         "note": "One per side. Both stick holes are the same, so you can print one design twice or two different ones. The number is the tilt range in degrees that the stick's neck is shaped for."}
+      ]
+    },
+
+    "sticks-GripX": {
+      "title": "Sticks",
+      "note": "The left and right stick holes differ in size, so take one stick from each folder.",
+      "items": [
+        {"name": "Left stick", "qty": 1,
+         "files": [
+           "parts/sticks/StickL/StickL_Xbox_cap.stl",
+           "parts/sticks/StickL/StickL_Xbox_cap_easy_print_tall.stl",
+           "parts/sticks/StickL/StickL_Xbox_cap_easy_print_short_(60%).stl",
+           "parts/sticks/StickL/StickL_Octagonal_18d_range.stl",
+           "parts/sticks/StickL/StickL_Xbox_Elite2_stick_base.stl"
+         ]},
+        {"name": "Right stick", "qty": 1,
+         "files": [
+           "parts/sticks/StickR/normal/StickR_concave.stl",
+           "parts/sticks/StickR/normal/StickR_convex.stl",
+           "parts/sticks/StickR/normal/StickR_flat.stl",
+           "parts/sticks/StickR/StickR_small_round.stl",
+           "parts/sticks/StickR/StickR_small_square.stl",
+           "parts/sticks/StickR/StickR_8_dir.stl"
+         ]}
+      ]
+    },
+
+    "dpad-stick": {
+      "title": "Rocker D-pad (D-pad stick)",
+      "when": "with a `dpad_stick` case top",
+      "items": [
+        {"name": "Cap", "file": "parts/dpad_stick/dpad_stick_cap.stl", "qty": 1},
+        {"name": "Stick", "file": "parts/dpad_stick/stick.stl", "qty": 1},
+        {"name": "Rocker", "file": "parts/dpad_stick/rocker.stl", "qty": 1},
+        {"name": "Rocker ball", "file": "parts/dpad_stick/rocker_ball.stl", "qty": 1},
+        {"name": "Ball support", "file": "parts/dpad_stick/ball_support.stl", "qty": 1},
+        {"name": "Rocker support", "file": "parts/dpad_stick/rocker_support.stl", "qty": 1}
+      ]
+    },
+
+    "scroll-wheel-GripV": {
+      "title": "Scroll wheel",
+      "note": "The preset copy in `blender/GripV_preset.json` does not list these three, so they may be older than the Blender file.",
+      "items": [
+        {"name": "Wheel", "file": "parts/scrollwheel/scrollwheel.stl", "qty": 1},
+        {"name": "Wheel core", "file": "parts/scrollwheel/scrollwheel_core.stl", "qty": 1},
+        {"name": "Wheel holder", "file": "parts/scrollwheel/scrollwheel_holder.stl", "qty": 1}
+      ]
+    },
+
+    "scroll-wheel-GripX": {
+      "title": "Scroll wheel",
+      "items": [
+        {"name": "Wheel", "file": "parts/scrollwheel/scrollwheel.stl", "qty": 1},
+        {"name": "Wheel core", "file": "parts/scrollwheel/scrollwheel_core.stl", "qty": 1},
+        {"name": "Wheel holder", "file": "parts/scrollwheel/scrollwheel_holder.stl", "qty": 1}
+      ]
+    },
+
+    "small-parts": {
+      "title": "Small parts",
+      "items": [
+        {"name": "Battery cover", "file": "parts/battery_cover/battery_cover.stl", "qty": 1},
+        {"name": "Cable holder", "file": "parts/cable_holder/cable_holder.stl", "qty": 1,
+         "unconfirmed": "It only fits a case exported with the global `cable holder` on. The export presets do not set it and the saved file has it on, so the exported cases probably have the wider USB opening for it."}
+      ]
+    },
+
+    "pins": {
+      "title": "Alignment pins",
+      "items": [
+        {"name": "Pin", "file": "parts/pins/pin.stl", "qty": 2,
+         "note": "One per side; each pin sits half in the top and half in the bottom."}
+      ]
+    },
+
+    "nut-lock-GripV": {
+      "title": "Optional",
+      "items": [
+        {"name": "Nut lock", "file": "parts/misc/nut_lock.stl", "qty": 2, "optional": true,
+         "unconfirmed": "A small wedge made from the front screw settings, probably to hold a front nut in its slot, so probably one per front screw."}
+      ]
+    }
+  },
+
+  "shapes": [
+    {
+      "id": "GripV-standard",
+      "title": "GripV standard",
+      "folder": "GripV",
+      "about": "The custom ergonomic \"pistol-like\" shape: a solid case bottom with a thin shell top, held together with screws.",
+      "vars": {"case": "case_standard", "triggers": "parts/triggers"},
+      "groups": ["case", "buttons", "caps", "capacitive", "triggers", "bumpers-GripV", "sticks-GripV",
+                 "dpad-stick", "scroll-wheel-GripV", "small-parts", "pins", "nut-lock-GripV"],
+      "projects": ["GripV_case_standard.3mf", "GripV_parts.3mf"],
+      "hardware": "Four M2.5 DIN 912 socket-head screws with nuts hold the case together. The electronics (board, joystick modules, battery, cable) are not printed."
+    },
+    {
+      "id": "GripV-hollow",
+      "title": "GripV hollow",
+      "folder": "GripV",
+      "about": "The GripV shape as a thin shell top and bottom that clip onto a middle plate carrying the board. Lighter, and also suited to resin and powder printing.",
+      "vars": {"case": "case_hollow", "triggers": "parts/triggers"},
+      "groups": ["case", "middle-plate", "buttons", "caps", "capacitive", "triggers", "bumpers-GripV",
+                 "sticks-GripV", "dpad-stick", "scroll-wheel-GripV", "small-parts", "nut-lock-GripV"],
+      "notes": ["No alignment pins: the shells line up on pins of the middle plate."],
+      "projects": ["GripV_case_hollow.3mf", "GripV_parts.3mf"],
+      "hardware": "The printing guide recommends the four M2.5 DIN 912 screws with nuts for now, until the middle plate is confirmed to hold the case on its own. The electronics (board, joystick modules, battery, cable) are not printed."
+    },
+    {
+      "id": "GripX-xbox",
+      "title": "GripX xbox",
+      "folder": "GripX",
+      "about": "The classic Xbox-style shape, solid, held together with screws.",
+      "vars": {"case": "xbox_style", "triggers": "xbox_style/triggers"},
+      "groups": ["case", "buttons", "caps", "capacitive", "triggers", "bumpers-GripX", "sticks-GripX",
+                 "dpad-stick", "scroll-wheel-GripX", "small-parts", "pins"],
+      "projects": [],
+      "hardware": "Four M2.5 DIN 912 socket-head screws with nuts hold the case together. The electronics (board, joystick modules, battery, cable) are not printed."
+    },
+    {
+      "id": "GripX-dualsense",
+      "title": "GripX dualsense",
+      "folder": "GripX",
+      "about": "The classic DualSense-style shape, solid, held together with screws.",
+      "vars": {"case": "dualsense_style", "triggers": "dualsense_style/triggers"},
+      "groups": ["case", "buttons", "caps", "capacitive", "triggers", "bumpers-GripX", "sticks-GripX",
+                 "dpad-stick", "scroll-wheel-GripX", "small-parts", "pins"],
+      "projects": [],
+      "hardware": "Four M2.5 DIN 912 socket-head screws with nuts hold the case together. The electronics (board, joystick modules, battery, cable) are not printed."
+    }
+  ]
+}

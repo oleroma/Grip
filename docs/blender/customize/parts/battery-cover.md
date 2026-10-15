@@ -40,4 +40,4 @@ The battery sits in a compartment in the underside of the case bottom. A printed
 
 ## Export
 
-Both "Parts" presets export the cover (the file on disk is still called `battery cover.stl`, with a space; see [Exporting](../05-exporting.md#known-problems)).
+Both "Parts" presets export the cover as `battery_cover.stl`.

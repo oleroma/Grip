@@ -20,4 +20,4 @@ A part in the middle of the ABXY cluster, probably a touch surface for a capacit
 
 ## Export
 
-The case-top exports write every top twice, as `…_cap_plate` and `…_cap_knob`, so pick the top that matches the part you print. The "Parts" preset exports the part in both modes. In the GripX preset this switch points at the GripV preset by mistake, so both GripX capacitive files are the plate ([Exporting](../05-exporting.md#known-problems)).
+The case-top exports write every top twice, as `…_cap_plate` and `…_cap_knob`, so pick the top that matches the part you print. The "Parts" preset exports the part in both modes.

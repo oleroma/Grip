@@ -32,4 +32,4 @@ Five design decisions explain most of the structure. Knowing them makes the node
 
 - Group nodes are named after their group (the `rename.py` text block does that), so a node's name tells you which group it is.
 - Frames inside preset groups are meaningful. In GripX they separate the xbox ("GripX") and dualsense ("GripD") settings; elsewhere they hold old alternatives.
-- Names keep their typos (`paramters`, `contols`, `wdith`), and a few have double spaces (`GripV  lever R1L1`). Search for them as spelled.
+- Node group and input names were cleaned of typos on 2026-10-15. Collections, labels, menu items and bundle items still carry a few (`Xbox syle`, `roker`, `caps fit Z olerance`). Search for them as spelled.

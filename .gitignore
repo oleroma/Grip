@@ -1,5 +1,14 @@
 *.blend1
+*.blend@
 backup/
 gcode/
 .vscode/
 __pycache__/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+*.swp
+*~

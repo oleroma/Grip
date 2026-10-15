@@ -24,8 +24,8 @@ One shaft object exists per family; print one for every button position. The cap
 |---|---|
 | `width` | the size of the button: shaft, cap and case hole grow together |
 | `octagonal fillet` | switches the outline between two corner styles |
-| `fillet` | how round the outline's corners are |
-| `fillet subdiv` | smoothness of those corners (ignored while `horizontal buttons` is on) |
+| `fillet` | how round the cap's corners are. The shaft ignores it while `horizontal buttons` is on. |
+| `fillet subdiv` | smoothness of the cap's corners; it does not change the shaft |
 | `fillet tolerance` | extra rounding of the corners of the case hole only, so a square-ish cap does not catch in it |
 
 ## The cap (`caps parameters`)
@@ -51,7 +51,7 @@ One shaft object exists per family; print one for every button position. The cap
 | `caps fit Z tolerance` | vertical play of the cap on the shaft |
 | `caps hook inset`, `caps hook height` | size of the snap hook that holds the cap |
 | `caps flex cut` | depth of a slit that makes the clip flexible (probably) |
-| `caps offset` | how much wider the cap is than the shaft. Raising it makes the shaft and its case hole thinner while the cap stays the same size. |
+| `caps offset` | how much wider the cap is than the shaft: it is subtracted from `width` for the shaft and its case hole, while the cap stays the same size. |
 
 ## The shaft (`button parameters`)
 
@@ -81,4 +81,4 @@ A button's position is its objects' location: the shaft, its caps, and the match
 
 ## Export
 
-The "Buttons" preset exports the ABXY shaft (named `button`) at each `tolerance`, and the caps at each `tolerance` × `cap tolerance`. The other shafts are not exported, which only works while a family's shaft matches the ABXY one. The Select buttons are narrower, and on GripX the corner fillets of each family differ. So add `select button`, `dpad button` or `home button` to the preset when their `curve parameters` or `button parameters` differ from ABXY.
+The "Buttons" preset exports the ABXY shaft (named `button`) at each `tolerance`, and the caps at each `tolerance` × `cap tolerance`. All button holes are the same for now, so this one shaft is printed for every button. Many cap settings change only the cap, not the shaft or its hole, so the caps differ while the shafts stay the same. If a family's hole changes one day, add its shaft (`select button`, `dpad button` or `home button`) to the preset.

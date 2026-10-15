@@ -3,7 +3,7 @@
 ## What you need
 
 - **Blender 5.2 or newer.** The file was saved in 5.2 and uses Geometry Nodes features that older versions do not have.
-- **The two extensions in [`extensions/`](../../../extensions/README.md)**: `combi_export` writes the STL files, and `blender_tracking` records every parameter in `blender/tracking.json` when you save. Add the folder as a local extension repository (Preferences › Get Extensions › Repositories › Add Local Repository).
+- **The extensions in [`extensions/`](../../../extensions/README.md)**: `combi_export` writes the STL files, `blender_tracking` records every parameter in `blender/tracking.json` when you save, and `grip_controls` adds the Grip tab ([below](#the-grip-tab)). Add the folder as a local extension repository (Preferences › Get Extensions › Repositories › Add Local Repository) and enable all three.
 - **Git LFS**, because `Grip.blend` and the exported files are stored with it.
 - **On macOS or Linux:** the text marks use the Windows font Segoe UI Bold. Without it the letters on parts are silently left out. Everything else works. See [Marks and logos](parts/marks-and-logos.md).
 
@@ -21,17 +21,37 @@ The scenes share their parts. There is one `abxy button` object, not one per sce
 
 ## Choose the controller
 
-Which controller is generated is decided by the global setting **`variant`**, not by the scene you are looking at. After opening the file, make them match:
+Which controller is generated is decided by the global setting **`variant`**, not by the scene you are looking at. If `variant` does not match the scene, the GripX scene shows GripX objects built from GripV numbers, which looks broken. The export presets set `variant` themselves, so exports are always right.
+
+With the Grip tab (below) you do not need to think about it: **Keep variant in step with the scene** is on by default and sets `variant` whenever you switch to the GripV or GripX scene. For GripX, pick `style` (`xbox` or `dualsense`) in the same panel.
+
+Without the add-on, make them match by hand after opening the file:
 
 1. Open the controls panel (below) and go into the `global` node.
 2. Set `variant` to `GripV` in the GripV scene or `GripX` in the GripX scene.
 3. For GripX, set `style` to `xbox` or `dualsense`.
 
-If `variant` does not match the scene, the GripX scene shows GripX objects built from GripV numbers, which looks broken. The export presets set `variant` themselves, so exports are always right. To have it switch automatically with the workspace, run the `Auto sync workspaces` script once per session (Text Editor › select it › Run Script).
+The old way to automate this is the `Auto sync workspaces` script, run once per session (Text Editor › select it › Run Script). The Grip tab replaces it.
+
+## The Grip tab
+
+The `grip_controls` extension adds a **Grip** tab to the sidebar of the 3D Viewport (press **N** in the viewport). It is a front panel for the settings people change most, so you rarely need to go into node groups:
+
+| Panel | What you set there |
+|---|---|
+| Controller | `variant`, `style`, `body type` and the switches that matter for that body. A button sets `variant` to the scene you are in. |
+| Preview quality | `subdivision level` and `voxel resolution`: keep them low while you edit (see [below](#keep-blender-fast-while-editing)). |
+| Fit | the three tolerance menus ([Fit and tolerances](03-fit-and-tolerances.md)) |
+| Features | the global switches such as `cable holder`, `stock bumpers` and `marks` |
+| Parts | for the active variant and style: trigger and back paddle length, width and position, bumper size and position, stick height, tilt range and top, the size of each button family, the battery size |
+
+The fields are the node inputs themselves, so a change there is the same as a change in the node editor: undo works and saving records it in `tracking.json`. Hover the name of a setting to see its tooltip (once `scripts/apply_tooltips.py` has written the tooltips into the file). For GripX the tab edits the node of the current style, and for GripX sticks the preset picked in the stick menu, which it also shows (that menu is not recorded in `tracking.json`, because it is not a group node). Each part box names the preset group and node it edits.
+
+A greyed row is a value the tab will not edit, with the reason. "set by …" means the input is connected to another node; edit that node in the controls panel. Everything that is not in the tab is still in the controls panel, and each part section ends with the frame to look in. More in the add-on's [README](../../../extensions/grip_controls/README.md).
 
 ## The controls panel
 
-Every setting you need is in one place: the node group **`GripV controls`** (for GripV) or **`GripX contols`** (for GripX, sic). It contains the `global` node and one node per part, sorted into frames:
+Every setting you need is in one place: the node group **`GripV controls`** (for GripV) or **`GripX controls`** (for GripX). It contains the `global` node and one node per part, sorted into frames:
 
 | Frame | Preset groups inside |
 |---|---|
@@ -39,9 +59,9 @@ Every setting you need is in one place: the node group **`GripV controls`** (for
 | STICKS | `stick L parameters`, `stick R parameters` |
 | R2R4 | `R2 parameters`, `R4 parameters` (triggers and back paddles) |
 | R1L1 LEVER | `lever R1L1` (bumpers) |
-| SCREWS | `screw paramters` |
+| SCREWS | `screw parameters` |
 | PINS | `pins parameters` (GripX: `pins`) |
-| PCB AND BATTERY | `pcb cutout paramters`, `cover parameters` |
+| PCB AND BATTERY | `pcb cutout parameters`, `cover parameters` |
 | SCROLLWHEEL | `scrollwheel` |
 | DPAD STICK | `dpad stick` |
 | pattern (GripX: FILL) | the patterns for the `indent` body type |
@@ -63,7 +83,7 @@ Three things make a value silently do nothing:
 
 ## Keep Blender fast while editing
 
-Leave these global settings low while you work. The export presets raise them on their own:
+Leave these global settings low while you work (Grip tab › Preview quality). The export presets raise them on their own:
 
 - `subdivision level` = low: the smoothness of the case.
 - `voxel resolution` = low: the detail of shell bodies.

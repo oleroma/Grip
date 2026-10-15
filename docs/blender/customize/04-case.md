@@ -92,7 +92,7 @@ The other inputs in these presets (shell, protect, rim, flat-surface and sharp s
 
 ### Lattice
 
-The outer wall becomes strips of skin that follow 24 curves drawn on the GripV surface (collection `creases and curves`). Two inputs matter, in the lattice slot (`GripV  lattice parameters`, GripX `GripX cubic hollow parameters`): `voxel size` (resolution) and `insert rim height` (height of the closed band where the halves meet). The rest of that preset does nothing. The top face, ribs, bosses and middle plate work as for `hollow`.
+The outer wall becomes strips of skin that follow 24 curves drawn on the GripV surface (collection `creases and curves`). Two inputs matter, in the lattice slot (`GripV lattice parameters`, GripX `GripX cubic hollow parameters`): `voxel size` (resolution) and `insert rim height` (height of the closed band where the halves meet). The rest of that preset does nothing. The top face, ribs, bosses and middle plate work as for `hollow`.
 
 The curves are projected onto the GripV basemesh only, so a **GripX lattice case does not follow the GripX shape**. Treat lattice as GripV-only until that is fixed.
 

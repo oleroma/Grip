@@ -23,7 +23,7 @@ You do not need to set `variant`, the subdivision level or the voxel resolution 
 | **Triggers** | L2, R2, L4, R4 at each `tolerance` × `press tolerance` | the same, per style |
 | **Bumpers** | (in "Parts") | L1, R1 per style at each `press tolerance` |
 
-Folder and file names come from the preset. A tolerance gets a folder (`tight/`, `press_loose/`, `cap_default/`), and an option gets a tag in the file name (`_dpad_stick`, `_cap_plate`, `_14_deg`).
+Folder and file names come from the preset. A tolerance gets a folder (`tight/`, `press_loose/`, `cap_default/`), and an option gets a tag in the file name (`_dpad_stick`, `_cap_plate`, `_14_deg`). Which of the exported files make up one controller is in the [print list](../../../orca_slicer/README.md).
 
 ## Changing a preset
 
@@ -31,17 +31,12 @@ Each preset lists collections and objects, and overrides at four levels (whole s
 
 ## Not exported by any preset
 
-`StickR` on GripV, the scroll wheel parts, `nut lock`, `reinforcers` (GripX) and `case_middle_plate`. Of the caps, the four ABXY caps (one per symbol), one D-pad cap, one Select cap and the Home cap are exported; the four D-pad caps share one outline turned four ways. Add objects to a preset if you need them.
+`StickR` on GripV, the scroll wheel parts and `nut lock` on GripX (GripV writes them to `parts/scrollwheel/` and `parts/misc/`), `reinforcers` (GripX) and `case_middle_plate`. Of the caps, the four ABXY caps (one per symbol), one D-pad cap, one Select cap and the Home cap are exported; the four D-pad caps share one outline turned four ways. Add objects to a preset if you need them.
 
 ## Known problems
 
 | Problem | Effect | What to do |
 |---|---|---|
-| The GripV view layer excludes the `case middle plate` collection | "Case hollow" silently skips the middle plate | include the collection in the view layer before exporting |
-| The GripX "Parts" preset switches the capacitive part through `GripV abxy` | the GripX `capacitive_knob.stl` is really the plate | point that override at `GripX abxy` |
-| The GripX bumpers do not read `press tolerance` | the three GripX `pres_*` bumper folders are identical | see [Bumpers](parts/bumpers.md) |
 | GripX caps have one cap tolerance for all three settings | the three GripX `cap_*` folders are identical | give tight and loose their own values |
 | GripX triggers: `default` = `loose` | two identical folders | give loose its own value |
-| Six part files on disk have spaces in their names (`battery cover.stl`, `cable holder.stl`, …); the exporter writes underscores | the next export adds `battery_cover.stl` next to the old file | rename the old files once |
-| GripV uses `press_*` folders, GripX `pres_*` | two spellings | pick one |
 | Text marks need the Windows font Segoe UI Bold | exports on macOS/Linux have no letters | see [Marks](parts/marks-and-logos.md) |

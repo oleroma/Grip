@@ -14,6 +14,7 @@ Recipes for common changes, and the traps that make a change silently do nothing
 2. Add the same key to the *Separate Bundle* in the matching `… outputs` group (`trigger outputs`) and expose it as an output.
 3. Use the output in the geometry group.
 4. **Type the value in every preset that uses the constructor**: both variants, and both style nodes in GripX where they exist. A new input starts at its interface default.
+5. Give it a tooltip: add a line for the input to `scripts/apply_tooltips.py`, check the table with `python scripts/check_tooltips.py` (it compares it with `tracking.json` after your save) and run the script in Blender.
 
 Keys are matched by name, and a missing key quietly comes out as zero. So check the spelling on both sides, or the new value will do nothing without any error.
 
@@ -63,6 +64,8 @@ Z = 40 is a constant in `cut basemesh`, `plate`, `offset basemesh and slice`, `i
 - From the command line, `bpy` (the Blender Python module, `pip install bpy`) can open the file headless. It can evaluate a scene and read each object's mesh, so you can compare vertex count, bounding box, volume and non-manifold edges before and after a change. Unhide eye-hidden objects first, or their evaluated mesh is empty.
 - Watch for non-manifold meshes after trigger edits. The case is cut with the Manifold boolean solver, which expects closed meshes, and in one Blender build a trigger value made a case half disappear.
 
+To check the numbers, save and run `python tools/tracking_diff/tracking_diff.py blender/tracking.json`. It lists every value that changed since your last commit, by controller, preset group and node, and names edited basemeshes and rewired node groups. That shows whether only the values you meant to change moved, and whether a rename came through as a rename and not as a lost value. Pull requests that change `tracking.json` get the same list on the summary page of the *Parameter changes* workflow run. See [Tracking diff](../../../tools/tracking_diff/README.md).
+
 ## Pitfalls
 
 - **Linked inputs ignore typed values.** Edit the node at the other end. The GripV bumper `stem radius` is the classic case.
@@ -74,4 +77,4 @@ Z = 40 is a constant in `cut basemesh`, `plate`, `offset basemesh and slice`, `i
 
 ## Cleanup conventions
 
-The file still carries typos in names (`wdith`, `stiick`, `sheild`, `paramters`, `contols`, …), double spaces (`GripV  lever R1L1`), automatic `.001` names on real alternatives, and leftovers of GripR1 and older designs. The list is in [Known issues](07-known-issues.md#d-leftovers-and-naming). When fixing a name, rename it in the `.blend`, the export presets and `tracking.json` in one change, so the diff shows a rename and not a lost value.
+The node group and input names were cleaned of typos with `scripts/fix_names.py`. The file still carries typos in collections, labels, menu items and bundle items (`Xbox syle`, `roker`, `caps fit Z olerance`, …), automatic `.001` names on real alternatives, and leftovers of GripR1 and older designs. The list is in [Known issues](07-known-issues.md#d-leftovers-and-naming). When fixing a name, rename it in the `.blend`, the export presets and `tracking.json` in one change, so the diff shows a rename and not a lost value.

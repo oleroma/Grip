@@ -1,0 +1,82 @@
+# Lists the preset values that changed in blender/tracking.json on the run's
+# summary page, using tools/tracking_diff. Informational only: it never fails
+# because values changed, and it does not comment on pull requests.
+name: Parameter changes
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - blender/tracking.json
+      - tools/tracking_diff/**
+      - .github/workflows/parameter-changes.yml
+  pull_request:
+    paths:
+      - blender/tracking.json
+      - tools/tracking_diff/**
+      - .github/workflows/parameter-changes.yml
+
+permissions:
+  contents: read
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          lfs: false        # Grip.blend and the STL/3MF files are not needed
+          fetch-depth: 0    # full history, to compare with the pull request base or the previous push
+
+      - name: Find what to compare
+        id: range
+        shell: bash
+        env:
+          EVENT: ${{ github.event_name }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          BEFORE: ${{ github.event.before }}
+        run: |
+          if [ "$EVENT" = pull_request ]; then
+            range="$PR_BASE...$PR_HEAD"   # the pull request's own changes, from the merge base
+            mode=diff
+          elif [ -n "$BEFORE" ] && git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
+            range="$BEFORE..$GITHUB_SHA"  # every commit of this push
+            mode=log
+          else
+            range="$GITHUB_SHA~1..$GITHUB_SHA"
+            mode=diff
+          fi
+          tool_changed=false
+          if [ -n "$(git diff --name-only "$range" -- tools/tracking_diff .github/workflows/parameter-changes.yml 2>/dev/null)" ]; then
+            tool_changed=true
+          fi
+          echo "range=$range" >> "$GITHUB_OUTPUT"
+          echo "mode=$mode" >> "$GITHUB_OUTPUT"
+          echo "tool_changed=$tool_changed" >> "$GITHUB_OUTPUT"
+
+      # Only when the tool itself changed, so a values-only change never turns red.
+      - name: Test the report tool
+        if: steps.range.outputs.tool_changed == 'true'
+        run: python3 -m unittest discover -s tools/tracking_diff -v
+
+      - name: Write the parameter changes to the summary
+        continue-on-error: true
+        shell: bash
+        env:
+          RANGE: ${{ steps.range.outputs.range }}
+          MODE: ${{ steps.range.outputs.mode }}
+        run: |
+          tool=tools/tracking_diff/tracking_diff.py
+          if [ "$MODE" = log ]; then
+            args=(--log 0 "$RANGE")       # one section per commit that changed tracking.json
+          else
+            args=("$RANGE")
+          fi
+          if python3 "$tool" --markdown "${args[@]}" > parameter-changes.md; then
+            cat parameter-changes.md >> "$GITHUB_STEP_SUMMARY"
+            python3 "$tool" "${args[@]}" || true   # the plain text version, for the job log
+          else
+            echo "Could not compare tracking.json for \`$RANGE\`, see the job log." >> "$GITHUB_STEP_SUMMARY"
+          fi

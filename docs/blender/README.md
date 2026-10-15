@@ -20,11 +20,11 @@ The guides do not list current values. Every preset value is recorded in `blende
 | global settings | the switches for the whole file (variant, body type, tolerances, …), on the node `global parameters` inside the group `global` |
 | preset group | the group that holds one part's numbers for one variant, for example `GripV abxy` or `GripX R2 parameters` |
 | constructor | a node inside a preset group whose inputs are the numbers, for example `button parameters` or `trigger parameters` |
-| controls panel | `GripV controls` and `GripX contols`: one node group that shows the global settings and every preset group of a variant, sorted into frames |
+| controls panel | `GripV controls` and `GripX controls`: one node group that shows the global settings and every preset group of a variant, sorted into frames |
 | cutter | a hidden object in the `source` scene that cuts a part's opening into the case. It is made by the same generator and preset as the part, so part and opening always match. |
 | basemesh | the hand-modelled outer shape of the controller that the case is made from |
 | body type | how the inside of the case is built: solid, patterned, a thin shell or a lattice |
 
-Names are written exactly as they are spelled in the file, including the typos (`wdith`, `stiick`, `paramters`, `contols`, `sheild`), so you can search for them in Blender.
+Names are written exactly as they are spelled in the file, so you can search for them in Blender. The node group and input typos were fixed on 2026-10-15; a few names people rarely see still carry theirs ([Known issues](develop/07-known-issues.md#d-leftovers-and-naming)).
 
 Some descriptions of what a part is *for* were reconstructed from the file itself. Where that is a guess rather than something the file shows, the text says "probably".

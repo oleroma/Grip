@@ -1,0 +1,21 @@
+name: Problem
+description: Something is wrong with the printed files, the Blender project or the docs.
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected and what you got. Screenshots help.
+    validations:
+      required: true
+  - type: input
+    id: where
+    attributes:
+      label: File or part
+      placeholder: "orca_slicer/GripV/parts/sticks/... or the Blender node/parameter name"
+  - type: input
+    id: setup
+    attributes:
+      label: Blender version and system (if it is about the Blender project)
+      placeholder: "Blender 5.2.2, Windows 11"

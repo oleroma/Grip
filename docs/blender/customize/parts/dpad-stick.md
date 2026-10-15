@@ -28,7 +28,7 @@ An alternative to the four D-pad caps. A short stick comes up through the case t
 | `stick hook depth`, `stick hook height`, `hook extrude`, `hook z tolerance` | the snap hook that holds the cap on the stick, and its vertical play |
 | `flex cut width`, `flex cut depth` | a slot that lets the cap flex onto the hook |
 | **stick** | |
-| `stiick height` | stick length (the cap moves up with it) |
+| `stick height` | stick length (the cap moves up with it) |
 | `stick thickness` | stick thickness |
 | `stick tolerance` | clearance between stick and cap |
 | **rocker and ball** | |

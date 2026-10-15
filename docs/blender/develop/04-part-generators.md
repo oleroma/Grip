@@ -79,7 +79,7 @@ One group builds all six pieces from one preset, with subgroups `rocker`, `ball`
 `lever R1L1 base` works from 2D profile meshes in the collection `R1L1 profiles`:
 
 - **Profile:** `R1 lever profile`, or `R1 flex profile` when `R1L1 flex` is on. The cutter uses the matching `… bool profile`.
-- **Body:** the profile is extruded to `wdith` and shaped by moving the vertices at the extremes of each axis (`height`, `overlap`, `overlap slant`, `top bevel`). *Why:* the profile carries the hand-designed cross-section, and the parameters only stretch it, so it keeps its shape at any size.
+- **Body:** the profile is extruded to `width` and shaped by moving the vertices at the extremes of each axis (`height`, `overlap`, `overlap slant`, `top bevel`). *Why:* the profile carries the hand-designed cross-section, and the parameters only stretch it, so it keeps its shape at any size.
 - **Stem** (`R1 stem`): the pivot.
 - **Press face:** the insert at the front and the press fit.
 - **Curved option:** the outline comes from a curve per variant and style (`custom shape  gripV`, `custom shape gripD`, `custom shape gripX`), picked with `part variant switching`.

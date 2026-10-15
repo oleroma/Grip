@@ -15,4 +15,4 @@ Unlike the other parts, the wheel is **modelled by hand**. The nodes only adjust
 
 ## Export
 
-No preset exports the scroll wheel parts yet. Add the `scrollwheel` collection to a preset if you need them.
+GripV exports the three pieces to `parts/scrollwheel/`. GripX does not export them yet; add the `scrollwheel` collection to its "Parts" preset if you need them.
