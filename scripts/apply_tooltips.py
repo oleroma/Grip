@@ -3,11 +3,14 @@
 A tooltip is the description of a node group input. Blender shows it when you
 hover the input on a group node or in the modifier panel.
 
-This script covers the global settings and the parameters that decide fit:
-tolerances, buttons and caps, triggers, bumpers, sticks, battery cover, pins,
-scroll wheel, PCB slot and capacitive plate. The texts follow the guide in
-docs/blender/customize. Lines marked "# guess" describe something the file
-does not show directly; check them in Blender.
+This script covers the global settings and every constructor whose values
+blender/tracking.json records: tolerances, buttons and caps, marks, triggers,
+bumpers, sticks and their textures, the D-pad stick, battery cover, pins,
+screws, scroll wheel, PCB slot, capacitive plate, and the shell, top face and
+middle plate settings of shell bodies. The texts follow the guides in
+docs/blender. Lines marked "# guess" describe something the file does not show
+directly; check them in Blender. scripts/check_tooltips.py checks the table
+against tracking.json without Blender.
 
 How to run:
 1. Open blender/Grip.blend.
@@ -19,9 +22,12 @@ How to run:
 
 The script only sets descriptions of the inputs listed below. It changes no
 value, default, link or name, so blender/tracking.json does not change.
-Numbered copies of a group (for example "basic stick parameters.001") get the
-same tooltips. Names are spelled as in the file, typos included; if an input
-is renamed, rename its key here too.
+Numbered copies of a group (for example "pins params.001") get the same
+tooltips. Names are spelled as in the file, typos included. If a group or
+input is not found, the script tries the corrected spelling (wdith -> width,
+paramters -> parameters, double spaces collapsed, ...), so the table keeps
+working after the planned typo cleanup; the report lists what matched that
+way. For any other rename, rename the key here too.
 """
 
 import re
@@ -31,7 +37,24 @@ import bpy
 # True: only report what would change.
 DRY_RUN = False
 
+# Planned typo fixes, as whole words. A name that is not found is tried again
+# with these corrected and its spaces collapsed.
+INPUT_FIXES = {
+    "wdith": "width",
+    "heght": "height",
+    "stiick": "stick",
+    "sheild": "shield",
+    "sbdiv": "subdiv",
+}
+GROUP_FIXES = {
+    "paramters": "parameters",
+    "paramteters": "parameters",
+    "postion": "position",
+    "contols": "controls",
+}
+
 TOLERANCE_LINK = "Comes from the global {} menu through a tolerance set."
+SCREW_INDEX = "Which screw pair this preset returns: 0 FRONT, 1 BACK. The parts set it through selector, so the value typed here changes nothing."
 
 TOOLTIPS = {
     "global parameters": {
@@ -112,6 +135,28 @@ TOOLTIPS = {
         "capacitive plate tolerance": "Plate mode: gap between the plate and the case.",
         "plate button offset": "Plate mode: how far the plate reaches out around the buttons. Its opening in the case grows with it.",
         "capacitive plate stem tolerance": "Not used.",
+    },
+    # Marks: identification letters on button shafts, triggers and bumpers
+    "marks parameters": {
+        "type": "What the mark shows: custom (a letter), parameter (the part's values named in parameters) or curve (the Grip logo curves).",
+        "text": "Custom marks: the letter printed when L-R side is off. In every preset an Index Switch feeds it, so change the letter there.",
+        "L-R side": "Custom marks: prints R or L on the right and left part instead of the letter.",
+        "parameters": "Parameter marks: names of the part's values to print, separated by commas. Use it to label tolerance variants.",
+        "Decimals": "Parameter marks: digits after the decimal point.",
+        "parameter bundle": "The part's values that parameter marks read. Linked in the presets; leave it.",
+        "font size": "Size of the lettering.",
+        "Character Spacing": "Space between the letters.",
+        "Word Spacing": "Space between words.",
+        "Line Spacing": "Space between lines, for marks that wrap.",
+        "Text Box Width": "Width of the text box. Longer text wraps onto the next line.",  # guess
+        "bump": "How far a raised mark stands out from the face.",
+        "mark depth": "How deep the mark is engraved.",
+        "insertion": "On: the mark is added onto the part. Off: it is cut into the part.",  # guess
+        "axis": "Axis that picks the face the mark goes on.",
+        "side": "Which end of that axis the mark goes on: min or max.",
+        "translate": "Moves the mark on the part.",
+        "rotate": "Turns the mark on its face, in radians. Only read when type is parameter.",  # guess
+        "rotate text": "Turns the mark on its face, in radians. Read when type is custom or curve.",  # guess
     },
     # Triggers (L2/R2) and back paddles (L4/R4)
     "trigger parameters": {
@@ -216,6 +261,61 @@ TOOLTIPS = {
         "square top subd": "Square tops: smoothness of the corners.",
         "square morph": "Square tops: how much the square bulges.",
     },
+    "grid texture parameters": {
+        "texture height": "Height of the grid pattern on the stick top. It is raised or cut in, depending on extrude texture.",
+        "texture sharpness": "Sharpness of the grid bumps.",
+        "texture subdivisions": "Number of grid lines across the top. More gives a finer pattern.",
+        "scale": "Size of the grid pattern compared with the thumb surface.",  # guess
+        "grid curvature offset": "Bends the grid pattern to follow a concave or convex top.",  # guess
+        "z offset": "Moves the grid pattern up or down on the top.",
+        "bottom xy correction": "Sideways size of the underside of the grid pattern, where it joins the top.",  # guess
+        "bottom z correction": "How far the underside of the grid pattern reaches down into the top, so the two join cleanly.",  # guess
+    },
+    "icosahedron texture parameters": {
+        "texture height": "Height of the icosahedron pattern on the stick top. It is raised or cut in, depending on extrude texture.",
+        "texture sharpness": "Sharpness of the icosahedron bumps.",
+        "icosahedron subdivisions": "Density of the pattern: more subdivisions give more, smaller facets.",
+        "icosahedron curvature offset": "Bends the pattern to follow the curved top, by moving the sphere it is cut from up or down.",  # guess
+    },
+    # D-pad stick (rocker D-pad)
+    "dpad stick parameters": {
+        "dpad stick": "Replaces the D-pad shaft and caps with the rocker D-pad stick. The case top gets the stick opening instead.",
+        "cap radius": "Size of the cap your thumb touches.",
+        "cap oval offset": "How oval the cap is.",
+        "texture height": "Height of the grip texture on the cap.",
+        "texture sharpness": "Sharpness of the grip texture on the cap.",
+        "cap subdivisions": "Smoothness of the cap.",
+        "cap fit tolerance": "Fit of the cap on the stick.",
+        "stick hook depth": "How far the snap hook that holds the cap on the stick reaches in.",  # guess
+        "stick hook height": "Height of the snap hook that holds the cap on the stick.",
+        "hook extrude": "How far the snap hook that holds the cap sticks out.",  # guess
+        "hook z tolerance": "Vertical play of the cap on its snap hook.",
+        "flex cut width": "Width of the slot that lets the cap flex onto the hook.",
+        "flex cut depth": "Depth of the slot that lets the cap flex onto the hook.",
+        "stiick height": "Length of the stick. The cap moves up with it.",
+        "stick thickness": "Thickness of the stick.",
+        "stick tolerance": "Clearance between the stick and the cap.",
+        "rocker size": "Footprint of the rocker plate that presses the switches.",
+        "rocker base thickness": "Thickness of the rocker plate.",
+        "button center offset": "Distance from the centre to the switch contact points. Set it for your board.",
+        "button travel": "Press travel of the rocker.",
+        "ball radius": "Size of the ball the rocker pivots on.",
+        "ball stopper height": "Fine adjustment of where stick, ball and rocker meet: height of the stop on the stick.",  # guess
+        "ball stopper position": "Fine adjustment of where stick, ball and rocker meet: position of the stop on the stick.",  # guess
+        "stick bottom offset": "Fine adjustment of where stick, ball and rocker meet: offset of the bottom of the stick.",  # guess
+        "ball support height": "Height of the seat the ball sits in.",
+        "ball support compression tolerance": "How much the ball seat preloads the ball.",
+        "rocker support size": "Size of the support under the rocker.",
+        "rocker support height": "Height of the support under the rocker.",
+        "rocker support thickness": "Thickness of the support under the rocker.",
+        "cutout": "Size of the stick opening. It changes both the rocker and the case top.",
+        "chamber size": "Size of the cavity in the case top that the rocker moves in.",
+        "chamber height": "Height of the cavity in the case top that the rocker moves in.",
+        "action": "Shows the assembly tilted, to check it. Preview only.",
+        "cap height offset": "Not used.",
+        "ball support radius": "Not used.",
+        "inner hook tolerance": "Not used.",
+    },
     # Battery cover
     "basic cover parameters": {
         "x tolerance": "Gap around the battery cover in its opening, along X.",
@@ -249,6 +349,38 @@ TOOLTIPS = {
         "z tol": "Vertical play: the pin is this much shorter than its hole, half at each end.",
         "bevel": "Rounding of the pin edges.",
     },
+    "pins postion": {
+        "X": "Sideways position of the pin and its hole. The hole on the other side is mirrored.",
+        "Y": "Front-to-back position of the pin and its holes.",
+        "Z": "Height of the pin and its holes. Keep it at the split height (40) so the pin is shared evenly between the halves.",
+    },
+    # Screws: one FRONT and one BACK definition per preset, mirrored left and right
+    "screw parameters": {
+        "screw hole diameter": "Diameter of the hole the screw passes through.",
+        "screw length": "Length of the screw. It decides how deep the head sits in the case bottom.",
+        "screw head hole diameter": "Diameter of the recess for the screw head.",
+        "screw head hole height": "Depth of the recess for the screw head.",
+        "screwdriver hole diameter": "Diameter of the access hole below the screw head. No effect when it equals the head diameter.",
+        "screwdriver guide slant height": "Height of the cone between the access hole and the screw head.",
+        "nut width": "Width of the nut pocket. Leave some play over your nut's size across flats.",
+        "nut height": "Height of the nut pocket.",
+        "nut pocket length": "Length of the slot the nut is slid in through.",
+        "nut slot hideout depth": "How far inside the slot the nut sits.",
+        "screw end slot offset": "Extra room past the tip of the screw.",
+        "nut slot depth tolerance offset": "Only affects the GripX reinforcers.",
+        "reinforcer offset": "GripX reinforcers: wall thickness of the sleeves around the screws.",
+        "reinforcer top offset": "GripX reinforcers: height of the sleeves around the screws.",
+    },
+    "screw position": {
+        "position": "Where the screw is. The mirror copy on the other side follows.",
+        "rotation": "Turns the nut slot around the screw, in radians.",  # guess
+    },
+    "GripV screw paramters": {
+        "Index": SCREW_INDEX,
+    },
+    "GripX screw paramters": {
+        "Index": SCREW_INDEX,
+    },
     # Scroll wheel
     "scroll parameters": {
         "scroll radius offset": "Wheel diameter. The slot in the case grows with it.",
@@ -263,19 +395,69 @@ TOOLTIPS = {
         "PCB support edge": "Width of the ledge the board rests on.",
         "PCB tolerance XY": "Gap around the board. It enlarges the slot, so the case bottom needs a reprint.",
     },
+    # Shell bodies (hollow, lattice, and the GripV hollow top)
+    "hollow  parameters": {
+        "shell thickness": "Wall thickness of the shell.",
+        "protect geometry": "Thickness of the solid bosses grown around every opening and screw. The openings are cut through them, so this sets how strong those walls are.",
+        "band remesh width": "Width of the band the shell's distance field is computed in. Technical; leave it.",
+        "voxel remesh size": "Detail of the shell. Linked to the global voxel resolution; change that instead.",
+        "smooth sdf": "Not used.",
+    },
+    "top face parameters": {
+        "top thickness": "Thickness of the solid layer under the flat top of the controller, where the buttons sit.",
+        "top grid": "Perforates that top layer with a pattern instead of leaving it solid.",
+        "grid thickness": "Thickness of the top grid pattern.",
+        "smooth grid": "Smoothness of the top grid pattern.",
+        "stick offset": "Width of the solid ring the top grid keeps around the stick holes.",
+        "parts offset": "Width of the solid rings the top grid keeps around the button, LED, scroll wheel and capacitive openings.",
+    },
+    "middle plate parameters": {
+        "inset width": "How far inside the outer wall the middle plate and the ledge it rests on sit.",
+        "insert height": "Thickness of the middle plate.",
+        "plate inset width": "Width of the rim of the middle plate.",
+        "hook inset": "How far the snap hook between plate and shell reaches in.",
+        "hook height": "Height of the snap hook between plate and shell.",
+        "slant height": "Height of the slope on the snap hook between plate and shell.",  # guess
+        "rim slant height": "Height of the slope of the ledge inside the shell.",  # guess
+        "rim slant outset": "How far the slope of the ledge inside the shell reaches sideways.",  # guess
+        "pcb pocket thickness": "Depth of the pocket the board sits in.",  # guess
+        "pcb pocket tolerance": "Gap around the board in its pocket.",  # guess
+        "xy tolerance": "Side play of the plate in the shells. The shells' alignment pins use it too.",  # guess
+        "Z tolerance": "Vertical play of the plate in the shells.",  # guess
+        "fit Z tolerance": "Vertical fit of the snap hook between plate and shell.",  # guess
+        "inner xy tolerance": "Side play of the plate. It changes the plate only, not the ledge in the shells.",  # guess
+        "inner Z tolerance": "Vertical play around the plate and its board pocket.",  # guess
+        "hook to top": "Not used.",
+    },
 }
 
 
+def corrected(name, fixes):
+    """name with the words in fixes corrected and its spaces collapsed."""
+    return " ".join(fixes.get(word, word) for word in name.split())
+
+
+def base_name(name):
+    """name without the suffix of a numbered copy (.001, .002, ...)."""
+    return re.sub(r"\.\d{3,}$", "", name)
+
+
 def matching_groups(name):
-    """The group called name and its numbered copies (name.001, name.002, ...)."""
-    pattern = re.compile(re.escape(name) + r"(\.\d{3})?")
-    return [
-        group for group in bpy.data.node_groups
-        if group.bl_idname == 'GeometryNodeTree' and pattern.fullmatch(group.name)
-    ]
+    """The groups called name and their numbered copies (name.001, ...).
+
+    If there are none, the groups whose corrected name matches. The second
+    value is True when the corrected spelling was used.
+    """
+    groups = [group for group in bpy.data.node_groups if group.bl_idname == 'GeometryNodeTree']
+    found = [group for group in groups if base_name(group.name) == name]
+    if found:
+        return found, False
+    fixed = corrected(name, GROUP_FIXES)
+    return [group for group in groups if corrected(base_name(group.name), GROUP_FIXES) == fixed], True
 
 
 def group_inputs(group):
+    """Input sockets of the group interface by name, including those in panels."""
     inputs = {}
     for item in group.interface.items_tree:
         if item.item_type == 'SOCKET' and item.in_out == 'INPUT':
@@ -283,48 +465,86 @@ def group_inputs(group):
     return inputs
 
 
-def main():
-    changed = unchanged = 0
-    replaced, missing_groups, missing_inputs, linked, uncovered = [], [], [], [], []
+def find_input(inputs, name, keys):
+    """The items of input name and the name they have in the file.
 
+    If name is missing, an input whose corrected name matches, skipping inputs
+    that another key in keys names exactly. Returns ([], None) if none.
+    """
+    if name in inputs:
+        return inputs[name], name
+    fixed = corrected(name, INPUT_FIXES)
+    for other, items in inputs.items():
+        if other not in keys and corrected(other, INPUT_FIXES) == fixed:
+            return items, other
+    return [], None
+
+
+def apply_tooltips(dry_run=DRY_RUN):
+    """Set the descriptions in TOOLTIPS and return what happened, for the report."""
+    report = {
+        "changed": 0, "unchanged": 0, "replaced": [], "corrected": [], "missing_groups": [],
+        "missing_inputs": [], "missing_in_copies": [], "linked": [], "uncovered": [],
+    }
     for group_name, tooltips in TOOLTIPS.items():
-        groups = matching_groups(group_name)
+        groups, fixed = matching_groups(group_name)
         if not groups:
-            missing_groups.append(group_name)
+            report["missing_groups"].append(group_name)
             continue
         for group in groups:
             if group.library:
-                linked.append(group.name)
+                report["linked"].append(group.name)
                 continue
+            if fixed:
+                report["corrected"].append(f"{group_name!r} -> {group.name!r}")
+            # A numbered copy can be an older group with other inputs, so its
+            # gaps are reported apart from those of the group itself.
+            copy = group.name != base_name(group.name)
             inputs = group_inputs(group)
+            covered = set()
             for input_name, text in tooltips.items():
-                if input_name not in inputs:
-                    missing_inputs.append(f"{group.name} > {input_name!r}")
+                items, file_name = find_input(inputs, input_name, tooltips)
+                if not items:
+                    report["missing_in_copies" if copy else "missing_inputs"].append(f"{group.name} > {input_name!r}")
                     continue
-                for item in inputs[input_name]:
+                covered.add(file_name)
+                if file_name != input_name:
+                    report["corrected"].append(f"{group.name} > {input_name!r} -> {file_name!r}")
+                for item in items:
                     if item.description == text:
-                        unchanged += 1
+                        report["unchanged"] += 1
                         continue
                     if item.description:
-                        replaced.append(f"{group.name} > {input_name!r}: {item.description!r}")
-                    if not DRY_RUN:
+                        report["replaced"].append(f"{group.name} > {file_name!r}: {item.description!r}")
+                    if not dry_run:
                         item.description = text
-                    changed += 1
-            uncovered += [f"{group.name} > {name!r}" for name in inputs if name not in tooltips]
+                    report["changed"] += 1
+            if not copy:
+                report["uncovered"] += [f"{group.name} > {name!r}" for name in inputs if name not in covered]
+    return report
 
-    print("\n=== apply_tooltips" + (" (dry run, nothing changed)" if DRY_RUN else "") + " ===")
-    print(f"{'Would set' if DRY_RUN else 'Set'} {changed} tooltips, {unchanged} already up to date.")
-    for title, lines in (
-        ("Replaced an existing tooltip", replaced),
-        ("Group not found", missing_groups),
-        ("Input not found (renamed?)", missing_inputs),
-        ("Linked from a library, skipped", linked),
-        ("Inputs of these groups that still have no tooltip", uncovered),
+
+def print_report(report, dry_run=DRY_RUN):
+    print("\n=== apply_tooltips" + (" (dry run, nothing changed)" if dry_run else "") + " ===")
+    print(f"{'Would set' if dry_run else 'Set'} {report['changed']} tooltips, {report['unchanged']} already up to date.")
+    for title, key in (
+        ("Replaced an existing tooltip", "replaced"),
+        ("Matched through a corrected spelling", "corrected"),
+        ("Group not found", "missing_groups"),
+        ("Input not found (renamed?)", "missing_inputs"),
+        ("Input not found in a numbered copy (copies can differ)", "missing_in_copies"),
+        ("Linked from a library, skipped", "linked"),
+        ("Inputs of these groups that still have no tooltip", "uncovered"),
     ):
+        lines = report[key]
         if lines:
             print(f"\n{title} ({len(lines)}):")
             for line in lines:
                 print("  " + line)
+
+
+def main():
+    print_report(apply_tooltips(DRY_RUN), DRY_RUN)
 
 
 if __name__ == "__main__":
