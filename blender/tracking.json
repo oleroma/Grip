@@ -1475,26 +1475,6 @@
             "[cos(2*n)*sin*cos.002] Value -> Value[1] [Math.018]",
             "[cos(2*n)*sin*cos] Value -> Value[0] [Math.017]"
         ],
-        "GripR1  parameters": [
-            "[GripR1 L1 parameters] L1 -> L1 [combine]",
-            "[GripR1 R1 parameters] R1 -> R1 [combine]",
-            "[GripR1 R1L1 parameters] R1L1 -> R1L1 [combine]",
-            "[GripR1 R2 parameters] R2 -> R2 [combine]",
-            "[GripR1 R4 parameters] R4 -> R4 [combine]",
-            "[GripR1 R4R2 parameters] Bundle -> R2R4 [combine]",
-            "[GripR1 abxy_OLD] abxy -> abxy [combine]",
-            "[GripR1 cover parameters_OLD] cover -> cover [combine]",
-            "[GripR1 dpad_OLD] dpad -> dpad [combine]",
-            "[GripR1 home_OLD] home -> home [combine]",
-            "[GripR1 pcb cutout parameters.001] pcb -> pcb [combine]",
-            "[GripR1 screw parameters] screw -> screw [combine]",
-            "[GripR1 screw positions] screw position -> screw positions [combine]",
-            "[GripR1 scrollwheel] scrollwheel -> scrollwheel [combine]",
-            "[GripR1 select_OLD] select -> select [combine]",
-            "[GripR1 stick L parameters_OLD] stick L -> stick L [combine]",
-            "[combine] Bundle -> Bundle [Group Output (Buttons parameters)]",
-            "[default lever R1L1] Bundle -> lever R1L1 [combine]"
-        ],
         "GripR1 FischerKoch CY hollow parameters": [
             "[fill parameters.001] Bundle -> Bundle [Group Output]"
         ],
@@ -9013,7 +8993,6 @@
             "[basic stick parameters.003] Bundle -> Bundle [Join Bundle.001]"
         ],
         "part and variant": [
-            "[GripR1  parameters] Bundle -> GripR1 [bundle variant switching base]",
             "[Group Input] Menu -> Menu [main switch]",
             "[bundle variant switching base] variant  -> Bundle [main switch]",
             "[main switch] Output -> Output [Group Output]"
@@ -9653,7 +9632,6 @@
             "[part to grid] SDF Grid -> Grid [SDF Grid Offset.010]",
             "[pcb grab support] Geometry -> Mesh [Mesh Boolean.013]",
             "[pcb grab support] Geometry -> Mesh [Mesh Boolean.015]",
-            "[screws] Geometry -> Mesh 2 [Mesh Boolean.005]",
             "[select at.001] Result -> Selection [Position offset]",
             "[select at] Result -> Selection [Set Position.001]",
             "[selector.001] selected bundle -> Bundle [lever R1L1 base]",
