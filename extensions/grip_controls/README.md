@@ -55,7 +55,7 @@ A preset group can hold several nodes made from the same constructor. The tab pi
 
 1. Only nodes whose output reaches the group output count. Unconnected leftovers, like the GripX cover nodes in frame "battery", are skipped. Nodes in frame "SNES" are never shown.
 2. If two connected nodes remain (GripX triggers and bumpers, one per style), it takes the node that the `gripD` *Switch* passes on for the current style (False = xbox, True = dualsense). Without such a switch it takes the node in the frame labelled "GripX" (xbox) or "GripD" (dualsense).
-3. GripX sticks pick a whole preset with a *Menu Switch*. The tab reads the selected item from the *Menu* node that drives it (`stick menu`, `Menu`), follows that item's input back to its *Join Bundle* and shows the constructors linked into it. It also shows the preset menu itself, so you can switch presets from the tab.
+3. GripX sticks pick a whole preset with a *Menu Switch*. The tab reads the selected item from the *Menu* node that drives it (`stick menu`, `Menu`), follows that item's input back to its *Join Bundle* and shows the constructors linked into it. It also shows the preset menu itself, so you can switch presets from the tab. That menu is a *Menu* node, not a group node, so `blender_tracking` does not record it in `tracking.json`.
 
 If any step finds nothing, or more than one node, the row is greyed with the reason instead.
 
