@@ -13831,11 +13831,11 @@
                             "screws": true,
                             "screws hollow": false,
                             "stock bumpers": false,
-                            "style": "xbox",
+                            "style": "dualsense",
                             "subdivision level": "low ",
                             "tolerance": "default",
                             "top wire cutouts": false,
-                            "variant": "GripV",
+                            "variant": "GripX",
                             "voxel resolution": "low"
                         }
                     }
@@ -14020,18 +14020,18 @@
                             "button press tolerance": 0.7,
                             "button pressed height": 1.29,
                             "button radius offset": 2.0,
-                            "button rotation": 1.7279,
+                            "button rotation": 1.3439,
                             "height": 12.0,
                             "radius tolerance": 0.2,
                             "shift z": 2.5,
                             "stopper height": 2.0,
                             "stopper length": 15.001,
                             "subdivision length": 1.0,
-                            "tip angle offset": -0.5079,
-                            "tip shear": -0.208,
-                            "top bevel": 0.7,
-                            "trigger length": 24.1,
-                            "trigger radius": 37.4,
+                            "tip angle offset": -0.4363,
+                            "tip shear": 0.0349,
+                            "top bevel": 0.9,
+                            "trigger length": 27.4,
+                            "trigger radius": 37.5,
                             "width": 10.9,
                             "x offset": 0.0,
                             "x tolerance": 0.2
@@ -14045,7 +14045,7 @@
                         "inputs": {
                             "SMD height": 4.6,
                             "bottom bevel": 1.0,
-                            "button height": 2.88,
+                            "button height": 2.56,
                             "button height offset": -0.5,
                             "button tolerance": 0.3,
                             "case bool bevel": 1.0,
@@ -14068,12 +14068,12 @@
                     },
                     "caps parameters": {
                         "inputs": {
-                            "bevel cutoff": 1.309,
+                            "bevel cutoff": 0.8029,
                             "button cap": true,
                             "button cap travel distance": 1.92,
                             "cap base fillet": 2.85,
                             "cap base fillet subd": 16,
-                            "cap bevel": 2.3,
+                            "cap bevel": 1.7,
                             "cap bevel cutoff": true,
                             "cap bevel subd": 16,
                             "cap case tolerance": 0.5,
@@ -14208,7 +14208,7 @@
                         "inputs": {
                             "SMD height": 4.6,
                             "bottom bevel": 1.0,
-                            "button height": 2.88,
+                            "button height": 2.56,
                             "button height offset": -0.5,
                             "button tolerance": 0.3,
                             "case bool bevel": 1.0,
@@ -14369,7 +14369,7 @@
                         "inputs": {
                             "SMD height": 4.6,
                             "bottom bevel": 1.0,
-                            "button height": 2.88,
+                            "button height": 2.56,
                             "button height offset": -0.5,
                             "button tolerance": 0.3,
                             "case bool bevel": 1.0,
@@ -14698,7 +14698,7 @@
                         "inputs": {
                             "SMD height": 4.6,
                             "bottom bevel": 1.0,
-                            "button height": 2.88,
+                            "button height": 2.56,
                             "button height offset": -0.5,
                             "button tolerance": 0.3,
                             "case bool bevel": 1.0,
@@ -15607,11 +15607,11 @@
                             "screws": true,
                             "screws hollow": false,
                             "stock bumpers": false,
-                            "style": "xbox",
+                            "style": "dualsense",
                             "subdivision level": "low ",
                             "tolerance": "default",
                             "top wire cutouts": false,
-                            "variant": "GripV",
+                            "variant": "GripX",
                             "voxel resolution": "low"
                         }
                     }
