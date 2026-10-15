@@ -13,7 +13,7 @@ Each preset is made of six constructors.
 
 | Input | What it changes |
 |---|---|
-| `stick heght` | height of the stick above the case |
+| `stick height` | height of the stick above the case |
 | `stick top radius` | size of the thumb surface |
 | `base size`, `base height` | the part that grips the joystick module's shaft |
 | `shaft tolerance` | fit on the module's shaft: higher is looser |
@@ -50,17 +50,17 @@ The skirt is the flared bottom of the stick that keeps the case hole covered at 
 
 | Input | What it changes |
 |---|---|
-| `sheild` | the skirt on or off |
-| `sheild height` | how far down the skirt reaches |
+| `shield` | the skirt on or off |
+| `shield height` | how far down the skirt reaches |
 | `shield cutoff height` | where the skirt is cut off |
-| `sheild radius offset` | skirt radius |
+| `shield radius offset` | skirt radius |
 | `FDM shield thickness`, `FDM Z correction` | extra thickness and a height correction for FDM printing |
 
 ## Position and preview (`advanced stick parameters`)
 
 | Input | What it changes |
 |---|---|
-| `stick  XY correction` + `X correction`, `Y correction` | when on, shifts the stick off the module centre by X and Y |
+| `stick XY correction` + `X correction`, `Y correction` | when on, shifts the stick off the module centre by X and Y |
 | `swap stick rotation` | turns the stick's mesh layout |
 | `stick subdivision`, `stick hole subdivision` | smoothness of stick and hole. The "8 dir" preset uses 8, which gives an eight-sided stick, probably for eight-direction input. |
 | `action`, `action rotation` (basic) | shows the stick tilted, to check clearance. It is a preview only; turn it off before exporting. |

@@ -101,7 +101,7 @@ Inside `global parameters` the nodes that convert the press and cap menus are na
 
 ## The controls panels
 
-`GripV controls`, `GripX contols` and `GripR1 controls` are groups with no inputs or outputs. Each holds one instance of `global` and of every preset group of its variant, arranged in frames (BUTTONS, STICKS, R2R4, R1L1 LEVER, SCREWS, PINS, PCB AND BATTERY, SCROLLWHEEL, DPAD STICK, pattern/FILL, shell/SHELL). A group node shows the shared group data, so editing inside the panel edits the real preset. The group `controls` holds all three panels. It sits as a modifier on the hidden object `case_front.002` (collection `references` › `other`), probably so the panel has a modifier user and is easy to open. `blender_tracking` tracks the GripV and GripX panels.
+`GripV controls`, `GripX controls` and `GripR1 controls` are groups with no inputs or outputs. Each holds one instance of `global` and of every preset group of its variant, arranged in frames (BUTTONS, STICKS, R2R4, R1L1 LEVER, SCREWS, PINS, PCB AND BATTERY, SCROLLWHEEL, DPAD STICK, pattern/FILL, shell/SHELL). A group node shows the shared group data, so editing inside the panel edits the real preset. The group `controls` holds all three panels. It sits as a modifier on the hidden object `case_front.002` (collection `references` › `other`), probably so the panel has a modifier user and is easy to open. `blender_tracking` tracks the GripV and GripX panels.
 
 ## Bundle keys
 

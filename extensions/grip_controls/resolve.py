@@ -11,7 +11,7 @@ import bpy
 GLOBAL_GROUP = "global"
 GLOBAL_NODE = "global parameters"
 VARIANTS = ("GripV", "GripX")
-CONTROLS_PANELS = {"GripV": "GripV controls", "GripX": "GripX contols"}  # 'contols' sic
+CONTROLS_PANELS = {"GripV": "GripV controls", "GripX": "GripX controls"}
 
 # GripX keeps one constructor per style, each in a frame with this label
 STYLE_FRAMES = {"xbox": "GripX", "dualsense": "GripD"}
@@ -31,7 +31,7 @@ GLOBAL_INPUTS = CONTROLLER_INPUTS + BODY_INPUTS + PREVIEW_INPUTS + FIT_INPUTS + 
 PART_GROUPS = {
     "R2": {"GripV": "GripV R2 parameters", "GripX": "GripX R2 parameters"},
     "R4": {"GripV": "GripV R4 parameters", "GripX": "GripX R4 parameters"},
-    "R1L1": {"GripV": "GripV  lever R1L1", "GripX": "GripX lever R1L1"},  # two spaces in the GripV name
+    "R1L1": {"GripV": "GripV lever R1L1", "GripX": "GripX lever R1L1"},
     "stick L": {"GripV": "GripV stick L parameters", "GripX": "GripX stick L parameters"},
     "stick R": {"GripV": "GripV stick R parameters", "GripX": "GripX stick R parameters"},
     "abxy": {"GripV": "GripV abxy", "GripX": "GripX abxy"},
@@ -52,7 +52,7 @@ def fields(slot, constructor, inputs):
 
 
 TRIGGER_INPUTS = ("trigger length", "width", "shift z", "x offset", "button radius offset")
-STICK_FIELDS = (("basic stick parameters", ("stick heght", "range degrees", "stick top radius")),
+STICK_FIELDS = (("basic stick parameters", ("stick height", "range degrees", "stick top radius")),
                 ("stick top parameters", ("top shape", "top curvature", "texture type")))
 
 
@@ -66,7 +66,7 @@ SECTIONS = (
         Block("R4 back paddle", fields("R4", "trigger parameters", TRIGGER_INPUTS)),
     )),
     Section("bumpers", "Bumpers", "R1L1 LEVER", (
-        Block("L1 and R1", fields("R1L1", "R1L1 lever parameters", ("wdith", "height", "X", "Y", "Z"))),
+        Block("L1 and R1", fields("R1L1", "R1L1 lever parameters", ("width", "height", "X", "Y", "Z"))),
     )),
     Section("sticks", "Sticks", "STICKS", (
         Block("Left stick", stick_fields("stick L")),

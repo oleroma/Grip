@@ -51,7 +51,7 @@ A greyed row is a value the tab will not edit, with the reason. "set by …" mea
 
 ## The controls panel
 
-Every setting you need is in one place: the node group **`GripV controls`** (for GripV) or **`GripX contols`** (for GripX, sic). It contains the `global` node and one node per part, sorted into frames:
+Every setting you need is in one place: the node group **`GripV controls`** (for GripV) or **`GripX controls`** (for GripX). It contains the `global` node and one node per part, sorted into frames:
 
 | Frame | Preset groups inside |
 |---|---|
@@ -59,9 +59,9 @@ Every setting you need is in one place: the node group **`GripV controls`** (for
 | STICKS | `stick L parameters`, `stick R parameters` |
 | R2R4 | `R2 parameters`, `R4 parameters` (triggers and back paddles) |
 | R1L1 LEVER | `lever R1L1` (bumpers) |
-| SCREWS | `screw paramters` |
+| SCREWS | `screw parameters` |
 | PINS | `pins parameters` (GripX: `pins`) |
-| PCB AND BATTERY | `pcb cutout paramters`, `cover parameters` |
+| PCB AND BATTERY | `pcb cutout parameters`, `cover parameters` |
 | SCROLLWHEEL | `scrollwheel` |
 | DPAD STICK | `dpad stick` |
 | pattern (GripX: FILL) | the patterns for the `indent` body type |

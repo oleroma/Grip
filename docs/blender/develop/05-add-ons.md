@@ -22,7 +22,7 @@ Source: [oleroma/combi_export](https://github.com/oleroma/combi_export). The pre
 
 ## `blender_tracking`: `tracking.json`
 
-Source: [oleroma/blender-tracking](https://github.com/oleroma/blender-tracking). Its settings are on the `source` scene. It tracks `GripV controls` and `GripX contols` one level deep (group nodes only), plus the `basemesh` collection. On every save it writes `blender/tracking.json` with:
+Source: [oleroma/blender-tracking](https://github.com/oleroma/blender-tracking). Its settings are on the `source` scene. It tracks `GripV controls` and `GripX controls` one level deep (group nodes only), plus the `basemesh` collection. On every save it writes `blender/tracking.json` with:
 
 - `tracked_inputs`: every input value of the preset groups in the two panels;
 - `modifiers`: modifier inputs of objects that use those trees (empty here);

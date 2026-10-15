@@ -24,8 +24,8 @@ Releases will be listed here, newest first, with what changed for people who pri
 - `Grip.blend` needs Blender 5.2 or newer.
 - Export presets (`combi_export`) and `blender/tracking.json`, which records every preset value on save (`blender_tracking`). Both extensions are in [`extensions/`](extensions/README.md).
 - The **Grip** tab in the 3D Viewport sidebar (`grip_controls`) gathers the most used settings and keeps `variant` in step with the scene.
-- `scripts/apply_tooltips.py` writes a tooltip for every input that `tracking.json` tracks: the global settings and every part's settings.
-- `scripts/fix_names.py` fixes the typos in node group and input names (`wdith`, `paramters`, …) and updates the export presets that name them. It starts in a dry run that only lists the renames.
+- Every input that `tracking.json` tracks has a tooltip, written by `scripts/apply_tooltips.py`.
+- Node group and input names are free of typos (`wdith` is `width`, `GripX contols` is `GripX controls`, …), fixed with `scripts/fix_names.py`. Values did not change.
 
 ### Repository and tools
 

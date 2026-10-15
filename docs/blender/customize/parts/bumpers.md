@@ -7,13 +7,13 @@ There are two designs:
 - **pivot** (`R1L1 flex` off, used by GripX): the bumper rotates on its stem.
 - **flex** (`R1L1 flex` on, used by GripV): the bumper gets an extra arm of about 17 mm towards the centre of the controller. Probably the arm bends instead of the bumper rotating on its stem.
 
-**Where:** controls panel › R1L1 LEVER › `GripV  lever R1L1` (two spaces) or `GripX lever R1L1` › `R1L1 lever parameters`. On GripX there are two nodes, frame "GripX" for xbox and "GripD" for dualsense. Edit the one for the style you use.
+**Where:** controls panel › R1L1 LEVER › `GripV lever R1L1` or `GripX lever R1L1` › `R1L1 lever parameters`. On GripX there are two nodes, frame "GripX" for xbox and "GripD" for dualsense. Edit the one for the style you use.
 
 ## Shape
 
 | Input | What it changes |
 |---|---|
-| `wdith` (sic) | length of the bumper along the case edge |
+| `width` | length of the bumper along the case edge |
 | `height` | height of the bumper |
 | `top bevel` | rounding of the top edge |
 | `overlap` | how far the bumper reaches down under the case edge |
@@ -59,7 +59,7 @@ There are two designs:
 
 ## Does nothing
 
-`bevel inner`, `bevel inner sbdiv` and `curved button thickness`.
+`bevel inner`, `bevel inner subdiv` and `curved button thickness`.
 
 ## Related settings
 

@@ -4,7 +4,7 @@ Four screws hold the case together: two at the front and two at the back, mirror
 
 The front pair and the back pair have their own settings, because they sit at different heights and need different screw lengths.
 
-**Where:** controls panel › SCREWS › `… screw paramters` (sic). Inside:
+**Where:** controls panel › SCREWS › `… screw parameters`. Inside:
 
 | Node | What it is |
 |---|---|

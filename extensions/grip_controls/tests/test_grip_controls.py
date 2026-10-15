@@ -37,7 +37,7 @@ import addon_utils  # noqa: E402  (comes with bpy)
 
 REPO_MODULE = "grip_test"
 ADDON = f"bl_ext.{REPO_MODULE}.grip_controls"
-PANELS = {"GripV": "GripV controls", "GripX": "GripX contols"}
+PANELS = {"GripV": "GripV controls", "GripX": "GripX controls"}
 
 
 # ---------------------------------------------------------------- add-on
@@ -153,7 +153,7 @@ def gripd_switch(tree, join, false_node, true_node):
 
 
 TRIGGER = ("trigger length", "width", "shift z", "x offset", "button radius offset", "x tolerance")
-LEVER = ("wdith", "height", "X", "Y", "Z", "stem radius")
+LEVER = ("width", "height", "X", "Y", "Z", "stem radius")
 
 
 def build_fixture():
@@ -163,7 +163,7 @@ def build_fixture():
     constructor("trigger parameters", floats=TRIGGER)
     constructor("tolerance set", floats=("tight", "default", "loose"), outputs=(("Value", "NodeSocketFloat"),))
     constructor("R1L1 lever parameters", floats=LEVER)
-    constructor("basic stick parameters", floats=("stick heght", "range degrees", "stick top radius"))
+    constructor("basic stick parameters", floats=("stick height", "range degrees", "stick top radius"))
     constructor("stick top parameters", menus=("top shape", "top curvature", "texture type"))
     constructor("curve parameters", floats=("width",))
     constructor("advanced cover parameters", floats=("battery length", "battery width", "battery height"))
@@ -204,15 +204,15 @@ def build_fixture():
     link_bundle(tree, dual, join.inputs[0])
 
     # Bumpers: GripV stem radius comes from a Value node; GripX has one node per style
-    tree, join = preset_group("GripV  lever R1L1")
-    lever = add_group(tree, "R1L1 lever parameters", values={"wdith": 20.0})
+    tree, join = preset_group("GripV lever R1L1")
+    lever = add_group(tree, "R1L1 lever parameters", values={"width": 20.0})
     link_bundle(tree, lever, join.inputs[0])
     value = tree.nodes.new("ShaderNodeValue")
     tree.links.new(value.outputs[0], lever.inputs["stem radius"])
     tree, join = preset_group("GripX lever R1L1")
-    xbox = add_group(tree, "R1L1 lever parameters", frame=add_frame(tree, "GripX"), values={"wdith": 21.0})
+    xbox = add_group(tree, "R1L1 lever parameters", frame=add_frame(tree, "GripX"), values={"width": 21.0})
     dual = add_group(tree, "R1L1 lever parameters", "R1L1 lever parameters.001", frame=add_frame(tree, "GripD"),
-                     values={"wdith": 22.0})
+                     values={"width": 22.0})
     gripd_switch(tree, join, xbox, dual)
 
     # Sticks: GripV has one set per stick
@@ -243,7 +243,7 @@ def build_fixture():
             for group in ("basic stick parameters", "stick top parameters"):
                 node = add_group(tree, group, f"{group}.{index:03d}")
                 link_bundle(tree, node, join.inputs[0])
-            tree.nodes[f"basic stick parameters.{index:03d}"].inputs["stick heght"].default_value = 10.0 + index
+            tree.nodes[f"basic stick parameters.{index:03d}"].inputs["stick height"].default_value = 10.0 + index
         if menu_node:
             menu = tree.nodes.new("FunctionNodeInputMenu")
             menu.name = menu_node
@@ -507,7 +507,7 @@ class GripControlsTest(unittest.TestCase):
 
     def test_linked_inputs(self):
         r = self.resolve
-        lever = bpy.data.node_groups["GripV  lever R1L1"].nodes["R1L1 lever parameters"]
+        lever = bpy.data.node_groups["GripV lever R1L1"].nodes["R1L1 lever parameters"]
         field = r.resolve_field(lever, r.FieldSpec("R1L1", "R1L1 lever parameters", "stem radius", "stem radius"))
         self.assertEqual(field.source, "Value")
         trigger = bpy.data.node_groups["GripV R2 parameters"].nodes["trigger parameters.001"]
@@ -533,7 +533,7 @@ class GripControlsTest(unittest.TestCase):
         self.assertIsInstance(selector, r.Selector)
         self.assertEqual((selector.data.name, selector.prop, selector.item), ("stick menu", "value",
                                                                              "Octagonal 18d range"))
-        height = next(row for row in block.rows if row.label == "stick heght")
+        height = next(row for row in block.rows if row.label == "stick height")
         self.assertEqual(height.node, "basic stick parameters.002")
         self.assertEqual(height.socket.default_value, 12.0)
 
@@ -654,7 +654,7 @@ class GripControlsTest(unittest.TestCase):
         self.assertEqual(entry[3], trigger.inputs["trigger length"])
         self.assertEqual(entry[4], "default_value")
         self.assertIn("GripX R2 parameters > trigger parameters.001", labels(log))
-        self.assertIn("More: GripX contols > R2R4", labels(log))
+        self.assertIn("More: GripX controls > R2R4", labels(log))
         log = draw_panel(ui.VIEW3D_PT_grip_sticks, fake_context("GripX"))
         self.assertEqual(props(log)["preset"][3].name, "stick menu")
         log = draw_panel(ui.VIEW3D_PT_grip_bumpers, fake_context("GripX"))

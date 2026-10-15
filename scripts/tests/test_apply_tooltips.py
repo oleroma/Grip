@@ -12,6 +12,7 @@ import io
 import re
 import sys
 import unittest
+from unittest import mock
 from contextlib import redirect_stdout
 from pathlib import Path
 
@@ -23,7 +24,7 @@ import apply_tooltips  # noqa: E402
 TOOLTIPS = apply_tooltips.TOOLTIPS
 ENTRIES = sum(len(tooltips) for tooltips in TOOLTIPS.values())
 
-# The planned typo cleanup, written out here so the test does not check
+# The typo cleanup, written out here so the test does not check
 # apply_tooltips.corrected against itself.
 CLEANUP = [
     (r"\bwdith\b", "width"), (r"\bheght\b", "height"), (r"\bstiick\b", "stick"),
@@ -36,6 +37,17 @@ def cleanup(name):
     for pattern, fix in CLEANUP:
         name = re.sub(pattern, fix, name)
     return " ".join(name.split())
+
+
+# Old spellings of a few current names, to test the fallback with a table
+# whose keys still carry typos (as it did before the cleanup of 2026-10-15).
+TYPOS = {"pins position": "pins postion", "hollow parameters": "hollow  parameters", "width": "wdith",
+         "shield": "sheild", "shield height": "sheild height", "stick height": "stick heght"}
+
+
+def typo_table():
+    return {TYPOS.get(name, name): {TYPOS.get(key, key): text for key, text in tooltips.items()}
+            for name, tooltips in TOOLTIPS.items()}
 
 
 def clear():
@@ -148,7 +160,7 @@ class ApplyTooltipsTest(unittest.TestCase):
         # Group nodes with typed values, as in the presets.
         preset = bpy.data.node_groups.new("GripV test preset", 'GeometryNodeTree')
         nodes = []
-        for name in ("trigger parameters", "marks parameters", "pins postion", "hollow  parameters"):
+        for name in ("trigger parameters", "marks parameters", "pins position", "hollow parameters"):
             node = preset.nodes.new('GeometryNodeGroup')
             node.node_tree = groups[name]
             for i, socket in enumerate(node.inputs):
@@ -195,30 +207,32 @@ class ApplyTooltipsTest(unittest.TestCase):
         self.assertIn("Input not found in a numbered copy", text)
 
     def test_fallback_spellings(self):
-        groups = build_all(rename=cleanup)
-        report, text = self.run_script()
+        groups = build_all()
+        table = typo_table()
+        with mock.patch.object(apply_tooltips, "TOOLTIPS", table):
+            report, text = self.run_script()
         self.assertEqual(report["changed"], ENTRIES)
         self.assert_clean(report)
         for name, tooltips in TOOLTIPS.items():
-            expected = {cleanup(key): value for key, value in tooltips.items()}
-            self.assertEqual(descriptions(groups[name]), expected, name)
-        expected = {f"{name!r} -> {cleanup(name)!r}" for name in TOOLTIPS if cleanup(name) != name}
-        for name, tooltips in TOOLTIPS.items():
+            self.assertEqual(descriptions(groups[name]), tooltips, name)
+        expected = {f"{name!r} -> {cleanup(name)!r}" for name in table if cleanup(name) != name}
+        for name, tooltips in table.items():
             expected |= {f"{cleanup(name)} > {key!r} -> {cleanup(key)!r}" for key in tooltips if cleanup(key) != key}
         self.assertEqual(set(report["corrected"]), expected)
-        self.assertEqual(len(report["corrected"]), 13)
-        self.assertIn("Matched through a corrected spelling (13):", text)
+        self.assertIn(f"Matched through a corrected spelling ({len(expected)}):", text)
         self.assertIn("  'pins postion' -> 'pins position'", text)
         self.assertIn("  R1L1 lever parameters > 'wdith' -> 'width'", text)
 
     def test_exact_name_wins_over_corrected_spelling(self):
-        exact = build("hollow  parameters", TOOLTIPS["hollow  parameters"])
-        other = build("hollow parameters", TOOLTIPS["hollow  parameters"])
-        shield = build("shield parameters", list(TOOLTIPS["shield parameters"]) + ["shield"])
-        report, _ = self.run_script()
-        self.assertEqual(descriptions(exact), TOOLTIPS["hollow  parameters"])
+        table = typo_table()
+        exact = build("hollow  parameters", table["hollow  parameters"])
+        other = build("hollow parameters", table["hollow  parameters"])
+        shield = build("shield parameters", list(table["shield parameters"]) + ["shield"])
+        with mock.patch.object(apply_tooltips, "TOOLTIPS", table):
+            report, _ = self.run_script()
+        self.assertEqual(descriptions(exact), table["hollow  parameters"])
         self.assertEqual(set(descriptions(other).values()), {""})
-        self.assertEqual(descriptions(shield)["sheild"], TOOLTIPS["shield parameters"]["sheild"])
+        self.assertEqual(descriptions(shield)["sheild"], table["shield parameters"]["sheild"])
         self.assertEqual(descriptions(shield)["shield"], "")
         self.assertEqual(report["corrected"], [])
         self.assertIn("shield parameters > 'shield'", report["uncovered"])

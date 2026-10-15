@@ -6,7 +6,7 @@ Three things in the case bottom are about the electronics: the slot the main boa
 
 The board drops into a slot in the case bottom. Judging by the parameter names and how the slot changes, it rests on a ledge around its edge, with a deeper pocket underneath for the components on its underside. The slot's outline is a fixed shape of the board (object `pcb cutout` in the `source` scene). The depths and fits are parameters.
 
-**Where:** controls panel › PCB AND BATTERY › `… pcb cutout paramters` › `pcb cutout parameters`.
+**Where:** controls panel › PCB AND BATTERY › `… pcb cutout parameters` › `pcb cutout parameters`.
 
 | Input | What it changes |
 |---|---|

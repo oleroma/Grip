@@ -2,7 +2,7 @@
 
 A front panel for `blender/Grip.blend`. It adds a **Grip** tab to the 3D Viewport sidebar (press **N**) with the settings people change most: which controller is built, how smooth the preview is, how tight parts fit, the feature switches, and the main sizes and positions of triggers, bumpers, sticks, buttons and the battery compartment.
 
-It does not replace the controls panel (`GripV controls`, `GripX contols`). Everything else is still there. The tab is a shortcut to the values you reach for most, without going into node groups.
+It does not replace the controls panel (`GripV controls`, `GripX controls`). Everything else is still there. The tab is a shortcut to the values you reach for most, without going into node groups.
 
 Every field in the tab is the real node input, shown in another place. Changing it is exactly the same as changing it in the node editor: undo works, and `blender_tracking` records it in `blender/tracking.json` when you save. Hover the name of a setting to see what it does. The tab shows the input's tooltip from the file, once `scripts/apply_tooltips.py` has written the tooltips into Grip.blend; until then the tooltip only names the node and input.
 
@@ -45,9 +45,9 @@ The sync only writes when the value is different. When two windows show GripV an
 
 ## How it finds the nodes (for contributors)
 
-The tab looks everything up by name, as spelled in the file (typos included: `wdith`, `stick heght`, `contols`). The names live in tables at the top of `resolve.py`:
+The tab looks everything up by name, as spelled in the file. The names live in tables at the top of `resolve.py`:
 
-- `PART_GROUPS`: the preset group of each part for GripV and GripX (`GripV  lever R1L1` has two spaces).
+- `PART_GROUPS`: the preset group of each part for GripV and GripX (`GripV lever R1L1` has two spaces).
 - `SECTIONS`: which constructor inputs each part section shows.
 - `GLOBAL_INPUTS`: the inputs of `global` › `global parameters`.
 

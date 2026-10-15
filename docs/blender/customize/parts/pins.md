@@ -2,7 +2,7 @@
 
 A small square peg that sits half in the case top and half in the case bottom, so the two halves line up when they are screwed together. One pin is generated; print two, one for each side. The holes are cut into both halves on both sides.
 
-**Where:** controls panel › PINS › `GripV pins parameters` or `GripX pins` › `pins params` and `pins postion` (sic).
+**Where:** controls panel › PINS › `GripV pins parameters` or `GripX pins` › `pins params` and `pins position`.
 
 | Input | What it changes |
 |---|---|

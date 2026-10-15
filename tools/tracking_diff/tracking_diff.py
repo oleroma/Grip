@@ -38,7 +38,8 @@ TRACKING_PATH = "blender/tracking.json"
 # Friendly headings for the tracked controls panels (keys spelled as in the file).
 PANELS = {
     "GripV controls": ("GripV", "custom ergonomic shape"),
-    "GripX contols": ("GripX", "classic xbox and dualsense styles"),
+    "GripX controls": ("GripX", "classic xbox and dualsense styles"),
+    "GripX contols": ("GripX", "classic xbox and dualsense styles"),  # its name before 2026-10-15
     "GripX controls": ("GripX", "classic xbox and dualsense styles"),    # the name after scripts/fix_names.py
 }
 # What each tracked basemesh is (docs/blender/customize/04-case.md).

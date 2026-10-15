@@ -77,4 +77,4 @@ To check the numbers, save and run `python tools/tracking_diff/tracking_diff.py 
 
 ## Cleanup conventions
 
-The file still carries typos in names (`wdith`, `stiick`, `sheild`, `paramters`, `contols`, …), double spaces (`GripV  lever R1L1`), automatic `.001` names on real alternatives, and leftovers of GripR1 and older designs. The list is in [Known issues](07-known-issues.md#d-leftovers-and-naming). When fixing a name, rename it in the `.blend`, the export presets and `tracking.json` in one change, so the diff shows a rename and not a lost value.
+The node group and input names were cleaned of typos with `scripts/fix_names.py`. The file still carries typos in collections, labels, menu items and bundle items (`Xbox syle`, `roker`, `caps fit Z olerance`, …), automatic `.001` names on real alternatives, and leftovers of GripR1 and older designs. The list is in [Known issues](07-known-issues.md#d-leftovers-and-naming). When fixing a name, rename it in the `.blend`, the export presets and `tracking.json` in one change, so the diff shows a rename and not a lost value.

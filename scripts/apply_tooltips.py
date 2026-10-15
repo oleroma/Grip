@@ -23,11 +23,11 @@ How to run:
 The script only sets descriptions of the inputs listed below. It changes no
 value, default, link or name, so blender/tracking.json does not change.
 Numbered copies of a group (for example "pins params.001") get the same
-tooltips. Names are spelled as in the file, typos included. If a group or
-input is not found, the script tries the corrected spelling (wdith -> width,
-paramters -> parameters, double spaces collapsed, ...), so the table keeps
-working after the planned typo cleanup; the report lists what matched that
-way. For any other rename, rename the key here too.
+tooltips. Names are spelled as in the file (the node group and input typos
+were fixed with scripts/fix_names.py on 2026-10-15). If a group or input is
+not found, the script tries the corrected spelling of the key (wdith -> width,
+paramters -> parameters, double spaces collapsed, ...); the report lists what
+matched that way. For any other rename, rename the key here too.
 """
 
 import re
@@ -185,7 +185,7 @@ TOOLTIPS = {
     },
     # Bumpers (L1/R1)
     "R1L1 lever parameters": {
-        "wdith": "Length of the bumper along the case edge.",
+        "width": "Length of the bumper along the case edge.",
         "height": "Height of the bumper.",
         "top bevel": "Rounding of the top edge of the bumper.",
         "overlap": "How far the back of the bumper reaches under the case edge, which holds it in place.",
@@ -211,11 +211,11 @@ TOOLTIPS = {
         "curved button bevel": "Curved bumpers only: rounding of the press face.",  # guess
         "curved button thickness": "Not used.",
         "bevel inner": "Not used.",
-        "bevel inner sbdiv": "Not used.",
+        "bevel inner subdiv": "Not used.",
     },
     # Sticks
     "basic stick parameters": {
-        "stick heght": "Height of the stick above the top surface of the case.",
+        "stick height": "Height of the stick above the top surface of the case.",
         "stick top radius": "Size of the thumb surface.",
         "base size": "Size of the part that grips the joystick module's shaft.",
         "base height": "Height of the part that grips the joystick module's shaft.",
@@ -234,8 +234,8 @@ TOOLTIPS = {
         "contact angle": "Angle of the surface where stick and case hole meet at full tilt.",
         "hole radius": "Size of the stick hole in the case top. The neck of the stick follows.",
         "hole bevel": "Rounding of the edge of the stick hole.",
-        "case cutout thickness ": "GripX: wall around the stick opening. Does nothing on GripV, which uses fixed cutouts.",
-        "stick  XY correction": "On: shifts the stick off the module centre by X correction and Y correction.",
+        "case cutout thickness": "GripX: wall around the stick opening. Does nothing on GripV, which uses fixed cutouts.",
+        "stick XY correction": "On: shifts the stick off the module centre by X correction and Y correction.",
         "X correction": "Sideways shift of the stick when XY correction is on.",
         "Y correction": "Front-to-back shift of the stick when XY correction is on.",
         "swap stick rotation": "Turns the mesh layout of the stick.",
@@ -245,10 +245,10 @@ TOOLTIPS = {
         "shaft Y correction": "Not used.",
     },
     "shield parameters": {
-        "sheild": "Skirt at the bottom of the stick that keeps the case hole covered at every tilt.",
-        "sheild height": "How far down the skirt reaches.",
+        "shield": "Skirt at the bottom of the stick that keeps the case hole covered at every tilt.",
+        "shield height": "How far down the skirt reaches.",
         "shield cutoff height": "Where the skirt is cut off.",
-        "sheild radius offset": "Radius of the skirt.",
+        "shield radius offset": "Radius of the skirt.",
         "FDM shield thickness": "Extra skirt thickness for FDM printing.",
         "FDM Z correction": "Height correction of the skirt for FDM printing.",
     },
@@ -292,7 +292,7 @@ TOOLTIPS = {
         "hook z tolerance": "Vertical play of the cap on its snap hook.",
         "flex cut width": "Width of the slot that lets the cap flex onto the hook.",
         "flex cut depth": "Depth of the slot that lets the cap flex onto the hook.",
-        "stiick height": "Length of the stick. The cap moves up with it.",
+        "stick height": "Length of the stick. The cap moves up with it.",
         "stick thickness": "Thickness of the stick.",
         "stick tolerance": "Clearance between the stick and the cap.",
         "rocker size": "Footprint of the rocker plate that presses the switches.",
@@ -349,7 +349,7 @@ TOOLTIPS = {
         "z tol": "Vertical play: the pin is this much shorter than its hole, half at each end.",
         "bevel": "Rounding of the pin edges.",
     },
-    "pins postion": {
+    "pins position": {
         "X": "Sideways position of the pin and its holes. The holes on the other side are mirrored.",
         "Y": "Front-to-back position of the pin and its holes.",
         "Z": "Height of the pin and its holes. Keep it at the split height (40) so the pin is shared evenly between the halves.",
@@ -375,10 +375,10 @@ TOOLTIPS = {
         "position": "Where the screw is. The mirror copy on the other side follows.",
         "rotation": "Turns the nut slot around the screw, in radians.",  # guess
     },
-    "GripV screw paramters": {
+    "GripV screw parameters": {
         "Index": SCREW_INDEX,
     },
-    "GripX screw paramters": {
+    "GripX screw parameters": {
         "Index": SCREW_INDEX,
     },
     # Scroll wheel
@@ -396,7 +396,7 @@ TOOLTIPS = {
         "PCB tolerance XY": "Gap around the board. It enlarges the slot, so the case bottom needs a reprint.",
     },
     # Shell bodies (hollow, lattice, and the GripV hollow top)
-    "hollow  parameters": {
+    "hollow parameters": {
         "shell thickness": "Wall thickness of the shell. The lattice body does not use it.",
         "protect geometry": "Thickness of the solid bosses grown around every opening and screw. The openings are cut through them, so this sets how strong those walls are.",
         "band remesh width": "Width of the band the shell's distance field is computed in. Technical; leave it.",

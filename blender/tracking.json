@@ -1486,14 +1486,14 @@
             "[GripR1 cover parameters_OLD] cover -> cover [combine]",
             "[GripR1 dpad_OLD] dpad -> dpad [combine]",
             "[GripR1 home_OLD] home -> home [combine]",
-            "[GripR1 pcb cutout paramters.001] pcb -> pcb [combine]",
-            "[GripR1 screw paramters] screw -> screw [combine]",
+            "[GripR1 pcb cutout parameters.001] pcb -> pcb [combine]",
+            "[GripR1 screw parameters] screw -> screw [combine]",
             "[GripR1 screw positions] screw position -> screw positions [combine]",
             "[GripR1 scrollwheel] scrollwheel -> scrollwheel [combine]",
             "[GripR1 select_OLD] select -> select [combine]",
             "[GripR1 stick L parameters_OLD] stick L -> stick L [combine]",
             "[combine] Bundle -> Bundle [Group Output (Buttons parameters)]",
-            "[deault lever R1L1] Bundle -> lever R1L1 [combine]"
+            "[default lever R1L1] Bundle -> lever R1L1 [combine]"
         ],
         "GripR1 FischerKoch CY hollow parameters": [
             "[fill parameters.001] Bundle -> Bundle [Group Output]"
@@ -1667,30 +1667,30 @@
             "[GripR1 gyroid indent parameters] Bundle -> 0 [Index Switch.001]",
             "[GripR1 home] Bundle -> home [parts bundle]",
             "[GripR1 middle plate parameters] Bundle -> middle plate [parts bundle]",
-            "[GripR1 pcb cutout paramters] Bundle -> pcb [parts bundle]",
+            "[GripR1 pcb cutout parameters] Bundle -> pcb [parts bundle]",
             "[GripR1 pins] pin -> pin [parts bundle]",
             "[GripR1 primitive indent parameters] Bundle -> 5 [Index Switch.001]",
-            "[GripR1 screw paramters] screw -> screw [parts bundle]",
+            "[GripR1 screw parameters] screw -> screw [parts bundle]",
             "[GripR1 scrollwheel] scrollwheel -> scrollwheel [parts bundle]",
             "[GripR1 select] Bundle -> select [parts bundle]",
             "[GripR1 stick L parameters] Bundle -> stick L [parts bundle]",
             "[GripR1 stick R parameters] bundle -> stick R [parts bundle]",
-            "[GripR1 voroni indent parameters] Bundle -> 3 [Index Switch.001]",
-            "[Group Input] Index -> Index [GripR1 screw paramters]",
+            "[GripR1 voronoi indent parameters] Bundle -> 3 [Index Switch.001]",
+            "[Group Input] Index -> Index [GripR1 screw parameters]",
             "[Index Switch.001] Output -> indent [parts bundle]",
             "[global outputs] fill type -> Index [Index Switch.001]",
             "[parts bundle] Bundle -> GripR1 [Group Output]"
         ],
-        "GripR1 pcb cutout paramters": [
+        "GripR1 pcb cutout parameters": [
             "[pcb cutout parameters] Bundle -> Bundle [Group Output]"
         ],
-        "GripR1 pcb cutout paramters.001": [
+        "GripR1 pcb cutout parameters.001": [
             "[pcb cutout parameters] Bundle -> pcb [Group Output]"
         ],
         "GripR1 pins": [
             "[Join Bundle] Bundle -> pin [Group Output]",
             "[pins params] Bundle -> Bundle [Join Bundle]",
-            "[pins postion] Bundle -> Bundle [Join Bundle]"
+            "[pins position] Bundle -> Bundle [Join Bundle]"
         ],
         "GripR1 primitive hollow parameters": [
             "[fill parameters.001] Bundle -> Bundle [Group Output]"
@@ -1701,7 +1701,7 @@
         "GripR1 primitive skeleton parameters": [
             "[fill parameters.001] Bundle -> Bundle [Group Output]"
         ],
-        "GripR1 screw paramters": [
+        "GripR1 screw parameters": [
             "[Group Input.001] Index -> Index [Index Switch]",
             "[Index Switch] Output -> screw [Group Output]",
             "[Join Bundle.001] Bundle -> 1 [Index Switch]",
@@ -1833,12 +1833,12 @@
             "[stick top parameters.001] Bundle -> Bundle [Join Bundle.013]",
             "[stick top parameters] Bundle -> Bundle [Join Bundle.012]"
         ],
-        "GripR1 voroni indent parameters": [
+        "GripR1 voronoi hollow parameters": [
             "[Join Bundle] Bundle -> Bundle [Group Output]",
             "[fill parameters.001] Bundle -> Bundle [Join Bundle]",
             "[voronoi parameters] Bundle -> Bundle [Join Bundle]"
         ],
-        "GripR1 voronoi  hollow parameters": [
+        "GripR1 voronoi indent parameters": [
             "[Join Bundle] Bundle -> Bundle [Group Output]",
             "[fill parameters.001] Bundle -> Bundle [Join Bundle]",
             "[voronoi parameters] Bundle -> Bundle [Join Bundle]"
@@ -1847,23 +1847,6 @@
             "[Join Bundle] Bundle -> Bundle [Group Output]",
             "[fill parameters.001] Bundle -> Bundle [Join Bundle]",
             "[voronoi parameters] Bundle -> Bundle [Join Bundle]"
-        ],
-        "GripV  lattice parameters": [
-            "[Join Bundle] Bundle -> Bundle [Group Output]",
-            "[fill parameters] Bundle -> Bundle [Join Bundle]",
-            "[holllow lattice parameters] Bundle -> Bundle [Join Bundle]",
-            "[top face parameters] Bundle -> Bundle [Join Bundle]"
-        ],
-        "GripV  lever R1L1": [
-            "[Index Switch] Output -> text [marks parameters]",
-            "[Join Bundle] Bundle -> Bundle [Group Output]",
-            "[R1L1 lever parameters] Bundle -> Bundle [Join Bundle]",
-            "[R1L1 lever parameters] Bundle -> Bundle [lever R1L1 outputs]",
-            "[Value] Value -> stem radius [R1L1 lever parameters]",
-            "[global outputs] button press tol -> tolerance [tolerance set (button tolerance)]",
-            "[marks parameters] Bundle -> Bundle [Join Bundle]",
-            "[marks parameters] Bundle -> Bundle [marks outputs]",
-            "[tolerance set (button tolerance)] Value -> button press tol [R1L1 lever parameters]"
         ],
         "GripV FischerKoch CY hollow parameters": [
             "[fill parameters.001] Bundle -> Bundle [Group Output]"
@@ -1938,7 +1921,7 @@
         "GripV cubic hollow parameters": [
             "[Join Bundle] Bundle -> Bundle [Group Output]",
             "[fill parameters] Bundle -> Bundle [Join Bundle]",
-            "[hollow  parameters] Bundle -> Bundle [Join Bundle]",
+            "[hollow parameters] Bundle -> Bundle [Join Bundle]",
             "[top face parameters] Bundle -> Bundle [Join Bundle]"
         ],
         "GripV cubic indent parameters": [
@@ -1987,8 +1970,8 @@
             "[Switch] Output -> top thickness [top face parameters]",
             "[Value.001] Value -> False [Switch]",
             "[Value] Value -> True [Switch]",
-            "[global outputs] voxel size -> voxel remesh size [hollow  parameters]",
-            "[hollow  parameters] Bundle -> Bundle [Join Bundle]",
+            "[global outputs] voxel size -> voxel remesh size [hollow parameters]",
+            "[hollow parameters] Bundle -> Bundle [Join Bundle]",
             "[top face parameters] Bundle -> Bundle [Join Bundle]",
             "[top grid (top grid)] Boolean -> Switch [Switch]",
             "[top grid (top grid)] Boolean -> top grid [top face parameters]"
@@ -2005,12 +1988,27 @@
             "[tolerance set (button tolerance)] Value -> button tolerance [button parameters]",
             "[tolerance set.001 (button tolerance)] Value -> caps fit tolerance [caps parameters]"
         ],
+        "GripV lattice parameters": [
+            "[Join Bundle] Bundle -> Bundle [Group Output]",
+            "[fill parameters] Bundle -> Bundle [Join Bundle]",
+            "[hollow lattice parameters] Bundle -> Bundle [Join Bundle]",
+            "[top face parameters] Bundle -> Bundle [Join Bundle]"
+        ],
+        "GripV lever R1L1": [
+            "[Index Switch] Output -> text [marks parameters]",
+            "[Join Bundle] Bundle -> Bundle [Group Output]",
+            "[R1L1 lever parameters] Bundle -> Bundle [Join Bundle]",
+            "[R1L1 lever parameters] Bundle -> Bundle [lever R1L1 outputs]",
+            "[Value] Value -> stem radius [R1L1 lever parameters]",
+            "[global outputs] button press tol -> tolerance [tolerance set (button tolerance)]",
+            "[marks parameters] Bundle -> Bundle [Join Bundle]",
+            "[marks parameters] Bundle -> Bundle [marks outputs]",
+            "[tolerance set (button tolerance)] Value -> button press tol [R1L1 lever parameters]"
+        ],
         "GripV middle plate parameters": [
             "[middle plate parameters] Bundle -> Bundle [Group Output]"
         ],
         "GripV parameters": [
-            "[GripV  lattice parameters] Bundle -> lattice [parts bundle]",
-            "[GripV  lever R1L1] Bundle -> R1L1 [parts bundle]",
             "[GripV FischerKoch CY indent parameters] Bundle -> 2 [Index Switch.001]",
             "[GripV FischerKoch S indent parameters] Bundle -> 1 [Index Switch.001]",
             "[GripV R2 parameters] Bundle -> R2 [parts bundle]",
@@ -2025,28 +2023,30 @@
             "[GripV gyroid indent parameters] Bundle -> 0 [Index Switch.001]",
             "[GripV hollow parameters] Bundle -> hollow [parts bundle]",
             "[GripV home] Bundle -> home [parts bundle]",
+            "[GripV lattice parameters] Bundle -> lattice [parts bundle]",
+            "[GripV lever R1L1] Bundle -> R1L1 [parts bundle]",
             "[GripV middle plate parameters] Bundle -> middle plate [parts bundle]",
-            "[GripV pcb cutout paramters] Bundle -> pcb [parts bundle]",
+            "[GripV pcb cutout parameters] Bundle -> pcb [parts bundle]",
             "[GripV pins parameters] Bundle -> pin [parts bundle]",
             "[GripV primitive indent parameters] Bundle -> 5 [Index Switch.001]",
-            "[GripV screw paramters] Bundle -> screw [parts bundle]",
+            "[GripV screw parameters] Bundle -> screw [parts bundle]",
             "[GripV scrollwheel] Bundle -> scrollwheel [parts bundle]",
             "[GripV select] Bundle -> select [parts bundle]",
             "[GripV stick L parameters] Bundle -> stick L [parts bundle]",
             "[GripV stick R parameters] bundle -> stick R [parts bundle]",
-            "[GripV voroni indent parameters] Bundle -> 3 [Index Switch.001]",
-            "[Group Input] Index -> Index [GripV screw paramters]",
+            "[GripV voronoi indent parameters] Bundle -> 3 [Index Switch.001]",
+            "[Group Input] Index -> Index [GripV screw parameters]",
             "[Index Switch.001] Output -> indent [parts bundle]",
             "[global outputs] fill type -> Index [Index Switch.001]",
             "[parts bundle] Bundle -> variant1 [Group Output]"
         ],
-        "GripV pcb cutout paramters": [
+        "GripV pcb cutout parameters": [
             "[pcb cutout parameters] Bundle -> Bundle [Group Output]"
         ],
         "GripV pins parameters": [
             "[Join Bundle] Bundle -> Bundle [Group Output]",
             "[pins params] Bundle -> Bundle [Join Bundle]",
-            "[pins postion] Bundle -> Bundle [Join Bundle]"
+            "[pins position] Bundle -> Bundle [Join Bundle]"
         ],
         "GripV primitive hollow parameters": [
             "[fill parameters.001] Bundle -> Bundle [Group Output]"
@@ -2057,7 +2057,7 @@
         "GripV primitive skeleton parameters": [
             "[fill parameters.001] Bundle -> Bundle [Group Output]"
         ],
-        "GripV screw paramters": [
+        "GripV screw parameters": [
             "[Group Input] Index -> Index [Index Switch]",
             "[Index Switch] Output -> Bundle [Group Output]",
             "[Join Bundle.001] Bundle -> 1 [Index Switch]",
@@ -2106,12 +2106,12 @@
             "[shield parameters] Bundle -> Bundle [Join Bundle.017]",
             "[stick top parameters] Bundle -> Bundle [Join Bundle.017]"
         ],
-        "GripV voroni indent parameters": [
+        "GripV voronoi hollow parameters": [
             "[Join Bundle] Bundle -> Bundle [Group Output]",
             "[fill parameters.001] Bundle -> Bundle [Join Bundle]",
             "[voronoi parameters] Bundle -> Bundle [Join Bundle]"
         ],
-        "GripV voronoi  hollow parameters": [
+        "GripV voronoi indent parameters": [
             "[Join Bundle] Bundle -> Bundle [Group Output]",
             "[fill parameters.001] Bundle -> Bundle [Join Bundle]",
             "[voronoi parameters] Bundle -> Bundle [Join Bundle]"
@@ -2190,7 +2190,7 @@
             "[tolerance set (button tolerance)] Value -> button tolerance [button parameters]",
             "[tolerance set.001 (button tolerance)] Value -> caps fit tolerance [caps parameters]"
         ],
-        "GripX contols": [],
+        "GripX controls": [],
         "GripX cover parameters": [
             "[Join Bundle.001] Bundle -> Bundle [Group Output]",
             "[advanced cover parameters.001] Bundle -> Bundle [Join Bundle.001]",
@@ -2256,8 +2256,8 @@
         ],
         "GripX hollow parameters": [
             "[Join Bundle] Bundle -> Bundle [Group Output]",
-            "[global outputs] voxel size -> voxel remesh size [hollow  parameters]",
-            "[hollow  parameters] Bundle -> Bundle [Join Bundle]",
+            "[global outputs] voxel size -> voxel remesh size [hollow parameters]",
+            "[hollow parameters] Bundle -> Bundle [Join Bundle]",
             "[top face parameters] Bundle -> Bundle [Join Bundle]"
         ],
         "GripX home": [
@@ -2301,17 +2301,17 @@
             "[GripX hollow parameters] Bundle -> hollow [parts bundle]",
             "[GripX home] Bundle -> home [parts bundle]",
             "[GripX lever R1L1] Bundle -> R1L1 [parts bundle]",
-            "[GripX pcb cutout paramters] Bundle -> pcb [parts bundle]",
+            "[GripX pcb cutout parameters] Bundle -> pcb [parts bundle]",
             "[GripX pins] Bundle -> pin [parts bundle]",
             "[GripX primitive indent parameters] Bundle -> 5 [Index Switch.001]",
-            "[GripX screw paramters] Bundle -> screw [parts bundle]",
+            "[GripX screw parameters] Bundle -> screw [parts bundle]",
             "[GripX scrollwheel] Bundle -> scrollwheel [parts bundle]",
             "[GripX select] Bundle -> select [parts bundle]",
             "[GripX shell middle plate parameters] Bundle -> middle plate [parts bundle]",
             "[GripX stick L parameters] Bundle -> stick L [parts bundle]",
             "[GripX stick R parameters] bundle -> stick R [parts bundle]",
-            "[GripX voroni indent parameters] Bundle -> 3 [Index Switch.001]",
-            "[Group Input] Index -> Index [GripX screw paramters]",
+            "[GripX voronoi indent parameters] Bundle -> 3 [Index Switch.001]",
+            "[Group Input] Index -> Index [GripX screw parameters]",
             "[Index Switch.001] Output -> indent [parts bundle]",
             "[global outputs] fill type -> Index [Index Switch.001]",
             "[parts bundle] Bundle -> gripx [Group Output]"
@@ -2325,13 +2325,13 @@
             "[pcb] Geometry -> Geometry [Group Output]",
             "[selector] selected bundle -> Bundle [pcb outputs]"
         ],
-        "GripX pcb cutout paramters": [
+        "GripX pcb cutout parameters": [
             "[pcb cutout parameters] Bundle -> Bundle [Group Output]"
         ],
         "GripX pins": [
             "[Join Bundle] Bundle -> Bundle [Group Output]",
             "[pins params] Bundle -> Bundle [Join Bundle]",
-            "[pins postion] Bundle -> Bundle [Join Bundle]"
+            "[pins position] Bundle -> Bundle [Join Bundle]"
         ],
         "GripX primitive hollow parameters": [
             "[fill parameters.001] Bundle -> Bundle [Group Output]"
@@ -2342,7 +2342,7 @@
         "GripX primitive skeleton parameters": [
             "[fill parameters.001] Bundle -> Bundle [Group Output]"
         ],
-        "GripX screw paramters": [
+        "GripX screw parameters": [
             "[Group Input] Index -> Index [Index Switch]",
             "[Index Switch] Output -> Bundle [Group Output]",
             "[Join Bundle.001] Bundle -> True [Switch]",
@@ -2425,7 +2425,7 @@
             "[stick top parameters.004] Bundle -> Bundle [Join Bundle.020]",
             "[stick top parameters.005] Bundle -> Bundle [Join Bundle.021]",
             "[stick top parameters] Bundle -> Bundle [Join Bundle.013]",
-            "[sticks xy correction] Value -> stick  XY correction [advanced stick parameters]"
+            "[sticks xy correction] Value -> stick XY correction [advanced stick parameters]"
         ],
         "GripX stick R parameters": [
             "[Join Bundle.017] Bundle -> Input [Reroute.003]",
@@ -2463,12 +2463,12 @@
             "[stick top parameters.004] Bundle -> Bundle [Join Bundle.020]",
             "[stick top parameters.normal] Bundle -> Bundle [Join Bundle.017]"
         ],
-        "GripX voroni indent parameters": [
+        "GripX voronoi hollow parameters": [
             "[Join Bundle] Bundle -> Bundle [Group Output]",
             "[fill parameters.001] Bundle -> Bundle [Join Bundle]",
             "[voronoi parameters] Bundle -> Bundle [Join Bundle]"
         ],
-        "GripX voronoi  hollow parameters": [
+        "GripX voronoi indent parameters": [
             "[Join Bundle] Bundle -> Bundle [Group Output]",
             "[fill parameters.001] Bundle -> Bundle [Join Bundle]",
             "[voronoi parameters] Bundle -> Bundle [Join Bundle]"
@@ -2797,12 +2797,12 @@
             "[flipX] Geometry -> L [Menu Switch]",
             "[selector] selected bundle -> Bundle [Separate Bundle.001]"
         ],
-        "R1 lever paramteters": [
+        "R1 lever parameters": [
             "[Combine Bundle] Bundle -> Bundle [Group Output (r1 params)]",
             "[Group Input] X tolerance -> X tolerance [Combine Bundle]",
             "[Group Input] Z tolerance -> Z tolerance [Combine Bundle]",
             "[Group Input] bevel inner -> bevel inner [Combine Bundle]",
-            "[Group Input] bevel inner sbdiv -> bevel inner sbdiv [Combine Bundle]",
+            "[Group Input] bevel inner subdiv -> bevel inner sbdiv [Combine Bundle]",
             "[Group Input] button front shift X -> button front shift X [Combine Bundle]",
             "[Group Input] button height -> button height [Combine Bundle]",
             "[Group Input] button inset offset -> button inset offset [Combine Bundle]",
@@ -2817,9 +2817,9 @@
             "[Group Input] stem radius -> stem radius [Combine Bundle]",
             "[Group Input] stem tolerance -> stem tolerance [Combine Bundle]",
             "[Group Input] top bevel -> top bevel [Combine Bundle]",
-            "[Group Input] wdith -> wdith [Combine Bundle]"
+            "[Group Input] width -> wdith [Combine Bundle]"
         ],
-        "R1 lever postion": [
+        "R1 lever position": [
             "[Combine Bundle] Bundle -> Bundle [Group Output]",
             "[Group Input] X -> X [Combine Bundle]",
             "[Group Input] X -> X [Group Output]",
@@ -2898,7 +2898,7 @@
             "[Group Input] Y -> Y [Combine Bundle]",
             "[Group Input] Z -> Z [Combine Bundle]",
             "[Group Input] bevel inner -> bevel inner [Combine Bundle]",
-            "[Group Input] bevel inner sbdiv -> bevel inner sbdiv [Combine Bundle]",
+            "[Group Input] bevel inner subdiv -> bevel inner sbdiv [Combine Bundle]",
             "[Group Input] bumper Z tolerance -> bumper Z tolerance [Combine Bundle]",
             "[Group Input] button front shift X -> button front shift X [Combine Bundle]",
             "[Group Input] button height -> bumper button height [Combine Bundle]",
@@ -2918,7 +2918,7 @@
             "[Group Input] stem radius -> stem radius [Combine Bundle]",
             "[Group Input] stem tolerance -> stem tolerance [Combine Bundle]",
             "[Group Input] top bevel -> bumper top bevel [Combine Bundle]",
-            "[Group Input] wdith -> wdith [Combine Bundle]"
+            "[Group Input] width -> wdith [Combine Bundle]"
         ],
         "R1L1 outputs": [
             "[Separate Bundle.003] X tolerance -> X tolerance [Group Output]",
@@ -3233,7 +3233,7 @@
             "[Group Input] stopper position -> stopper position [Combine Bundle]",
             "[Group Input] stopper thickness -> stopper thickness [Combine Bundle]",
             "[Group Input] top lip -> top lip [Combine Bundle]",
-            "[Group Input] wdith -> wdith [Combine Bundle]"
+            "[Group Input] width -> wdith [Combine Bundle]"
         ],
         "advanced R4R2 parameters": [
             "[Combine Bundle] Bundle -> Bundle [Group Output (R2)]",
@@ -3285,13 +3285,13 @@
             "[Combine Bundle] Bundle -> Bundle [Group Output]",
             "[Group Input] X correction -> X correction [Combine Bundle]",
             "[Group Input] Y correction -> Y correction [Combine Bundle]",
-            "[Group Input] case cutout thickness  -> case cutout thickness [Combine Bundle]",
+            "[Group Input] case cutout thickness -> case cutout thickness [Combine Bundle]",
             "[Group Input] contact angle -> contact angle [Combine Bundle]",
             "[Group Input] hole bevel -> hole bevel [Combine Bundle]",
             "[Group Input] hole radius -> hole radius [Combine Bundle]",
             "[Group Input] shaft X correction -> shaft X correction [Combine Bundle]",
             "[Group Input] shaft Y correction -> shaft Y correction [Combine Bundle]",
-            "[Group Input] stick  XY correction -> stick XY correction [Combine Bundle]",
+            "[Group Input] stick XY correction -> stick XY correction [Combine Bundle]",
             "[Group Input] stick hole subdivision -> stick hole subdivision [Combine Bundle]",
             "[Group Input] stick subdivision -> stick subdivision [Combine Bundle]",
             "[Group Input] swap stick rotation -> swap stick rotation [Combine Bundle]"
@@ -3300,13 +3300,13 @@
             "[Combine Bundle] Bundle -> Bundle [Group Output]",
             "[Group Input] X correction -> X correction [Combine Bundle]",
             "[Group Input] Y correction -> Y correction [Combine Bundle]",
-            "[Group Input] case cutout thickness  -> case cutout thickness [Combine Bundle]",
+            "[Group Input] case cutout thickness -> case cutout thickness [Combine Bundle]",
             "[Group Input] contact angle -> contact angle [Combine Bundle]",
             "[Group Input] hole bevel -> hole bevel [Combine Bundle]",
             "[Group Input] hole radius -> hole radius [Combine Bundle]",
             "[Group Input] shaft X correction -> shaft X correction [Combine Bundle]",
             "[Group Input] shaft Y correction -> shaft Y correction [Combine Bundle]",
-            "[Group Input] stick  XY correction -> stick XY correction [Combine Bundle]",
+            "[Group Input] stick XY correction -> stick XY correction [Combine Bundle]",
             "[Group Input] stick hole subdivision -> stick hole subdivision [Combine Bundle]",
             "[Group Input] stick subdivision -> stick subdivision [Combine Bundle]",
             "[Group Input] swap stick rotation -> swap stick rotation [Combine Bundle]",
@@ -3425,7 +3425,7 @@
             "[Mesh Boolean.007] Mesh -> Mesh [Group Output]",
             "[Mesh to SDF Grid.012] SDF Grid -> Grid [SDF Grid Offset.002]",
             "[SDF Grid Offset.002] Grid -> Grid [Grid to Mesh.002]",
-            "[align pin] pin -> isntance [place on curve]",
+            "[align pin] pin -> instance [place on curve]",
             "[basemesh variant] variant  -> Mesh [Mesh to SDF Grid.012]",
             "[middle plate outputs] inset width -> Value [offset basemesh and slice]",
             "[offset basemesh and slice] Geometry -> curves [place on curve]",
@@ -3602,7 +3602,7 @@
             "[Group Input] X tolerance -> X tolerance [Combine Bundle]",
             "[Group Input] Z tolerance -> Z tolerance [Combine Bundle]",
             "[Group Input] bevel inner -> bevel inner [Combine Bundle]",
-            "[Group Input] bevel inner sbdiv -> bevel inner sbdiv [Combine Bundle]",
+            "[Group Input] bevel inner subdiv -> bevel inner sbdiv [Combine Bundle]",
             "[Group Input] button height -> button height [Combine Bundle]",
             "[Group Input] button press tolerance -> button press tolerance [Combine Bundle]",
             "[Group Input] jump fix shear -> jump fix shear [Combine Bundle]",
@@ -3634,7 +3634,7 @@
             "[Group Input] range degrees -> range degrees [Combine Bundle]",
             "[Group Input] shaft Z offset -> shaft Z offset [Combine Bundle]",
             "[Group Input] shaft tolerance -> shaft tolerance [Combine Bundle]",
-            "[Group Input] stick heght -> stick heght [Combine Bundle]",
+            "[Group Input] stick height -> stick heght [Combine Bundle]",
             "[Group Input] stick top radius -> stick top radius [Combine Bundle]",
             "[Group Input] top bevel -> top bevel [Combine Bundle]",
             "[Group Input] topmost offset -> topmost offset [Combine Bundle]",
@@ -3664,14 +3664,14 @@
             "[Group Input] range degrees -> range degrees [Combine Bundle]",
             "[Group Input] shaft Z offset -> shaft Z offset [Combine Bundle]",
             "[Group Input] shaft tolerance -> shaft tolerance [Combine Bundle]",
-            "[Group Input] sheild -> sheild [Combine Bundle]",
-            "[Group Input] sheild height -> sheild height [Combine Bundle]",
-            "[Group Input] sheild radius -> sheild radius [Combine Bundle]",
+            "[Group Input] shield -> sheild [Combine Bundle]",
             "[Group Input] shield cutoff height -> shield cutoff height [Combine Bundle]",
+            "[Group Input] shield height -> sheild height [Combine Bundle]",
+            "[Group Input] shield radius -> sheild radius [Combine Bundle]",
             "[Group Input] square texture height -> square texture height [Combine Bundle]",
             "[Group Input] square texture sharpness -> square texture sharpness [Combine Bundle]",
             "[Group Input] square texture subdivision -> square texture subdivision [Combine Bundle]",
-            "[Group Input] stick heght -> stick heght [Combine Bundle]",
+            "[Group Input] stick height -> stick heght [Combine Bundle]",
             "[Group Input] stick top radius -> stick top radius [Combine Bundle]",
             "[Group Input] top bevel -> top bevel [Combine Bundle]",
             "[Group Input] topmost offset -> topmost offset [Combine Bundle]",
@@ -3772,7 +3772,7 @@
             "[Group Input.002] Input -> Bundle [separate cover basic.001]",
             "[Group Input.004] bool -> Switch [Switch]",
             "[Group Input.005] bool -> Switch [Switch.001]",
-            "[Group Input.006] Input -> Bundle [coer Y tolerance]",
+            "[Group Input.006] Input -> Bundle [cover Y tolerance]",
             "[Group Input.007] Input -> Bundle [cover base plate]",
             "[Group Input.007] bool -> bool [cover base plate]",
             "[Group Input.007] bool -> bool [cover lips]",
@@ -3781,7 +3781,7 @@
             "[Math.001] Value -> Value[1] [Math]",
             "[Math] Value -> Z [Combine XYZ.001]",
             "[Mesh Boolean] Intersecting Edges -> Selection [Store Named Attribute]",
-            "[Mesh Boolean] Mesh -> Geometry [coer Y tolerance]",
+            "[Mesh Boolean] Mesh -> Geometry [cover Y tolerance]",
             "[Normal] Normal -> Value [Evaluate on Domain]",
             "[Position.001] Position -> Vector [Separate XYZ.001]",
             "[Position.002] Position -> Value [Evaluate on Domain.001]",
@@ -3808,7 +3808,7 @@
             "[Switch] Output -> Geometry [Set Position]",
             "[Value] Value -> Value[0] [Math]",
             "[battery bool] Mesh -> True [Switch]",
-            "[coer Y tolerance] Geometry -> Geometry [Store Named Attribute]",
+            "[cover Y tolerance] Geometry -> Geometry [Store Named Attribute]",
             "[cover base plate] Geometry -> Input[0] [battery bool]",
             "[cover base plate] Geometry -> Mesh [Mesh Boolean]",
             "[cover base plate] Top -> Input[1] [battery bool]",
@@ -4054,8 +4054,8 @@
             "[Switch.007] Output -> Mesh [Mesh Boolean.008]",
             "[Switch.008] Output -> Mesh 1 [Mesh Boolean.003]",
             "[Switch] Output -> Mesh 2 [Mesh Boolean.003]",
-            "[coVer base] Geometry -> False [Switch.002]",
-            "[coVer base] no extrude -> True [Switch.002]",
+            "[cover base] Geometry -> False [Switch.002]",
+            "[cover base] no extrude -> True [Switch.002]",
             "[global outputs.001] pillars -> Boolean[0] [Boolean Math]",
             "[global outputs.002] screws -> Switch [Switch.001]",
             "[global outputs.003] hollow -> Boolean[0] [Boolean Math.001]",
@@ -4065,7 +4065,7 @@
             "[global outputs.005] stock R1L1 -> Switch [Switch.003]",
             "[global outputs] bottom wire cutouts -> Switch [Switch]",
             "[screws] Geometry -> True [Switch.001]",
-            "[selector] selected bundle -> Input [coVer base]"
+            "[selector] selected bundle -> Input [cover base]"
         ],
         "bundle variant switching base": [
             "[Group Input] GripR1 -> 0 [Index Switch]",
@@ -4204,7 +4204,7 @@
             "[Group Input.006] flex cut -> flex cut [caps]",
             "[Group Input.006] hook height -> hook height [caps]",
             "[Group Input.006] hook inset -> hook inset [caps]",
-            "[Group Input.006] top bevel -> bevel  [caps]",
+            "[Group Input.006] top bevel -> bevel [caps]",
             "[Group Input.007] button tolerance -> Value[0] [Math.006]",
             "[Group Input.007] caps fit tolerance -> Value[1] [Math.006]",
             "[Group Input.008] custom base curve[0] -> False [Switch.005]",
@@ -4248,7 +4248,7 @@
             "[Group Input.026] flex cut -> flex cut [caps.001]",
             "[Group Input.026] hook height -> hook height [caps.001]",
             "[Group Input.026] hook inset -> Value[0] [Math.005]",
-            "[Group Input.026] top bevel -> bevel  [caps.001]",
+            "[Group Input.026] top bevel -> bevel [caps.001]",
             "[Group Input.028] button -> Switch [Switch.012]",
             "[Group Input.028] marks[1] -> Bundle [marks]",
             "[Group Input.029] SMD height -> SMD height [button.002]",
@@ -5026,7 +5026,7 @@
             "[Value] Value -> Radius [Curve Circle]",
             "[Value] Value -> Value[0] [Math]"
         ],
-        "circlularize": [
+        "circularize": [
             "[Attribute Statistic.005 (averaged center point)] Mean -> Vector[1] [Vector Math.001]",
             "[Attribute Statistic.005 (averaged center point)] Mean -> Vector[1] [Vector Math.004]",
             "[Attribute Statistic.005 (averaged center point)] Mean -> Vector[1] [Vector Math.007]",
@@ -5106,85 +5106,6 @@
             "[Store Named Attribute] Geometry -> Input [MirrorX]",
             "[Vector Math.001] Vector -> Offset [Set Position.001]",
             "[Vector Math] Vector -> Vector[0] [Vector Math.001]"
-        ],
-        "coVer base": [
-            "[Boolean Math.004] Boolean -> Value [Evaluate on Domain.002]",
-            "[Boolean Math] Boolean -> Selection [Set Position.001]",
-            "[Combine XYZ.001] Vector -> Offset [Set Position]",
-            "[Combine XYZ] Vector -> Size [Cube (battery)]",
-            "[Compare.001] Result -> Boolean[0] [Boolean Math]",
-            "[Compare.002] Result -> Boolean[1] [Boolean Math]",
-            "[Compare.003] Result -> Boolean[0] [Boolean Math.004]",
-            "[Compare.004] Result -> Boolean[1] [Boolean Math.004]",
-            "[Compare] Result -> Selection [Extrude Mesh]",
-            "[Cube (battery)] Mesh -> Input [Reroute]",
-            "[Evaluate on Domain.001] Value -> Vector [Separate XYZ.002]",
-            "[Evaluate on Domain.002] Value -> Selection [Set Position.002]",
-            "[Evaluate on Domain] Value -> A [Compare.004]",
-            "[Extrude Mesh] Mesh -> Geometry [Set Position.001]",
-            "[Field Min & Max.001] Max -> B [Compare.001]",
-            "[Field Min & Max.002] Min -> B [Compare.002]",
-            "[Field Min & Max] Max -> B [Compare]",
-            "[Group Input.001] Input -> Bundle [battery bool]",
-            "[Group Input.001] Input -> Bundle [separate cover basic]",
-            "[Group Input.002] Input -> Bundle [separate cover basic.001]",
-            "[Group Input.004] bool -> Switch [Switch]",
-            "[Group Input.006] Input -> Bundle [coer Y tolerance]",
-            "[Group Input.007] Input -> Bundle [cover base plate]",
-            "[Group Input.007] bool -> bool [cover base plate]",
-            "[Group Input.007] bool -> bool [cover lips]",
-            "[Group Input.009] Input -> Bundle [cover outputs]",
-            "[Group Input] Input -> Input [cover lips]",
-            "[Math.001] Value -> Value[1] [Math]",
-            "[Math] Value -> Z [Combine XYZ.001]",
-            "[Mesh Boolean] Intersecting Edges -> Selection [Store Named Attribute]",
-            "[Mesh Boolean] Mesh -> Geometry [coer Y tolerance]",
-            "[Normal] Normal -> Value [Evaluate on Domain]",
-            "[Position.001] Position -> Vector [Separate XYZ.001]",
-            "[Position.002] Position -> Value [Evaluate on Domain.001]",
-            "[Position] Position -> Vector [Separate XYZ]",
-            "[Reroute.001] Output -> Input[2] [battery bool]",
-            "[Reroute.001] Output -> Mesh [Mesh Boolean]",
-            "[Reroute] Output -> Geometry [cover base plate]",
-            "[Reroute] Output -> Geometry [cover lips]",
-            "[Reroute] Output -> Input[3] [battery bool]",
-            "[Separate XYZ.001] Y -> A [Compare.002]",
-            "[Separate XYZ.001] Y -> Value [Field Min & Max.002]",
-            "[Separate XYZ.001] Z -> A [Compare.001]",
-            "[Separate XYZ.001] Z -> Value [Field Min & Max.001]",
-            "[Separate XYZ.002] X -> A [Compare.003]",
-            "[Separate XYZ] Z -> A [Compare]",
-            "[Separate XYZ] Z -> Value [Field Min & Max]",
-            "[Set Position.001] Geometry -> Geometry [Group Output]",
-            "[Set Position.002] Geometry -> False [Switch]",
-            "[Set Position] Geometry -> Mesh [Extrude Mesh]",
-            "[Set Position] Geometry -> no extrude [Group Output]",
-            "[Store Named Attribute] Geometry -> Mesh 1 [nail cut]",
-            "[Switch] Output -> Geometry [Set Position]",
-            "[Value] Value -> Value[0] [Math]",
-            "[battery bool] Mesh -> True [Switch]",
-            "[coer Y tolerance] Geometry -> Geometry [Store Named Attribute]",
-            "[cover base plate] Geometry -> Input[0] [battery bool]",
-            "[cover base plate] Geometry -> Mesh [Mesh Boolean]",
-            "[cover base plate] Top -> Input[1] [battery bool]",
-            "[cover lips] Geometry -> Input [Reroute.001]",
-            "[cover outputs] battery height -> Z [Combine XYZ]",
-            "[cover outputs] battery length -> Y [Combine XYZ]",
-            "[cover outputs] battery width -> X [Combine XYZ]",
-            "[nail cut] Mesh -> Geometry [Set Position.002]",
-            "[separate cover basic.001] battery height -> Value[0] [Math.001]",
-            "[separate cover basic.001] shift Y -> Y [Combine XYZ.001]"
-        ],
-        "coer Y tolerance": [
-            "[Group Input] Bundle -> Bundle [Separate Bundle]",
-            "[Group Input] Geometry -> Geometry [Set Position.004]",
-            "[Math] Value -> Scale [Vector Math.008]",
-            "[Position.004] Position -> Vector [only y]",
-            "[Separate Bundle] y tolerance -> Value[0] [Math]",
-            "[Set Position.004] Geometry -> Geometry [Group Output]",
-            "[Vector Math.008] Vector -> Offset [Set Position.004]",
-            "[Vector Math.010] Vector -> Vector[0] [Vector Math.008]",
-            "[only y] Vector -> Vector[0] [Vector Math.010]"
         ],
         "combine": [
             "[Combine Bundle] Bundle -> Bundle [Group Output]",
@@ -5286,7 +5207,7 @@
             "[Position.002] Position -> Vector[0] [Vector Math]",
             "[Position.008] Position -> Vector [Separate XYZ.005]",
             "[Position] Position -> Vector [Separate XYZ.001]",
-            "[Repeat Input.003] Geometry -> Geometry [circlularize]",
+            "[Repeat Input.003] Geometry -> Geometry [circularize]",
             "[Repeat Input.003] Iteration -> Iterations [selection.001]",
             "[Repeat Input] starting value -> Value[0] [Math.039]",
             "[Repeat Input] starting value -> Value[1] [Math.039]",
@@ -5316,8 +5237,8 @@
             "[Vector Math.001] Vector -> Position [Set Position.002]",
             "[Vector Math] Vector -> Position [Set Position.001]",
             "[basemesh top face position] Mean -> Value[0] [Math.001]",
-            "[circlularize] Geometry -> Geometry [Repeat Output.003]",
-            "[selection.001] contour -> Value [circlularize]",
+            "[circularize] Geometry -> Geometry [Repeat Output.003]",
+            "[selection.001] contour -> Value [circularize]",
             "[selection] contour -> Selection [Mesh to Curve]",
             "[selection] faces -> Selection [Delete Geometry]",
             "[stick outputs.001] texture height -> Offset Scale [Extrude Mesh.007]",
@@ -5371,6 +5292,85 @@
             "[Set Material] Geometry -> Geometry [Group Output]",
             "[battery bool and cover] Geometry -> Geometry [Set Material]",
             "[selector] selected bundle -> Input [battery bool and cover]"
+        ],
+        "cover Y tolerance": [
+            "[Group Input] Bundle -> Bundle [Separate Bundle]",
+            "[Group Input] Geometry -> Geometry [Set Position.004]",
+            "[Math] Value -> Scale [Vector Math.008]",
+            "[Position.004] Position -> Vector [only y]",
+            "[Separate Bundle] y tolerance -> Value[0] [Math]",
+            "[Set Position.004] Geometry -> Geometry [Group Output]",
+            "[Vector Math.008] Vector -> Offset [Set Position.004]",
+            "[Vector Math.010] Vector -> Vector[0] [Vector Math.008]",
+            "[only y] Vector -> Vector[0] [Vector Math.010]"
+        ],
+        "cover base": [
+            "[Boolean Math.004] Boolean -> Value [Evaluate on Domain.002]",
+            "[Boolean Math] Boolean -> Selection [Set Position.001]",
+            "[Combine XYZ.001] Vector -> Offset [Set Position]",
+            "[Combine XYZ] Vector -> Size [Cube (battery)]",
+            "[Compare.001] Result -> Boolean[0] [Boolean Math]",
+            "[Compare.002] Result -> Boolean[1] [Boolean Math]",
+            "[Compare.003] Result -> Boolean[0] [Boolean Math.004]",
+            "[Compare.004] Result -> Boolean[1] [Boolean Math.004]",
+            "[Compare] Result -> Selection [Extrude Mesh]",
+            "[Cube (battery)] Mesh -> Input [Reroute]",
+            "[Evaluate on Domain.001] Value -> Vector [Separate XYZ.002]",
+            "[Evaluate on Domain.002] Value -> Selection [Set Position.002]",
+            "[Evaluate on Domain] Value -> A [Compare.004]",
+            "[Extrude Mesh] Mesh -> Geometry [Set Position.001]",
+            "[Field Min & Max.001] Max -> B [Compare.001]",
+            "[Field Min & Max.002] Min -> B [Compare.002]",
+            "[Field Min & Max] Max -> B [Compare]",
+            "[Group Input.001] Input -> Bundle [battery bool]",
+            "[Group Input.001] Input -> Bundle [separate cover basic]",
+            "[Group Input.002] Input -> Bundle [separate cover basic.001]",
+            "[Group Input.004] bool -> Switch [Switch]",
+            "[Group Input.006] Input -> Bundle [cover Y tolerance]",
+            "[Group Input.007] Input -> Bundle [cover base plate]",
+            "[Group Input.007] bool -> bool [cover base plate]",
+            "[Group Input.007] bool -> bool [cover lips]",
+            "[Group Input.009] Input -> Bundle [cover outputs]",
+            "[Group Input] Input -> Input [cover lips]",
+            "[Math.001] Value -> Value[1] [Math]",
+            "[Math] Value -> Z [Combine XYZ.001]",
+            "[Mesh Boolean] Intersecting Edges -> Selection [Store Named Attribute]",
+            "[Mesh Boolean] Mesh -> Geometry [cover Y tolerance]",
+            "[Normal] Normal -> Value [Evaluate on Domain]",
+            "[Position.001] Position -> Vector [Separate XYZ.001]",
+            "[Position.002] Position -> Value [Evaluate on Domain.001]",
+            "[Position] Position -> Vector [Separate XYZ]",
+            "[Reroute.001] Output -> Input[2] [battery bool]",
+            "[Reroute.001] Output -> Mesh [Mesh Boolean]",
+            "[Reroute] Output -> Geometry [cover base plate]",
+            "[Reroute] Output -> Geometry [cover lips]",
+            "[Reroute] Output -> Input[3] [battery bool]",
+            "[Separate XYZ.001] Y -> A [Compare.002]",
+            "[Separate XYZ.001] Y -> Value [Field Min & Max.002]",
+            "[Separate XYZ.001] Z -> A [Compare.001]",
+            "[Separate XYZ.001] Z -> Value [Field Min & Max.001]",
+            "[Separate XYZ.002] X -> A [Compare.003]",
+            "[Separate XYZ] Z -> A [Compare]",
+            "[Separate XYZ] Z -> Value [Field Min & Max]",
+            "[Set Position.001] Geometry -> Geometry [Group Output]",
+            "[Set Position.002] Geometry -> False [Switch]",
+            "[Set Position] Geometry -> Mesh [Extrude Mesh]",
+            "[Set Position] Geometry -> no extrude [Group Output]",
+            "[Store Named Attribute] Geometry -> Mesh 1 [nail cut]",
+            "[Switch] Output -> Geometry [Set Position]",
+            "[Value] Value -> Value[0] [Math]",
+            "[battery bool] Mesh -> True [Switch]",
+            "[cover Y tolerance] Geometry -> Geometry [Store Named Attribute]",
+            "[cover base plate] Geometry -> Input[0] [battery bool]",
+            "[cover base plate] Geometry -> Mesh [Mesh Boolean]",
+            "[cover base plate] Top -> Input[1] [battery bool]",
+            "[cover lips] Geometry -> Input [Reroute.001]",
+            "[cover outputs] battery height -> Z [Combine XYZ]",
+            "[cover outputs] battery length -> Y [Combine XYZ]",
+            "[cover outputs] battery width -> X [Combine XYZ]",
+            "[nail cut] Mesh -> Geometry [Set Position.002]",
+            "[separate cover basic.001] battery height -> Value[0] [Math.001]",
+            "[separate cover basic.001] shift Y -> Y [Combine XYZ.001]"
         ],
         "cover base plate": [
             "[Boolean Math.001] Boolean -> Selection [Delete Geometry.002]",
@@ -5600,26 +5600,26 @@
             "[Math.005] Value -> Value[0] [Math.006]",
             "[Math.006] Value -> value [Group Output]",
             "[Separate Bundle.001] rotate -> Rotation [Vector Rotate.003]",
-            "[Separate Bundle.001] scale -> Scale [euclidean distance ]",
+            "[Separate Bundle.001] scale -> Scale [euclidean distance]",
             "[Separate Bundle.001] translate -> Vector[1] [Vector Math.004]",
             "[Separate Bundle.002] rotate -> Rotation [Vector Rotate.001]",
-            "[Separate Bundle.002] scale -> Scale [euclidean distance .001]",
+            "[Separate Bundle.002] scale -> Scale [euclidean distance.001]",
             "[Separate Bundle.002] translate -> Vector[1] [Vector Math.002]",
             "[Separate Bundle.003] rotate -> Rotation [Vector Rotate]",
-            "[Separate Bundle.003] scale -> Scale [euclidean distance .002]",
+            "[Separate Bundle.003] scale -> Scale [euclidean distance.002]",
             "[Separate Bundle.003] translate -> Vector[1] [Vector Math.001]",
-            "[Vector Math.001] Vector -> position [euclidean distance .002]",
-            "[Vector Math.002] Vector -> position [euclidean distance .001]",
-            "[Vector Math.004] Vector -> position [euclidean distance ]",
-            "[Vector Rotate.001] Vector -> Vector [euclidean distance .001]",
-            "[Vector Rotate.003] Vector -> Vector [euclidean distance ]",
-            "[Vector Rotate] Vector -> Vector [euclidean distance .002]",
+            "[Vector Math.001] Vector -> position [euclidean distance.002]",
+            "[Vector Math.002] Vector -> position [euclidean distance.001]",
+            "[Vector Math.004] Vector -> position [euclidean distance]",
+            "[Vector Rotate.001] Vector -> Vector [euclidean distance.001]",
+            "[Vector Rotate.003] Vector -> Vector [euclidean distance]",
+            "[Vector Rotate] Vector -> Vector [euclidean distance.002]",
             "[cubic fill outputs] X -> Bundle [Separate Bundle.001]",
             "[cubic fill outputs] Y -> Bundle [Separate Bundle.002]",
             "[cubic fill outputs] Z -> Bundle [Separate Bundle.003]",
-            "[euclidean distance .001] Value -> Value[1] [Math.005]",
-            "[euclidean distance .002] Value -> Value[1] [Math.006]",
-            "[euclidean distance ] Value -> Value[0] [Math.005]",
+            "[euclidean distance.001] Value -> Value[1] [Math.005]",
+            "[euclidean distance.002] Value -> Value[1] [Math.006]",
+            "[euclidean distance] Value -> Value[0] [Math.005]",
             "[lattice outputs] smooth pattern -> Value[2] [Math.005]",
             "[lattice outputs] smooth pattern -> Value[2] [Math.006]"
         ],
@@ -5983,10 +5983,10 @@
             "[Mesh Circle.001] Mesh -> Mesh [Extrude Mesh.002]",
             "[Mesh Circle.001] Mesh -> Mesh [Flip Faces.001]"
         ],
-        "deault lever R1L1": [
+        "default lever R1L1": [
             "[Join Bundle] Bundle -> Bundle [Group Output]",
-            "[R1 lever paramteters] Bundle -> Bundle [Join Bundle]",
-            "[R1 lever postion] Bundle -> Bundle [Join Bundle]"
+            "[R1 lever parameters] Bundle -> Bundle [Join Bundle]",
+            "[R1 lever position] Bundle -> Bundle [Join Bundle]"
         ],
         "delete half": [
             "[Compare.001] Result -> top [Menu Switch]",
@@ -6371,7 +6371,7 @@
             "[Set Position] Geometry -> Geometry [Transform Geometry.002]",
             "[Switch.001] Output -> False [Switch]",
             "[Switch.002] Output -> Geometry [action.003]",
-            "[Switch.004] Output -> stiick height [stem base.002]",
+            "[Switch.004] Output -> stick height [stem base.002]",
             "[Switch.005] Output -> stick hook depth [stem base.002]",
             "[Switch] Output -> Geometry[0] [Group Output]",
             "[Transform Geometry.001] Geometry -> Geometry [Capture Attribute.001]",
@@ -6413,7 +6413,7 @@
             "[dpad stick outputs.001] stick hook height -> Value[0] [Math.001]",
             "[dpad stick outputs.001] stick thickness -> stick thickness [stem base.001]",
             "[dpad stick outputs.001] stick tolerance -> Input [Reroute.004]",
-            "[dpad stick outputs.001] stiick height -> stiick height [stem base.001]",
+            "[dpad stick outputs.001] stiick height -> stick height [stem base.001]",
             "[dpad stick outputs.002] ball stopper height -> ball stopper height [stem base]",
             "[dpad stick outputs.002] ball stopper position -> ball stopper position [stem base]",
             "[dpad stick outputs.002] flex cut depth -> Input [Reroute.019 (flex cut depth)]",
@@ -6424,7 +6424,7 @@
             "[dpad stick outputs.002] stick hook depth -> Value[1] [Math.003]",
             "[dpad stick outputs.002] stick hook height -> Value[0] [Math.003]",
             "[dpad stick outputs.002] stick thickness -> stick thickness [stem base]",
-            "[dpad stick outputs.002] stiick height -> stiick height [stem base]",
+            "[dpad stick outputs.002] stiick height -> stick height [stem base]",
             "[dpad stick outputs.003] cap oval offset -> Value[1] [Math.002]",
             "[dpad stick outputs.003] hook extrude -> Value[1] [Math]",
             "[dpad stick outputs.003] hook z tolerance -> Value[1] [Math.008]",
@@ -6537,15 +6537,15 @@
             "[Group Input.001] rocker support size -> rocker support size [Combine Bundle]",
             "[Group Input.001] rocker support thickness -> rocker support thickness [Combine Bundle]",
             "[Group Input.001] stick bottom offset -> stick bottom offset [Combine Bundle]",
+            "[Group Input.001] stick height -> stiick height [Combine Bundle]",
             "[Group Input.001] stick hook depth -> stick hook depth [Combine Bundle]",
             "[Group Input.001] stick hook height -> stick hook height [Combine Bundle]",
             "[Group Input.001] stick thickness -> stick thickness [Combine Bundle]",
             "[Group Input.001] stick tolerance -> stick tolerance [Combine Bundle]",
-            "[Group Input.001] stiick height -> stiick height [Combine Bundle]",
             "[Group Input.001] texture height -> texture height [Combine Bundle]",
             "[Group Input.001] texture sharpness -> texture sharpness [Combine Bundle]"
         ],
-        "euclidean distance ": [
+        "euclidean distance": [
             "[Group Input.001] position -> Vector[0] [Vector Math.002]",
             "[Group Input] Scale -> Value[1] [Math.005]",
             "[Group Input] Vector -> Vector[1] [Vector Math.002]",
@@ -6574,8 +6574,8 @@
         ],
         "extrude and offset": [
             "[Boolean Math.001] Boolean -> Selection [Set Position.002]",
-            "[Boolean Math.002] Boolean -> Weights [neighboor direction.001]",
-            "[Boolean Math.002] Boolean -> Weights [neighboor direction]",
+            "[Boolean Math.002] Boolean -> Weights [neighbour direction.001]",
+            "[Boolean Math.002] Boolean -> Weights [neighbour direction]",
             "[Boolean Math] Boolean -> Switch [Switch.001]",
             "[Compare] Result -> Boolean[0] [Boolean Math]",
             "[Compare] Result -> Switch [Switch]",
@@ -6618,12 +6618,12 @@
             "[Vector Math.032] Vector -> False [Switch.001]",
             "[Vector Math] Vector -> Vector[0] [Vector Math.024]",
             "[Vertex Neighbors] Vertex Count -> A [Compare]",
-            "[neighboor direction.001] Vector -> Input [Reroute.002]",
-            "[neighboor direction.001] Vector -> Input [Reroute.011]",
-            "[neighboor direction.001] Vector -> Vector[0] [Vector Math.023]",
-            "[neighboor direction] Vector -> Input [Reroute.010]",
-            "[neighboor direction] Vector -> Input [Reroute]",
-            "[neighboor direction] Vector -> Vector[1] [Vector Math.023]"
+            "[neighbour direction.001] Vector -> Input [Reroute.002]",
+            "[neighbour direction.001] Vector -> Input [Reroute.011]",
+            "[neighbour direction.001] Vector -> Vector[0] [Vector Math.023]",
+            "[neighbour direction] Vector -> Input [Reroute.010]",
+            "[neighbour direction] Vector -> Input [Reroute]",
+            "[neighbour direction] Vector -> Vector[1] [Vector Math.023]"
         ],
         "extrude insert": [
             "[Extrude Mesh.002] Mesh -> Geometry [Set Position.005]",
@@ -7056,14 +7056,6 @@
             "[cut basemesh] Geometry -> half basemesh [Group Output]",
             "[cut basemesh] Intersecting Edges -> Intersecting Edges [Group Output]"
         ],
-        "holllow lattice parameters": [
-            "[Combine Bundle.002] Bundle -> Bundle [Group Output]",
-            "[Group Input.001] band remesh width -> band remesh width [Combine Bundle.002]",
-            "[Group Input.001] protect geometry -> protect geometry [Combine Bundle.002]",
-            "[Group Input.001] shell thickness -> shell thickness [Combine Bundle.002]",
-            "[Group Input.001] smooth sdf -> smooth sdf [Combine Bundle.002]",
-            "[Group Input.001] voxel remesh size -> voxel remesh size [Combine Bundle.002]"
-        ],
         "hollow": [
             "[SDF Grid Boolean] Grid -> Grid [Group Output]",
             "[SDF Grid Offset.005] Grid -> Grid 2 [SDF Grid Boolean]",
@@ -7074,7 +7066,15 @@
             "[part to grid] SDF Grid -> Grid [SDF Grid Offset.006]",
             "[shell outputs] shell thickness -> Value [invert]"
         ],
-        "hollow  parameters": [
+        "hollow lattice parameters": [
+            "[Combine Bundle.002] Bundle -> Bundle [Group Output]",
+            "[Group Input.001] band remesh width -> band remesh width [Combine Bundle.002]",
+            "[Group Input.001] protect geometry -> protect geometry [Combine Bundle.002]",
+            "[Group Input.001] shell thickness -> shell thickness [Combine Bundle.002]",
+            "[Group Input.001] smooth sdf -> smooth sdf [Combine Bundle.002]",
+            "[Group Input.001] voxel remesh size -> voxel remesh size [Combine Bundle.002]"
+        ],
+        "hollow parameters": [
             "[Combine Bundle.002] Bundle -> Bundle [Group Output]",
             "[Group Input.001] band remesh width -> band remesh width [Combine Bundle.002]",
             "[Group Input.001] protect geometry -> protect geometry [Combine Bundle.002]",
@@ -8388,7 +8388,7 @@
             "[Mesh Boolean.014] Mesh -> Mesh 1 [plate bools]",
             "[MirrorX] Geometry -> Mesh 2 [Mesh Boolean.014]",
             "[Set Position] Geometry -> Mesh [Mesh Boolean.013]",
-            "[align pin] bool -> isntance [place on curve]",
+            "[align pin] bool -> instance [place on curve]",
             "[middle plate outputs.001] pcb pocket thickness -> thickness [pcb pocket]",
             "[middle plate outputs.001] pcb pocket tolerance -> tolerance [pcb pocket]",
             "[middle plate outputs.002] inset width -> Value [offset basemesh and slice]",
@@ -8516,7 +8516,7 @@
             "[Mesh Boolean.008] Mesh -> Mesh [Group Output]",
             "[Set Position.009] Geometry -> Mesh 2 [Mesh Boolean.008]"
         ],
-        "neighboor direction": [
+        "neighbour direction": [
             "[Edge Vertices] Position 1 -> Value [Evaluate at Index.005]",
             "[Edge Vertices] Position 2 -> Value [Evaluate at Index.006]",
             "[Edges of Vertex.002] Edge Index -> Index [Evaluate at Index.005]",
@@ -8533,7 +8533,7 @@
             "[Vector Math.016] Vector -> Vector[0] [Vector Math.017]",
             "[Vector Math.017] Vector -> Vector [Group Output]"
         ],
-        "neighboor direction.001": [
+        "neighbour direction.001": [
             "[Edge Vertices] Position 1 -> Value [Evaluate at Index.005]",
             "[Edge Vertices] Position 2 -> Value [Evaluate at Index.006]",
             "[Edges of Vertex.002] Edge Index -> Index [Evaluate at Index.005]",
@@ -8549,7 +8549,7 @@
             "[Vector Math.016] Vector -> Vector[0] [Vector Math.017]",
             "[Vector Math.017] Vector -> Vector [Group Output]"
         ],
-        "neighboor vert vector": [
+        "neighbour vert vector": [
             "[Field Min & Max] Max -> Value[0] [Integer Math.002]",
             "[Group Input] Input -> Input [Reroute.004]",
             "[Group Input] Mesh -> Input [Reroute.005]",
@@ -8759,12 +8759,12 @@
             "[Vector Math] Vector -> Vector[0] [Vector Math.024]",
             "[Vertex Neighbors] Vertex Count -> A [Compare]",
             "[direction flow] Vector -> Input [Reroute.003]",
-            "[neighboor direction.001] Vector -> Input [Reroute.010]",
-            "[neighboor direction.001] Vector -> Input [Reroute]",
-            "[neighboor direction.001] Vector -> Vector[1] [Vector Math.023]",
-            "[neighboor direction.002] Vector -> Input [Reroute.002]",
-            "[neighboor direction.002] Vector -> Input [Reroute.011]",
-            "[neighboor direction.002] Vector -> Vector[0] [Vector Math.023]"
+            "[neighbour direction.001] Vector -> Input [Reroute.010]",
+            "[neighbour direction.001] Vector -> Input [Reroute]",
+            "[neighbour direction.001] Vector -> Vector[1] [Vector Math.023]",
+            "[neighbour direction.002] Vector -> Input [Reroute.002]",
+            "[neighbour direction.002] Vector -> Input [Reroute.011]",
+            "[neighbour direction.002] Vector -> Vector[0] [Vector Math.023]"
         ],
         "offset edge gemini": [
             "[Boolean Math] Boolean -> Switch [Switch.001]",
@@ -8780,8 +8780,8 @@
             "[Math.009] Value -> False [Switch]",
             "[Math.010] Value -> Boolean[0] [Boolean Math]",
             "[Math] Value -> Scale [Vector Math.032]",
-            "[Reroute.001] Output -> Weights [neighboor direction.001]",
-            "[Reroute.001] Output -> Weights [neighboor direction]",
+            "[Reroute.001] Output -> Weights [neighbour direction.001]",
+            "[Reroute.001] Output -> Weights [neighbour direction]",
             "[Reroute.002] Output -> Vector[1] [Vector Math.020]",
             "[Reroute.003] Output -> Input [Reroute.004]",
             "[Reroute.003] Output -> Input [Reroute.009]",
@@ -8802,12 +8802,12 @@
             "[Vector Math.032] Vector -> False [Switch.001]",
             "[Vector Math] Vector -> Vector[0] [Vector Math.001]",
             "[Vertex Neighbors] Vertex Count -> A [Compare]",
-            "[neighboor direction.001] Vector -> Input [Reroute.002]",
-            "[neighboor direction.001] Vector -> Input [Reroute.011]",
-            "[neighboor direction.001] Vector -> Vector[0] [Vector Math.023]",
-            "[neighboor direction] Vector -> Input [Reroute.010]",
-            "[neighboor direction] Vector -> Input [Reroute]",
-            "[neighboor direction] Vector -> Vector[1] [Vector Math.023]"
+            "[neighbour direction.001] Vector -> Input [Reroute.002]",
+            "[neighbour direction.001] Vector -> Input [Reroute.011]",
+            "[neighbour direction.001] Vector -> Vector[0] [Vector Math.023]",
+            "[neighbour direction] Vector -> Input [Reroute.010]",
+            "[neighbour direction] Vector -> Input [Reroute]",
+            "[neighbour direction] Vector -> Vector[1] [Vector Math.023]"
         ],
         "offset even reddit old": [
             "[Compare] Result -> Switch [Switch]",
@@ -8912,8 +8912,8 @@
             "[Reroute.003] Output -> Input [Reroute.009]",
             "[Reroute.004] Output -> True [Switch.002]",
             "[Reroute.005] Output -> Vector[1] [Vector Math.020]",
-            "[Reroute.007] Output -> Weights [neighboor direction.001]",
-            "[Reroute.007] Output -> Weights [neighboor direction]",
+            "[Reroute.007] Output -> Weights [neighbour direction.001]",
+            "[Reroute.007] Output -> Weights [neighbour direction]",
             "[Reroute.009] Output -> Vector[1] [Vector Math.031]",
             "[Reroute.010] Output -> Vector[1] [Vector Math.021]",
             "[Reroute.011] Output -> Vector[0] [Vector Math.021]",
@@ -8931,12 +8931,12 @@
             "[Vector Math.031] Value -> Value[0] [Math.033]",
             "[Vector Math.032] Vector -> False [Switch.002]",
             "[Vertex Neighbors] Vertex Count -> A [Compare.007]",
-            "[neighboor direction.001] Vector -> Input [Reroute.005]",
-            "[neighboor direction.001] Vector -> Input [Reroute.011]",
-            "[neighboor direction.001] Vector -> Vector[0] [Vector Math.023]",
-            "[neighboor direction] Vector -> Input [Reroute.001]",
-            "[neighboor direction] Vector -> Input [Reroute.010]",
-            "[neighboor direction] Vector -> Vector[1] [Vector Math.023]"
+            "[neighbour direction.001] Vector -> Input [Reroute.005]",
+            "[neighbour direction.001] Vector -> Input [Reroute.011]",
+            "[neighbour direction.001] Vector -> Vector[0] [Vector Math.023]",
+            "[neighbour direction] Vector -> Input [Reroute.001]",
+            "[neighbour direction] Vector -> Input [Reroute.010]",
+            "[neighbour direction] Vector -> Vector[1] [Vector Math.023]"
         ],
         "offset selected axis": [
             "[Boolean Math.020] Boolean -> Switch [Switch.002]",
@@ -8962,8 +8962,8 @@
             "[Reroute.003] Output -> Input [Reroute.009]",
             "[Reroute.004] Output -> True [Switch.002]",
             "[Reroute.005] Output -> Vector[1] [Vector Math.020]",
-            "[Reroute.007] Output -> Weights [neighboor direction.001]",
-            "[Reroute.007] Output -> Weights [neighboor direction]",
+            "[Reroute.007] Output -> Weights [neighbour direction.001]",
+            "[Reroute.007] Output -> Weights [neighbour direction]",
             "[Reroute.009] Output -> Vector[1] [Vector Math.031]",
             "[Reroute.010] Output -> Vector[1] [Vector Math.021]",
             "[Reroute.011] Output -> Vector[0] [Vector Math.021]",
@@ -8983,12 +8983,12 @@
             "[Vector Math.031] Value -> Value[0] [Math.033]",
             "[Vector Math.032] Vector -> False [Switch.002]",
             "[Vertex Neighbors] Vertex Count -> A [Compare.007]",
-            "[neighboor direction.001] Vector -> Input [Reroute.005]",
-            "[neighboor direction.001] Vector -> Input [Reroute.011]",
-            "[neighboor direction.001] Vector -> Vector[0] [Vector Math.023]",
-            "[neighboor direction] Vector -> Input [Reroute.001]",
-            "[neighboor direction] Vector -> Input [Reroute.010]",
-            "[neighboor direction] Vector -> Vector[1] [Vector Math.023]"
+            "[neighbour direction.001] Vector -> Input [Reroute.005]",
+            "[neighbour direction.001] Vector -> Input [Reroute.011]",
+            "[neighbour direction.001] Vector -> Vector[0] [Vector Math.023]",
+            "[neighbour direction] Vector -> Input [Reroute.001]",
+            "[neighbour direction] Vector -> Input [Reroute.010]",
+            "[neighbour direction] Vector -> Vector[1] [Vector Math.023]"
         ],
         "only x": [
             "[Combine XYZ.002] Vector -> Vector [Group Output]",
@@ -9388,7 +9388,7 @@
             "[Group Input] xy tol -> xy tol [Combine Bundle]",
             "[Group Input] z tol -> z tol [Combine Bundle]"
         ],
-        "pins postion": [
+        "pins position": [
             "[Combine Bundle] Bundle -> Bundle [Group Output]",
             "[Group Input] X -> X [Combine Bundle]",
             "[Group Input] Y -> Y [Combine Bundle]",
@@ -9403,7 +9403,7 @@
             "[Group Input] curves -> Curve [Curve to Mesh]",
             "[Group Input] curves -> Geometry [Sample Index (curves)]",
             "[Group Input] empties -> Geometry [Set Position.002]",
-            "[Group Input] isntance -> Instance [Instance on Points]",
+            "[Group Input] instance -> Instance [Instance on Points]",
             "[Instance on Points] Instances -> Geometry [Realize Instances]",
             "[Instances to Points] Points -> Points [Instance on Points]",
             "[Realize Instances] Geometry -> Geometry [Group Output]",
@@ -10550,10 +10550,10 @@
             "[Combine Bundle] Bundle -> Bundle [Group Output (Stick R)]",
             "[Group Input] FDM Z correction -> FDM Z correction [Combine Bundle]",
             "[Group Input] FDM shield thickness -> FDM shield thickness [Combine Bundle]",
-            "[Group Input] sheild -> sheild [Combine Bundle]",
-            "[Group Input] sheild height -> sheild height [Combine Bundle]",
-            "[Group Input] sheild radius offset -> sheild radius [Combine Bundle]",
-            "[Group Input] shield cutoff height -> shield cutoff height [Combine Bundle]"
+            "[Group Input] shield -> sheild [Combine Bundle]",
+            "[Group Input] shield cutoff height -> shield cutoff height [Combine Bundle]",
+            "[Group Input] shield height -> sheild height [Combine Bundle]",
+            "[Group Input] shield radius offset -> sheild radius [Combine Bundle]"
         ],
         "sin(2n)*(sin+cos)": [
             "[Group Input] cos -> Value[0] [Math.020]",
@@ -10940,12 +10940,12 @@
             "[Group Input] hook extrude -> Offset Scale [Extrude Mesh.004]",
             "[Group Input] stick bottom offset -> Value[1] [Math.001]",
             "[Group Input] stick bottom offset -> Value[1] [Math.002]",
+            "[Group Input] stick height -> Value[0] [Math.007]",
             "[Group Input] stick hook depth -> Input [Reroute.017]",
             "[Group Input] stick hook height -> Offset Scale [Extrude Mesh.003]",
             "[Group Input] stick hook height -> Value[1] [Math.019]",
             "[Group Input] stick thickness -> Value[0] [Math.017]",
             "[Group Input] stick tolerance -> Value[1] [Math.017]",
-            "[Group Input] stiick height -> Value[0] [Math.007]",
             "[Math.001] Value -> Z [Combine XYZ.001]",
             "[Math.002] Value -> Value[0] [Math.004]",
             "[Math.004] Value -> Value[0] [Math.006]",
@@ -11383,8 +11383,8 @@
         "sticks xy correction": [],
         "stopper offset": [
             "[Boolean Math.001] Boolean -> Selection [Set Position.002]",
-            "[Boolean Math.002] Boolean -> Weights [neighboor direction.001]",
-            "[Boolean Math.002] Boolean -> Weights [neighboor direction]",
+            "[Boolean Math.002] Boolean -> Weights [neighbour direction.001]",
+            "[Boolean Math.002] Boolean -> Weights [neighbour direction]",
             "[Boolean Math] Boolean -> Switch [Switch.001]",
             "[Compare] Result -> Boolean[0] [Boolean Math]",
             "[Compare] Result -> Switch [Switch]",
@@ -11427,12 +11427,12 @@
             "[Vector Math.032] Vector -> False [Switch.001]",
             "[Vector Math] Vector -> Vector[0] [Vector Math.024]",
             "[Vertex Neighbors] Vertex Count -> A [Compare]",
-            "[neighboor direction.001] Vector -> Input [Reroute.002]",
-            "[neighboor direction.001] Vector -> Input [Reroute.011]",
-            "[neighboor direction.001] Vector -> Vector[0] [Vector Math.023]",
-            "[neighboor direction] Vector -> Input [Reroute.010]",
-            "[neighboor direction] Vector -> Input [Reroute]",
-            "[neighboor direction] Vector -> Vector[1] [Vector Math.023]"
+            "[neighbour direction.001] Vector -> Input [Reroute.002]",
+            "[neighbour direction.001] Vector -> Input [Reroute.011]",
+            "[neighbour direction.001] Vector -> Vector[0] [Vector Math.023]",
+            "[neighbour direction] Vector -> Input [Reroute.010]",
+            "[neighbour direction] Vector -> Input [Reroute]",
+            "[neighbour direction] Vector -> Vector[1] [Vector Math.023]"
         ],
         "subd": [
             "[Group Input] Geometry -> Mesh [Subdivision Surface]",
@@ -11465,7 +11465,7 @@
             "[Value.001] Value -> False [Switch]",
             "[Vector Rotate] Vector -> Position [Set Position.003]"
         ],
-        "swich tolerance": [
+        "switch tolerance": [
             "[Group Input] Switch -> Switch [Switch.004]",
             "[Group Input] tolerance -> Value[1] [Math.004]",
             "[Group Input] value -> Input [Reroute.002]",
@@ -12445,7 +12445,7 @@
             "[Join Geometry] Geometry -> Geometry [Viewer]",
             "[Math.001] Value -> Value[0] [Math.009]",
             "[Math.001] Value -> X [Combine XYZ.005]",
-            "[Math.003] Value -> value [swich tolerance]",
+            "[Math.003] Value -> value [switch tolerance]",
             "[Math.004] Value -> Input [Reroute.005]",
             "[Math.005] Value -> Value[0] [Math.006]",
             "[Math.006] Value -> Z [Combine XYZ.003]",
@@ -12473,9 +12473,9 @@
             "[Reroute.005] Output -> Value[0] [Math.005]",
             "[Reroute.005] Output -> Y [Combine XYZ.002]",
             "[Reroute.006] Output -> Input [Reroute.007]",
-            "[Reroute.007] Output -> Switch [swich tolerance.001]",
-            "[Reroute.007] Output -> Switch [swich tolerance.002]",
-            "[Reroute.007] Output -> Switch [swich tolerance]",
+            "[Reroute.007] Output -> Switch [switch tolerance.001]",
+            "[Reroute.007] Output -> Switch [switch tolerance.002]",
+            "[Reroute.007] Output -> Switch [switch tolerance]",
             "[Reroute.008] Output -> X [Combine XYZ.001]",
             "[Reroute.008] Output -> X [Combine XYZ.003]",
             "[Reroute.009] Output -> Input [Reroute.012]",
@@ -12509,16 +12509,16 @@
             "[selector.001] selected bundle -> Bundle [trigger outputs]",
             "[selector.002] selected bundle -> Bundle [Separate Bundle.003]",
             "[selector] selected bundle -> Bundle [Separate Bundle.001]",
-            "[split parameters] tip fit compression offset -> tolerance [swich tolerance]",
+            "[split parameters] tip fit compression offset -> tolerance [switch tolerance]",
             "[split parameters] tip fit length -> Value[0] [Math.003]",
-            "[split parameters] tip fit radius -> value [swich tolerance.001]",
-            "[split parameters] tip fit radius tolerance -> tolerance [swich tolerance.001]",
+            "[split parameters] tip fit radius -> value [switch tolerance.001]",
+            "[split parameters] tip fit radius tolerance -> tolerance [switch tolerance.001]",
             "[split parameters] tip fit shift -> Input [Reroute.008]",
-            "[split parameters] tip fit width -> value [swich tolerance.002]",
-            "[split parameters] tip fit width tolerance -> tolerance [swich tolerance.002]",
-            "[swich tolerance.001] Output -> Radius [Cylinder]",
-            "[swich tolerance.002] Output -> Input [Reroute.004]",
-            "[swich tolerance] Output -> Input [Reroute.002]",
+            "[split parameters] tip fit width -> value [switch tolerance.002]",
+            "[split parameters] tip fit width tolerance -> tolerance [switch tolerance.002]",
+            "[switch tolerance.001] Output -> Radius [Cylinder]",
+            "[switch tolerance.002] Output -> Input [Reroute.004]",
+            "[switch tolerance] Output -> Input [Reroute.002]",
             "[tal] top arch length -> Value[1] [Math]",
             "[topoff] Geometry -> Input [Reroute.001]",
             "[trigger outputs] shift z -> Value[0] [tal]",
@@ -12774,75 +12774,6 @@
     "modifiers": {},
     "tracked_inputs": {
         "GripV controls": {
-            "GripV  lever R1L1": {
-                "nodes": {
-                    "R1L1 lever parameters": {
-                        "inputs": {
-                            "R1L1 flex": true,
-                            "X": 28.0,
-                            "X tolerance": 1.0,
-                            "Y": -14.0,
-                            "Z": 40.0,
-                            "bevel inner": 3.0,
-                            "bevel inner sbdiv": 2,
-                            "bumper Z tolerance": 0.52,
-                            "button front shift X": 18.0,
-                            "button height": 0.0,
-                            "button inset offset": 1.0,
-                            "button press tol": 0.0,
-                            "curved R1L1": false,
-                            "curved button bevel": 1.0,
-                            "curved button depth tolerance": 1.0,
-                            "curved button slant": -1.0,
-                            "curved button thickness": 6.1,
-                            "depth": 2.0,
-                            "height": 8.16,
-                            "insert depth": 5.0,
-                            "overlap": -5.16,
-                            "overlap slant": 2.9,
-                            "overlap tolerance": 0.48,
-                            "stem radius": 3.0,
-                            "stem tolerance": -0.025,
-                            "top bevel": 2.5,
-                            "wdith": 20.0
-                        }
-                    },
-                    "marks parameters": {
-                        "inputs": {
-                            "Character Spacing": 1.1,
-                            "Decimals": 2,
-                            "L-R side": true,
-                            "Line Spacing": 0.7,
-                            "Text Box Width": 0.1,
-                            "Word Spacing": 0.0,
-                            "axis": "Z",
-                            "bump": 0.16,
-                            "font size": 5.0,
-                            "insertion": false,
-                            "mark depth": 0.16,
-                            "parameters": "",
-                            "rotate": 0.0,
-                            "rotate text": 0.0,
-                            "side": "min",
-                            "text": "A",
-                            "translate": [
-                                22.0,
-                                0.0,
-                                0.0
-                            ],
-                            "type": "custom"
-                        }
-                    },
-                    "tolerance set (button tolerance)": {
-                        "inputs": {
-                            "default": 0.0,
-                            "loose": 0.1,
-                            "tight": -0.1,
-                            "tolerance": 0
-                        }
-                    }
-                }
-            },
             "GripV R2 parameters": {
                 "nodes": {
                     "marks parameters": {
@@ -13301,11 +13232,11 @@
                             "rocker support size": 14.4,
                             "rocker support thickness": 5.7,
                             "stick bottom offset": 1.4,
+                            "stick height": 1.0,
                             "stick hook depth": 1.12,
                             "stick hook height": 2.72,
                             "stick thickness": 2.2,
                             "stick tolerance": 0.1,
-                            "stiick height": 1.0,
                             "texture height": 0.6,
                             "texture sharpness": 0.5
                         }
@@ -13314,7 +13245,7 @@
             },
             "GripV hollow parameters": {
                 "nodes": {
-                    "hollow  parameters": {
+                    "hollow parameters": {
                         "inputs": {
                             "band remesh width": 3,
                             "protect geometry": 0.84,
@@ -13429,6 +13360,75 @@
                     }
                 }
             },
+            "GripV lever R1L1": {
+                "nodes": {
+                    "R1L1 lever parameters": {
+                        "inputs": {
+                            "R1L1 flex": true,
+                            "X": 28.0,
+                            "X tolerance": 1.0,
+                            "Y": -14.0,
+                            "Z": 40.0,
+                            "bevel inner": 3.0,
+                            "bevel inner subdiv": 2,
+                            "bumper Z tolerance": 0.52,
+                            "button front shift X": 18.0,
+                            "button height": 0.0,
+                            "button inset offset": 1.0,
+                            "button press tol": 0.0,
+                            "curved R1L1": false,
+                            "curved button bevel": 1.0,
+                            "curved button depth tolerance": 1.0,
+                            "curved button slant": -1.0,
+                            "curved button thickness": 6.1,
+                            "depth": 2.0,
+                            "height": 8.16,
+                            "insert depth": 5.0,
+                            "overlap": -5.16,
+                            "overlap slant": 2.9,
+                            "overlap tolerance": 0.48,
+                            "stem radius": 3.0,
+                            "stem tolerance": -0.025,
+                            "top bevel": 2.5,
+                            "width": 20.0
+                        }
+                    },
+                    "marks parameters": {
+                        "inputs": {
+                            "Character Spacing": 1.1,
+                            "Decimals": 2,
+                            "L-R side": true,
+                            "Line Spacing": 0.7,
+                            "Text Box Width": 0.1,
+                            "Word Spacing": 0.0,
+                            "axis": "Z",
+                            "bump": 0.16,
+                            "font size": 5.0,
+                            "insertion": false,
+                            "mark depth": 0.16,
+                            "parameters": "",
+                            "rotate": 0.0,
+                            "rotate text": 0.0,
+                            "side": "min",
+                            "text": "A",
+                            "translate": [
+                                22.0,
+                                0.0,
+                                0.0
+                            ],
+                            "type": "custom"
+                        }
+                    },
+                    "tolerance set (button tolerance)": {
+                        "inputs": {
+                            "default": 0.0,
+                            "loose": 0.1,
+                            "tight": -0.1,
+                            "tolerance": 0
+                        }
+                    }
+                }
+            },
             "GripV middle plate parameters": {
                 "nodes": {
                     "middle plate parameters": {
@@ -13453,7 +13453,7 @@
                     }
                 }
             },
-            "GripV pcb cutout paramters": {
+            "GripV pcb cutout parameters": {
                 "nodes": {
                     "pcb cutout parameters": {
                         "inputs": {
@@ -13476,7 +13476,7 @@
                             "z tol": 0.6
                         }
                     },
-                    "pins postion": {
+                    "pins position": {
                         "inputs": {
                             "X": 69.0,
                             "Y": -43.0119,
@@ -13485,7 +13485,7 @@
                     }
                 }
             },
-            "GripV screw paramters": {
+            "GripV screw parameters": {
                 "inputs": {
                     "Index": 0
                 },
@@ -13660,13 +13660,13 @@
                         "inputs": {
                             "X correction": 0.05,
                             "Y correction": 1.0,
-                            "case cutout thickness ": 2.5,
+                            "case cutout thickness": 2.5,
                             "contact angle": 23.0,
                             "hole bevel": 1.0,
                             "hole radius": 9.0,
                             "shaft X correction": 0.0,
                             "shaft Y correction": 0.0,
-                            "stick  XY correction": false,
+                            "stick XY correction": false,
                             "stick hole subdivision": 128,
                             "stick subdivision": 128,
                             "swap stick rotation": true
@@ -13684,7 +13684,7 @@
                             "range degrees": 18.0,
                             "shaft Z offset": -0.5,
                             "shaft tolerance": 0.2,
-                            "stick heght": 7.0,
+                            "stick height": 7.0,
                             "stick top radius": 7.0,
                             "top bevel": 0.6,
                             "topmost offset": 1.3
@@ -13714,10 +13714,10 @@
                         "inputs": {
                             "FDM Z correction": 1.8,
                             "FDM shield thickness": 0.2,
-                            "sheild": true,
-                            "sheild height": 12.4,
-                            "sheild radius offset": 0.0,
-                            "shield cutoff height": 6.8
+                            "shield": true,
+                            "shield cutoff height": 6.8,
+                            "shield height": 12.4,
+                            "shield radius offset": 0.0
                         }
                     },
                     "stick top parameters": {
@@ -13739,13 +13739,13 @@
                         "inputs": {
                             "X correction": 0.05,
                             "Y correction": 1.0,
-                            "case cutout thickness ": 2.5,
+                            "case cutout thickness": 2.5,
                             "contact angle": 23.0,
                             "hole bevel": 1.0,
                             "hole radius": 9.0,
                             "shaft X correction": 0.0,
                             "shaft Y correction": 0.0,
-                            "stick  XY correction": false,
+                            "stick XY correction": false,
                             "stick hole subdivision": 128,
                             "stick subdivision": 128,
                             "swap stick rotation": false
@@ -13763,7 +13763,7 @@
                             "range degrees": 18.0,
                             "shaft Z offset": -0.5,
                             "shaft tolerance": 0.2,
-                            "stick heght": 7.0,
+                            "stick height": 7.0,
                             "stick top radius": 7.0,
                             "top bevel": 0.6,
                             "topmost offset": 1.3
@@ -13793,10 +13793,10 @@
                         "inputs": {
                             "FDM Z correction": 1.8,
                             "FDM shield thickness": 0.2,
-                            "sheild": true,
-                            "sheild height": 12.4,
-                            "sheild radius offset": 0.0,
-                            "shield cutoff height": 6.8
+                            "shield": true,
+                            "shield cutoff height": 6.8,
+                            "shield height": 12.4,
+                            "shield radius offset": 0.0
                         }
                     },
                     "stick top parameters": {
@@ -13842,7 +13842,7 @@
                 }
             }
         },
-        "GripX contols": {
+        "GripX controls": {
             "GripX R2 parameters": {
                 "nodes": {
                     "marks parameters": {
@@ -14329,11 +14329,11 @@
                             "rocker support size": 14.4,
                             "rocker support thickness": 5.7,
                             "stick bottom offset": 1.4,
+                            "stick height": 1.0,
                             "stick hook depth": 1.12,
                             "stick hook height": 2.72,
                             "stick thickness": 2.2,
                             "stick tolerance": 0.1,
-                            "stiick height": 1.0,
                             "texture height": 0.6,
                             "texture sharpness": 0.5
                         }
@@ -14342,7 +14342,7 @@
             },
             "GripX hollow parameters": {
                 "nodes": {
-                    "hollow  parameters": {
+                    "hollow parameters": {
                         "inputs": {
                             "band remesh width": 3,
                             "protect geometry": 0.81,
@@ -14467,7 +14467,7 @@
                             "Y": -14.0,
                             "Z": 40.0,
                             "bevel inner": 4.0,
-                            "bevel inner sbdiv": 2,
+                            "bevel inner subdiv": 2,
                             "bumper Z tolerance": 0.3,
                             "button front shift X": 17.0,
                             "button height": 2.4,
@@ -14487,7 +14487,7 @@
                             "stem radius": 3.0,
                             "stem tolerance": 0.1,
                             "top bevel": 2.5,
-                            "wdith": 21.0
+                            "width": 21.0
                         }
                     },
                     "R1L1 lever parameters.001": {
@@ -14498,7 +14498,7 @@
                             "Y": -14.0,
                             "Z": 40.0,
                             "bevel inner": 4.0,
-                            "bevel inner sbdiv": 2,
+                            "bevel inner subdiv": 2,
                             "bumper Z tolerance": 0.3,
                             "button front shift X": 18.0,
                             "button height": 2.4,
@@ -14518,7 +14518,7 @@
                             "stem radius": 3.0,
                             "stem tolerance": 0.1,
                             "top bevel": 2.7,
-                            "wdith": 21.0
+                            "width": 21.0
                         }
                     },
                     "marks parameters": {
@@ -14557,7 +14557,7 @@
                     }
                 }
             },
-            "GripX pcb cutout paramters": {
+            "GripX pcb cutout parameters": {
                 "nodes": {
                     "pcb cutout parameters": {
                         "inputs": {
@@ -14580,7 +14580,7 @@
                             "z tol": 0.6
                         }
                     },
-                    "pins postion": {
+                    "pins position": {
                         "inputs": {
                             "X": 70.418,
                             "Y": -55.5119,
@@ -14589,7 +14589,7 @@
                     }
                 }
             },
-            "GripX screw paramters": {
+            "GripX screw parameters": {
                 "inputs": {
                     "Index": 0
                 },
@@ -14836,13 +14836,13 @@
                         "inputs": {
                             "X correction": 0.05,
                             "Y correction": 1.0,
-                            "case cutout thickness ": 2.5,
+                            "case cutout thickness": 2.5,
                             "contact angle": 18.1,
                             "hole bevel": 1.0,
                             "hole radius": 8.3,
                             "shaft X correction": 0.0,
                             "shaft Y correction": 0.0,
-                            "stick  XY correction": false,
+                            "stick XY correction": false,
                             "stick hole subdivision": 4,
                             "stick subdivision": 128,
                             "swap stick rotation": false
@@ -14852,13 +14852,13 @@
                         "inputs": {
                             "X correction": 0.05,
                             "Y correction": 0.8,
-                            "case cutout thickness ": 2.0,
+                            "case cutout thickness": 2.0,
                             "contact angle": 18.0,
                             "hole bevel": 0.0,
                             "hole radius": 8.3,
                             "shaft X correction": 0.0,
                             "shaft Y correction": 0.0,
-                            "stick  XY correction": false,
+                            "stick XY correction": false,
                             "stick hole subdivision": 8,
                             "stick subdivision": 128,
                             "swap stick rotation": false
@@ -14868,13 +14868,13 @@
                         "inputs": {
                             "X correction": 0.05,
                             "Y correction": 0.8,
-                            "case cutout thickness ": 2.0,
+                            "case cutout thickness": 2.0,
                             "contact angle": 16.0,
                             "hole bevel": 0.0,
                             "hole radius": 8.3,
                             "shaft X correction": 0.0,
                             "shaft Y correction": 0.0,
-                            "stick  XY correction": false,
+                            "stick XY correction": false,
                             "stick hole subdivision": 8,
                             "stick subdivision": 128,
                             "swap stick rotation": false
@@ -14884,13 +14884,13 @@
                         "inputs": {
                             "X correction": 0.05,
                             "Y correction": 0.7,
-                            "case cutout thickness ": 2.0,
+                            "case cutout thickness": 2.0,
                             "contact angle": 17.0,
                             "hole bevel": 0.0,
                             "hole radius": 8.3,
                             "shaft X correction": 0.0,
                             "shaft Y correction": 0.0,
-                            "stick  XY correction": false,
+                            "stick XY correction": false,
                             "stick hole subdivision": 8,
                             "stick subdivision": 128,
                             "swap stick rotation": false
@@ -14900,13 +14900,13 @@
                         "inputs": {
                             "X correction": 0.05,
                             "Y correction": 0.8,
-                            "case cutout thickness ": 2.0,
+                            "case cutout thickness": 2.0,
                             "contact angle": 20.0,
                             "hole bevel": 0.0,
                             "hole radius": 8.3,
                             "shaft X correction": 0.0,
                             "shaft Y correction": 0.0,
-                            "stick  XY correction": false,
+                            "stick XY correction": false,
                             "stick hole subdivision": 8,
                             "stick subdivision": 128,
                             "swap stick rotation": false
@@ -14916,13 +14916,13 @@
                         "inputs": {
                             "X correction": 0.05,
                             "Y correction": 0.8,
-                            "case cutout thickness ": 2.0,
+                            "case cutout thickness": 2.0,
                             "contact angle": 11.0,
                             "hole bevel": 0.0,
                             "hole radius": 8.3,
                             "shaft X correction": 0.0,
                             "shaft Y correction": 0.0,
-                            "stick  XY correction": false,
+                            "stick XY correction": false,
                             "stick hole subdivision": 8,
                             "stick subdivision": 128,
                             "swap stick rotation": false
@@ -14940,7 +14940,7 @@
                             "range degrees": 20.0,
                             "shaft Z offset": 0.0,
                             "shaft tolerance": 0.2,
-                            "stick heght": 6.2,
+                            "stick height": 6.2,
                             "stick top radius": 7.1,
                             "top bevel": 0.4,
                             "topmost offset": 0.4
@@ -14958,7 +14958,7 @@
                             "range degrees": 18.0,
                             "shaft Z offset": -0.5,
                             "shaft tolerance": 0.2,
-                            "stick heght": 6.7,
+                            "stick height": 6.7,
                             "stick top radius": 6.8,
                             "top bevel": 0.2,
                             "topmost offset": 0.5
@@ -14976,7 +14976,7 @@
                             "range degrees": 16.0,
                             "shaft Z offset": -0.5,
                             "shaft tolerance": 0.2,
-                            "stick heght": 9.2,
+                            "stick height": 9.2,
                             "stick top radius": 8.3,
                             "top bevel": 0.4,
                             "topmost offset": 4.4
@@ -14994,7 +14994,7 @@
                             "range degrees": 17.0,
                             "shaft Z offset": -0.5,
                             "shaft tolerance": 0.2,
-                            "stick heght": 10.2,
+                            "stick height": 10.2,
                             "stick top radius": 8.3,
                             "top bevel": 0.4,
                             "topmost offset": 4.2
@@ -15012,7 +15012,7 @@
                             "range degrees": 15.3,
                             "shaft Z offset": -0.5,
                             "shaft tolerance": 0.2,
-                            "stick heght": 4.0,
+                            "stick height": 4.0,
                             "stick top radius": 2.98,
                             "top bevel": 0.3,
                             "topmost offset": 4.9
@@ -15030,7 +15030,7 @@
                             "range degrees": 11.0,
                             "shaft Z offset": -0.5,
                             "shaft tolerance": 0.2,
-                            "stick heght": 8.9,
+                            "stick height": 8.9,
                             "stick top radius": 8.3,
                             "top bevel": 0.4,
                             "topmost offset": 3.9
@@ -15160,60 +15160,60 @@
                         "inputs": {
                             "FDM Z correction": 2.25,
                             "FDM shield thickness": 0.1,
-                            "sheild": false,
-                            "sheild height": 12.65,
-                            "sheild radius offset": 0.85,
-                            "shield cutoff height": 5.25
+                            "shield": false,
+                            "shield cutoff height": 5.25,
+                            "shield height": 12.65,
+                            "shield radius offset": 0.85
                         }
                     },
                     "shield parameters.001": {
                         "inputs": {
                             "FDM Z correction": 2.3,
                             "FDM shield thickness": 0.2,
-                            "sheild": true,
-                            "sheild height": 13.195,
-                            "sheild radius offset": 1.34,
-                            "shield cutoff height": 5.75
+                            "shield": true,
+                            "shield cutoff height": 5.75,
+                            "shield height": 13.195,
+                            "shield radius offset": 1.34
                         }
                     },
                     "shield parameters.002": {
                         "inputs": {
                             "FDM Z correction": 2.3,
                             "FDM shield thickness": 0.2,
-                            "sheild": true,
-                            "sheild height": 13.195,
-                            "sheild radius offset": 1.34,
-                            "shield cutoff height": 5.75
+                            "shield": true,
+                            "shield cutoff height": 5.75,
+                            "shield height": 13.195,
+                            "shield radius offset": 1.34
                         }
                     },
                     "shield parameters.003": {
                         "inputs": {
                             "FDM Z correction": 2.3,
                             "FDM shield thickness": 0.2,
-                            "sheild": true,
-                            "sheild height": 13.195,
-                            "sheild radius offset": 1.34,
-                            "shield cutoff height": 5.75
+                            "shield": true,
+                            "shield cutoff height": 5.75,
+                            "shield height": 13.195,
+                            "shield radius offset": 1.34
                         }
                     },
                     "shield parameters.004": {
                         "inputs": {
                             "FDM Z correction": 2.3,
                             "FDM shield thickness": 0.2,
-                            "sheild": true,
-                            "sheild height": 13.195,
-                            "sheild radius offset": 1.34,
-                            "shield cutoff height": 5.75
+                            "shield": true,
+                            "shield cutoff height": 5.75,
+                            "shield height": 13.195,
+                            "shield radius offset": 1.34
                         }
                     },
                     "shield parameters.005": {
                         "inputs": {
                             "FDM Z correction": 2.3,
                             "FDM shield thickness": 0.2,
-                            "sheild": true,
-                            "sheild height": 13.195,
-                            "sheild radius offset": 1.34,
-                            "shield cutoff height": 5.75
+                            "shield": true,
+                            "shield cutoff height": 5.75,
+                            "shield height": 13.195,
+                            "shield radius offset": 1.34
                         }
                     },
                     "stick top parameters": {
@@ -15290,13 +15290,13 @@
                         "inputs": {
                             "X correction": 0.2,
                             "Y correction": -0.1,
-                            "case cutout thickness ": 2.0,
+                            "case cutout thickness": 2.0,
                             "contact angle": 18.0,
                             "hole bevel": 2.0,
                             "hole radius": 8.0,
                             "shaft X correction": 0.0,
                             "shaft Y correction": 0.0,
-                            "stick  XY correction": false,
+                            "stick XY correction": false,
                             "stick hole subdivision": 8,
                             "stick subdivision": 128,
                             "swap stick rotation": false
@@ -15306,13 +15306,13 @@
                         "inputs": {
                             "X correction": 0.2,
                             "Y correction": -0.1,
-                            "case cutout thickness ": 2.0,
+                            "case cutout thickness": 2.0,
                             "contact angle": 18.0,
                             "hole bevel": 2.0,
                             "hole radius": 8.0,
                             "shaft X correction": 0.0,
                             "shaft Y correction": 0.0,
-                            "stick  XY correction": true,
+                            "stick XY correction": true,
                             "stick hole subdivision": 8,
                             "stick subdivision": 128,
                             "swap stick rotation": false
@@ -15322,13 +15322,13 @@
                         "inputs": {
                             "X correction": 0.2,
                             "Y correction": -0.1,
-                            "case cutout thickness ": 2.0,
+                            "case cutout thickness": 2.0,
                             "contact angle": 18.0,
                             "hole bevel": 2.0,
                             "hole radius": 8.0,
                             "shaft X correction": 0.0,
                             "shaft Y correction": 0.0,
-                            "stick  XY correction": true,
+                            "stick XY correction": true,
                             "stick hole subdivision": 8,
                             "stick subdivision": 256,
                             "swap stick rotation": false
@@ -15338,13 +15338,13 @@
                         "inputs": {
                             "X correction": 0.2,
                             "Y correction": -0.1,
-                            "case cutout thickness ": 2.0,
+                            "case cutout thickness": 2.0,
                             "contact angle": 14.0,
                             "hole bevel": 2.0,
                             "hole radius": 8.0,
                             "shaft X correction": 0.0,
                             "shaft Y correction": 0.0,
-                            "stick  XY correction": true,
+                            "stick XY correction": true,
                             "stick hole subdivision": 8,
                             "stick subdivision": 8,
                             "swap stick rotation": false
@@ -15362,7 +15362,7 @@
                             "range degrees": 18.0,
                             "shaft Z offset": -0.5,
                             "shaft tolerance": 0.2,
-                            "stick heght": 5.6,
+                            "stick height": 5.6,
                             "stick top radius": 5.75,
                             "top bevel": 0.4,
                             "topmost offset": 0.6
@@ -15380,7 +15380,7 @@
                             "range degrees": 18.0,
                             "shaft Z offset": -0.5,
                             "shaft tolerance": 0.2,
-                            "stick heght": 4.4,
+                            "stick height": 4.4,
                             "stick top radius": 4.5,
                             "top bevel": 0.4,
                             "topmost offset": 0.6
@@ -15398,7 +15398,7 @@
                             "range degrees": 18.0,
                             "shaft Z offset": -0.5,
                             "shaft tolerance": 0.2,
-                            "stick heght": 4.8,
+                            "stick height": 4.8,
                             "stick top radius": 4.5,
                             "top bevel": 0.4,
                             "topmost offset": 0.6
@@ -15416,7 +15416,7 @@
                             "range degrees": 14.0,
                             "shaft Z offset": -0.5,
                             "shaft tolerance": 0.2,
-                            "stick heght": 4.4,
+                            "stick height": 4.4,
                             "stick top radius": 4.5,
                             "top bevel": 0.4,
                             "topmost offset": 0.6
@@ -15506,40 +15506,40 @@
                         "inputs": {
                             "FDM Z correction": 2.3,
                             "FDM shield thickness": 0.2,
-                            "sheild": true,
-                            "sheild height": 13.195,
-                            "sheild radius offset": 1.34,
-                            "shield cutoff height": 7.5
+                            "shield": true,
+                            "shield cutoff height": 7.5,
+                            "shield height": 13.195,
+                            "shield radius offset": 1.34
                         }
                     },
                     "shield parameters.002": {
                         "inputs": {
                             "FDM Z correction": 2.3,
                             "FDM shield thickness": 0.2,
-                            "sheild": true,
-                            "sheild height": 13.195,
-                            "sheild radius offset": 1.34,
-                            "shield cutoff height": 7.5
+                            "shield": true,
+                            "shield cutoff height": 7.5,
+                            "shield height": 13.195,
+                            "shield radius offset": 1.34
                         }
                     },
                     "shield parameters.003": {
                         "inputs": {
                             "FDM Z correction": 2.3,
                             "FDM shield thickness": 0.2,
-                            "sheild": true,
-                            "sheild height": 13.195,
-                            "sheild radius offset": 1.34,
-                            "shield cutoff height": 7.5
+                            "shield": true,
+                            "shield cutoff height": 7.5,
+                            "shield height": 13.195,
+                            "shield radius offset": 1.34
                         }
                     },
                     "shield parameters.004": {
                         "inputs": {
                             "FDM Z correction": 2.3,
                             "FDM shield thickness": 0.2,
-                            "sheild": true,
-                            "sheild height": 13.195,
-                            "sheild radius offset": 1.34,
-                            "shield cutoff height": 8.4
+                            "shield": true,
+                            "shield cutoff height": 8.4,
+                            "shield height": 13.195,
+                            "shield radius offset": 1.34
                         }
                     },
                     "stick top parameters.002": {
