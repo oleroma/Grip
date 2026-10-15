@@ -27,7 +27,6 @@ needed (Python 3.8+). See README.md next to this file.
 """
 
 import argparse
-import glob
 import hashlib
 import json
 import os
@@ -110,17 +109,38 @@ def scene_folder(root_dir):
     return "/".join(rest) or None
 
 
+def disk_folder(root, folder):
+    """folder with the spelling of the folders on disk below root, which can
+    differ in case from a root folder typed on Windows."""
+    out, cur = [], root
+    for part in folder.split("/"):
+        try:
+            names = os.listdir(cur)
+        except OSError:
+            names = []
+        same = [n for n in names if n.lower() == part.lower()]
+        if part not in names and len(same) == 1:
+            part = same[0]
+        out.append(part)
+        cur = os.path.join(cur, part)
+    return "/".join(out)
+
+
 def load_scenes(repo):
-    """Read every blender/*_preset.json. Returns ([Scene], [(level, text)]),
-    level being "error" or "info". Two files with the same export folder are
-    one scene."""
-    scenes, notes = {}, []
-    paths = sorted(glob.glob(os.path.join(repo, PRESETS, "*" + PRESET_SUFFIX)))
-    if not paths:
+    """Read every blender/*_preset.json. Returns ([Scene], [(level, text)],
+    [export folders of the preset files that could not be used]), level being
+    "error" or "info". Two files with the same export folder are one scene."""
+    scenes, notes, skipped = {}, [], []
+    try:
+        names = sorted(n for n in os.listdir(os.path.join(repo, PRESETS)) if n.endswith(PRESET_SUFFIX))
+    except OSError:
+        names = []
+    if not names:
         notes.append(("error", "no %s/*%s: combi_export writes one per scene when Grip.blend is saved"
                       % (PRESETS, PRESET_SUFFIX)))
-    for full in paths:
-        path = PRESETS + "/" + os.path.basename(full)
+    for name in names:
+        full = os.path.join(repo, PRESETS, name)
+        path = PRESETS + "/" + name
         try:
             with open(full, encoding="utf-8") as f:
                 data = json.load(f)
@@ -132,16 +152,24 @@ def load_scenes(repo):
         if folder is None:
             notes.append(("error", "%s: its root folder %r is not a folder in %s/" % (path, root_dir, ROOT)))
             continue
+        spelt = disk_folder(os.path.join(repo, ROOT), folder)
+        if spelt != folder:
+            notes.append(("info", "%s: its root folder names %s/%s/, the folder on disk is %s/%s/"
+                          % (path, ROOT, folder, ROOT, spelt)))
+            folder = spelt
         listing = data.get("exports")
         presets = listing.get("presets") if isinstance(listing, dict) else None
         if not isinstance(presets, list) or not all(
                 isinstance(p, dict) and isinstance(p.get("files"), list) for p in presets):
-            notes.append(("error", "%s has no list of the exported files: save Grip.blend with "
-                          "combi_export's \"Save JSON with File\" on to write it" % path))
+            notes.append(("error", "%s has no list of the exported files: it was saved by an older "
+                          "combi_export. Update the add-on from extensions/combi_export and save Grip.blend "
+                          "with its \"Save JSON with File\" tick on" % path))
+            skipped.append(folder)
             continue
         if listing.get("complete") is not True:
             notes.append(("error", "%s lists only part of the exported files (combi_export stops at 5000)"
                           % path))
+            skipped.append(folder)
             continue
         scene = scenes.setdefault(folder, Scene(folder))
         scene.sources.append(path)
@@ -154,7 +182,11 @@ def load_scenes(repo):
         notes.append(("info", "%s: %s write%s %s to %s/%s/." % (
             path, plural(len(presets), "preset"), "s" if len(presets) == 1 else "", plural(count, "file"),
             ROOT, folder)))
-    return [scenes[k] for k in sorted(scenes)], notes
+    for folder in sorted(scenes):
+        if not scenes[folder].files:
+            notes.append(("error", "%s: the presets export no files to %s/%s/"
+                          % (", ".join(scenes[folder].sources), ROOT, folder)))
+    return [scenes[k] for k in sorted(scenes)], notes, skipped
 
 
 def plural(n, word):
@@ -168,13 +200,13 @@ def plural(n, word):
 class Release:
     """One zip: a scene's shape folder (case_standard) with its parts/ folder."""
 
-    def __init__(self, scene, shape, files, projects):
+    def __init__(self, scene, shape, files, projects, label=None, others=()):
         self.scene = scene
         self.shape = shape  # None for a scene without a shape folder
         self.files = files  # exported files below the scene folder, every tolerance
         self.projects = projects
+        self.others = others  # the other shape folders of the scene
         name = os.path.basename(scene.folder)
-        label = shape_label(shape) if shape else None
         self.id = "-".join(p for p in (name, label) if p)
         self.title = " ".join(p for p in (name, label) if p)
 
@@ -198,14 +230,31 @@ def releases(scenes, tree):
     out = []
     have = set(tree)
     for scene in scenes:
+        if not scene.files:
+            continue
         shapes = sorted(set(top(rel) for rel in scene.files) - {None})
+        labels = dict((shape, shape_label(shape)) for shape in shapes)
+        taken = [label.lower() for label in labels.values()]
+        for shape, label in list(labels.items()):
+            if taken.count(label.lower()) > 1:
+                labels[shape] = shape  # case_xbox and xbox_style keep their folder names
         name = os.path.basename(scene.folder)
         for shape in shapes or [None]:
             files = sorted(rel for rel in scene.files if top(rel) in (shape, None))
             projects = [p for p in ("%s_%s.3mf" % (name, shape) if shape else None, "%s_%s.3mf" % (name, SHARED))
                         if p and scene.folder + "/" + p in have]
-            out.append(Release(scene, shape, files, projects))
+            out.append(Release(scene, shape, files, projects, labels.get(shape),
+                               tuple(s for s in shapes if s != shape)))
     return out
+
+
+def duplicate_ids(rels):
+    """The release ids that several releases share, ignoring case: two scene
+    folders with the same name."""
+    seen = {}
+    for release in rels:
+        seen.setdefault(release.id.lower(), []).append(release.id)
+    return sorted(ids[0] for ids in seen.values() if len(ids) > 1)
 
 
 def find_release(rels, release_id):
@@ -220,32 +269,67 @@ def levels_of(rel):
     return [m.group(2) for m in (TOL_DIR.match(p) for p in rel.split("/")[:-1]) if m]
 
 
+def any_level(parts):
+    """A folder path with its tolerance folders made alike: tight/ and
+    default/ are both *, cap_tight/ and cap_loose/ both cap*."""
+    out = []
+    for part in parts:
+        m = TOL_DIR.match(part)
+        out.append((m.group(1) or "") + "*" if m else part)
+    return tuple(out)
+
+
+def flat_folders(parts, holds_files):
+    """The folders of a path without its tolerance folders. A bare one
+    (default/) goes. One with a word (cap_default/) becomes the word (cap/)
+    when holds_files says the folder it is in has files of its own, so the
+    caps stay apart from the button.stl next to them; otherwise it goes too."""
+    kept = []
+    for i, part in enumerate(parts):
+        m = TOL_DIR.match(part)
+        if not m:
+            kept.append(part)
+        elif m.group(1) and holds_files(parts[:i]):
+            kept.append(m.group(1))
+    return kept
+
+
+def folders_with_files(rels):
+    """The folders that hold the files, in any_level() form."""
+    return set(any_level(rel.split("/")[:-1]) for rel in rels)
+
+
 def layout(release, mode, flat=False):
     """{file below the scene folder: its path in the release}, sorted. A build
     with one tolerance takes the files whose tolerance folders all name it.
-    flat leaves those folders out: tight/ and press_tight/ go, and cap_tight/
-    becomes cap/ where its folder also holds files of its own, so the caps stay
-    apart from the shaft next to them. The projects go only into builds with
-    the default tolerance, which they were laid out with (probably)."""
+    flat leaves those folders out, see flat_folders(). The projects go only
+    into builds with the default tolerance, which they were laid out with
+    (probably)."""
     files = [rel for rel in release.files if mode == ALL or all(l == mode for l in levels_of(rel))]
     out = {}
     if flat and mode != ALL:
-        with_files = set(rel.rpartition("/")[0] for rel in files)
+        with_files = folders_with_files(files)
         for rel in files:
-            parts, kept = rel.split("/"), []
-            for i, part in enumerate(parts[:-1]):
-                m = TOL_DIR.match(part)
-                if not m:
-                    kept.append(part)
-                elif m.group(1) and "/".join(parts[:i]) in with_files:
-                    kept.append(m.group(1))
-            out[rel] = "/".join(kept + parts[-1:])
+            parts = rel.split("/")
+            out[rel] = "/".join(flat_folders(parts[:-1], lambda head: any_level(head) in with_files) + parts[-1:])
     else:
         out = {rel: rel for rel in files}
     if mode == DEFAULT_LEVEL:
         for project in release.projects:
             out.setdefault(project, project)
     return out
+
+
+def missing_levels(release, mode):
+    """The parts that have tolerance variants, but none at mode, so a build at
+    mode leaves them out: [the part with * for its tolerance folders]."""
+    have = {}
+    for rel in release.files:
+        levels = levels_of(rel)
+        if levels:
+            key = "/".join(_wild(p) for p in rel.split("/"))
+            have.setdefault(key, set()).add(all(l == mode for l in levels))
+    return sorted(key for key, found in have.items() if True not in found)
 
 
 def clashes(paths):
@@ -393,6 +477,12 @@ def identical_siblings(digests):
     return sorted((p, s, sorted(files), totals[p]) for (p, s), files in found.items())
 
 
+def _folders(rel):
+    """The folders a file is in: a/b/c.stl -> a, a/b."""
+    parts = rel.split("/")
+    return ["/".join(parts[:i]) for i in range(1, len(parts))]
+
+
 def _wild(part):
     m = TOL_DIR.match(part)
     if not m:
@@ -429,23 +519,98 @@ def absolute_links(text, base):
     return MD_LINK.sub(fix, text)
 
 
-def print_section(repo, scene):
-    """The scene's section of orca_slicer/README.md: the "## Print list" heading
-    that names its folder (GripV), up to the next "## " heading, with its links
-    made absolute. None when there is no such section."""
+def print_section(repo, scene, title=None):
+    """A section of orca_slicer/README.md, up to the next "## " heading: the
+    first "## Print list" heading that names the release title (GripV hollow),
+    else the first that names the scene (GripV). None when no heading names it.
+    Its links still point into the repository, see absolute_links()."""
     try:
         with open(os.path.join(repo, *PRINT_LISTS.split("/")), encoding="utf-8") as f:
             lines = f.read().splitlines()
     except OSError:
         return None
-    name = re.compile(r"\b%s\b" % re.escape(os.path.basename(scene.folder)))
-    start = next((i for i, line in enumerate(lines)
-                  if line.startswith("## Print list") and name.search(line)), None)
-    if start is None:
-        return None
-    end = next((i for i in range(start + 1, len(lines)) if lines[i].startswith("## ")), len(lines))
-    body = "\n".join(lines[start + 1:end]).strip("\n")
-    return absolute_links(body, PRINT_LISTS)
+    starts = [i for i, line in enumerate(lines) if line.startswith("## Print list")]
+    for name in (title, os.path.basename(scene.folder)):
+        if not name:
+            continue
+        words = re.compile(r"(?<![\w-])%s(?![\w-])" % r"[\s-]+".join(map(re.escape, name.split())), re.I)
+        start = next((i for i in starts if words.search(lines[i])), None)
+        if start is not None:
+            end = next((i for i in range(start + 1, len(lines)) if lines[i].startswith("## ")), len(lines))
+            return "\n".join(lines[start + 1:end]).strip("\n")
+    return None
+
+
+CODE = re.compile(r"`([^`\s]+)`")
+
+
+def section_paths(section, scene):
+    """The paths in backticks in a print list that name files or folders of the
+    scene: `parts/buttons/default/button.stl`, `<style>/bumpers/`. Only paths
+    that start with a folder the presets export to, or a <placeholder>, so not
+    `blender/...` or the scene folder itself, nor names without a folder, nor
+    paths made of placeholders only (`<style>/`)."""
+    tops = set(rel.split("/")[0] for rel in scene.files if "/" in rel)
+    out = []
+    for m in CODE.finditer(section or ""):
+        path = m.group(1)
+        parts = [p for p in path.split("/") if p]
+        if "/" in path and (parts[0] in tops or parts[0].startswith("<")) and any("<" not in p for p in parts):
+            out.append(path)
+    return out
+
+
+def path_pattern(path):
+    """A regex for a print-list path, <placeholder> standing for any name part."""
+    parts = re.split(r"(<[^>/]*>)", path.rstrip("/"))
+    return re.compile("".join("[^/]+" if p.startswith("<") else re.escape(p) for p in parts) + "$", re.I)
+
+
+def matches(path, files):
+    """Whether a print-list path names one of the files below the scene folder,
+    or a folder holding one."""
+    pattern = path_pattern(path)
+    for rel in files:
+        names = _folders(rel) + ([] if path.endswith("/") else [rel])
+        if any(pattern.match(name) for name in names):
+            return True
+    return False
+
+
+def unexported_paths(section, scene):
+    """The print-list paths that name nothing the presets export, so no zip
+    has them."""
+    return [path for path in section_paths(section, scene) if not matches(path, scene.files)]
+
+
+def release_section(section, release, flat):
+    """The print list of one release: without the table rows that only name
+    the other shapes of the scene (case_hollow/ in GripV standard), and with
+    flat, the paths in backticks without their tolerance folders, as they are
+    in the zip."""
+    with_files = folders_with_files(release.files)
+
+    def holds_files(head):
+        key = any_level(head)
+        return any(len(k) == len(key) and all(a == b or "<" in a for a, b in zip(key, k)) for k in with_files)
+
+    def flatten(m):
+        path = m.group(1)
+        if "/" not in path or not any(TOL_DIR.match(p) for p in path.split("/")):
+            return m.group(0)
+        parts = path.rstrip("/").split("/")
+        name = [] if path.endswith("/") or TOL_DIR.match(parts[-1]) else parts[-1:]
+        folders = parts[:len(parts) - len(name)]
+        kept = flat_folders(folders, holds_files) + name
+        return "`%s`" % ("/".join(kept) + ("/" if not name else "")) if kept else m.group(0)
+
+    out = []
+    for line in section.split("\n"):
+        paths = section_paths(line, release.scene) if line.startswith("|") else []
+        if paths and all(p.split("/")[0] in release.others for p in paths):
+            continue
+        out.append(CODE.sub(flatten, line) if flat else line)
+    return "\n".join(out)
 
 
 def file_lines(paths):
@@ -472,23 +637,31 @@ def print_list(release, mode, paths, section=None, source=None, flat=False):
         out.append("Built from %s." % source)
     others = " or ".join("`%s`" % l for l in LEVELS if l != (DEFAULT_LEVEL if mode == ALL else mode))
     tol_link = link(PRINT_LISTS) + "#tolerances"
+    refit = "If a part does not fit, reprint only that part from %s tolerance (%s) in the repository; " \
+            "the case stays. See [tolerances](%s)." % ("another" if flat else "the neighbouring", others, tol_link)
     if flat:
-        text = "Every fit part here is the `%s` one, so the paths leave out the tolerance folders " \
-               "that %s in the repository has." % (mode, folder)
-        moved = [(s.rpartition("/")[0], d.rpartition("/")[0]) for s, d in paths.items()]
-        moved = [(s, d) for s, d in moved if s != d and d]
+        moved = sorted(set((s.rpartition("/")[0], d.rpartition("/")[0]) for s, d in paths.items()))
+        moved = [(s, d) for s, d in moved if s != d]
+        out += ["", "Every fit part here is the `%s` one, so the paths leave out the tolerance folders that "
+                    "%s in the repository has%s" % (mode, folder, ":" if moved else ".")]
         if moved:
-            text += " For example `%s/` there is `%s/` here." % moved[0]
-        text += " If a part does not fit, reprint only that part from another tolerance (%s) " \
-                "in the repository; the case stays. See [tolerances](%s)." % (others, tol_link)
+            out += [""] + ["- `%s/` there is %s here" % (s, "`%s/`" % d if d else "the top folder")
+                           for s, d in moved]
+        out += ["", refit]
     else:
-        text = "The paths are the same as in %s in the repository, so the folder names show the " \
-               "tolerance of each part. If a part does not fit, reprint only that part from the " \
-               "neighbouring tolerance (%s); the case stays. See [tolerances](%s)." % (folder, others, tol_link)
-    out += ["", text, "", "## What to print", ""]
+        out += ["", "The paths are the same as in %s in the repository, so the folder names show the "
+                    "tolerance of each part. %s" % (folder, refit)]
+    out += ["", "## What to print", ""]
     if section:
-        out += ["From the print list in the repository, which shows the paths with their `%s` folders."
-                % DEFAULT_LEVEL, "", section]
+        kept = release_section(section, release, False)
+        out += ["From the print list in the repository%s." % (", with the paths as they are in this zip"
+                                                                if flat else ""),
+                "", absolute_links(release_section(section, release, flat), PRINT_LISTS)]
+        lost = unexported_paths(kept, release.scene)
+        if lost:
+            out += ["", "**Not in this zip:** %s. The print list names %s, but no preset exports %s."
+                    % (", ".join("`%s`" % p for p in lost), "them" if len(lost) > 1 else "it",
+                       "them" if len(lost) > 1 else "it")]
     else:
         out.append("See the [print list](%s) for how many of each part to print." % link(PRINT_LISTS))
     parts = [p for s, p in paths.items() if s not in release.projects]
@@ -541,7 +714,7 @@ def check(repo, verbose=False):
     parts = [rel for rel in tree if rel.lower().endswith(PART_EXTS)]
 
     section("Presets")
-    scenes, notes = load_scenes(repo)
+    scenes, notes, skipped = load_scenes(repo)
     for level, text in notes:
         (error if level == "error" else info)(text)
 
@@ -559,22 +732,40 @@ def check(repo, verbose=False):
         for dest, srcs in clashes(files):
             error("%s land on the same path %s in the %s release without tolerance folders"
                   % (" and ".join(release.scene.folder + "/" + s for s in srcs), dest, release.title))
-    for scene in scenes:
-        levels = set(l for rel in scene.files for l in levels_of(rel))
-        if levels and DEFAULT_LEVEL not in levels:
-            warn("%s/%s/ has tolerance folders but none named `%s`, so a plain build has no fit parts"
-                 % (ROOT, scene.folder, DEFAULT_LEVEL))
-    if not rels:
+        for level in LEVELS:
+            lost = missing_levels(release, level)
+            if lost:
+                (error if level == DEFAULT_LEVEL else warn)(
+                    "%s: %s no `%s` variant, so a %s build leaves %s out: %s" % (
+                        release.id, plural(len(lost), "part") + (" has" if len(lost) == 1 else " have"), level,
+                        "plain" if level == DEFAULT_LEVEL else "`--tolerance %s`" % level,
+                        "it" if len(lost) == 1 else "them",
+                        ", ".join(release.scene.folder + "/" + k for k in lost[:3]) + (", ..." if len(lost) > 3 else "")))
+    for release_id in duplicate_ids(rels):
+        error("several releases are called %s: rename one of their scene folders" % release_id)
+    if not rels and not skipped:
         error("no releases: the presets export nothing")
     if not os.path.isfile(os.path.join(repo, LICENSE)):
         error("missing %s (copied into every release)" % LICENSE)
     for title, path in GUIDES:
         if "://" not in path and not os.path.isfile(os.path.join(repo, *path.split("/"))):
             warn("missing %s (linked from every print list)" % path)
+    asked = {}  # path below ROOT -> the print list names it
     for scene in scenes:
-        if print_section(repo, scene) is None:
+        text = print_section(repo, scene)
+        if text is None:
             warn("%s has no \"## Print list\" section that names %s, so its print lists only list the files"
                  % (PRINT_LISTS, os.path.basename(scene.folder)))
+            continue
+        texts = [print_section(repo, scene, r.title) for r in rels if r.scene is scene]
+        for path in sorted(set(p for t in texts for p in unexported_paths(t, scene))):
+            warn("the %s print list asks for `%s`, but no preset exports it, so no zip has it: add it to "
+                 "a preset and export it, or take it out of %s" % (os.path.basename(scene.folder), path,
+                                                                   PRINT_LISTS))
+        paths = set(p for t in texts for p in section_paths(t, scene))
+        for rel in tree:
+            if rel.startswith(scene.folder + "/") and any(matches(p, [rel[len(scene.folder) + 1:]]) for p in paths):
+                asked[rel] = True
 
     section("Exported files")
     missing = missing_files(tree, sorted(exported))
@@ -588,18 +779,24 @@ def check(repo, verbose=False):
 
     section("Files no preset exports")
     folders = [scene.folder + "/" for scene in scenes]
+    unread = [folder + "/" for folder in skipped]
     projects = set(release.scene.folder + "/" + p for release in rels for p in release.projects)
     stale = [rel for rel in parts if rel not in exported and rel not in projects
              and any(rel.startswith(f) for f in folders)]
     for rel in stale:
-        if rel.lower().endswith(".stl"):
-            warn("%s: in no release; delete it, or add it to a preset and export it" % rel)
-        else:
+        if not rel.lower().endswith(".stl"):
             info("%s: an OrcaSlicer project that no release takes (name it <scene>_<folder>.3mf)" % rel)
-    others = [rel for rel in parts if not any(rel.startswith(f) for f in folders)]
+        elif rel in asked:
+            warn("%s: in no release, though the print list asks for it; add it to a preset and export it" % rel)
+        else:
+            warn("%s: in no release; delete it, or add it to a preset and export it" % rel)
+    for folder in unread:
+        count = len([rel for rel in parts if rel.startswith(folder)])
+        info("%s: %s not checked, because its preset file could not be read" % (folder, plural(count, "file")))
+    others = [rel for rel in parts if not any(rel.startswith(f) for f in folders + unread)]
     for rel in others:
         info("%s: outside the export folders" % rel)
-    if not stale and not others:
+    if not stale and not others and not unread:
         info("none.")
 
     section("File and folder names")
@@ -637,20 +834,22 @@ def check(repo, verbose=False):
 # Building
 
 
-def source_label(repo, root):
-    """'commit `abc1234`', noting uncommitted changes under root; None without git."""
+def source_label(repo):
+    """'commit `abc1234`', noting uncommitted changes to the parts or the preset
+    files, which say what goes into the zips; None without git."""
     try:
         commit = subprocess.run(["git", "-C", repo, "rev-parse", "--short", "HEAD"],
                                 capture_output=True, text=True, check=True).stdout.strip()
-        dirty = subprocess.run(["git", "-C", repo, "status", "--porcelain", "--", root],
-                               capture_output=True, text=True, check=True).stdout.strip()
+        dirty = [folder for folder in (ROOT, PRESETS) if subprocess.run(
+            ["git", "-C", repo, "status", "--porcelain", "--", folder],
+            capture_output=True, text=True, check=True).stdout.strip()]
     except (OSError, subprocess.CalledProcessError):
         return None
     if not commit:
         return None
     label = "commit `%s`" % commit
     if dirty:
-        label += " with uncommitted changes in `%s/`" % os.path.basename(os.path.normpath(root))
+        label += " with uncommitted changes in %s" % " and ".join("`%s/`" % d for d in dirty)
     return label
 
 
@@ -709,10 +908,12 @@ def build(repo, chosen, mode, out_dir, tag=None, make_zip=True, allow_pointers=F
     flat = flat and mode != ALL
     root = os.path.join(repo, ROOT)
     tree = scan(root) if os.path.isdir(root) else []
-    plans, missing, pointers, clashing = [], set(), set(), []
+    plans, missing, pointers, clashing, lacking = [], set(), set(), [], []
     for release in chosen:
         files = layout(release, mode, flat)
         clashing += [(release, dest, srcs) for dest, srcs in clashes(files)]
+        if mode != ALL:
+            lacking += [(release, part) for part in missing_levels(release, mode)]
         paths = [release.scene.folder + "/" + rel for rel in files]
         lost = set(rel for rel, _ in missing_files(tree, paths))
         missing |= lost
@@ -728,6 +929,9 @@ def build(repo, chosen, mode, out_dir, tag=None, make_zip=True, allow_pointers=F
     for release, dest, srcs in clashing:
         log("ERROR  %s: %s land on the same path %s; build with --full-paths"
             % (release.id, " and ".join(srcs), dest))
+    for release, part in lacking:
+        log("ERROR  %s: %s/%s has no `%s` variant; export it, or build another tolerance"
+            % (release.id, release.scene.folder, part, mode))
     if pointers:
         shown = sorted(pointers)[:5]
         one = len(pointers) == 1
@@ -735,7 +939,7 @@ def build(repo, chosen, mode, out_dir, tag=None, make_zip=True, allow_pointers=F
             len(pointers), "" if one else "s", "is a" if one else "are", "" if one else "s", "" if one else "s",
             ", ".join(shown), ", ..." if len(pointers) > len(shown) else ""))
         log("Run git lfs pull to download the models first.")
-    if missing or pointers or clashing:
+    if missing or pointers or clashing or lacking:
         return EXIT_ERROR
 
     if not os.path.isdir(out_dir):
@@ -744,7 +948,7 @@ def build(repo, chosen, mode, out_dir, tag=None, make_zip=True, allow_pointers=F
         if os.path.normcase(os.path.abspath(out_dir)).startswith(os.path.normcase(os.path.abspath(repo)) + os.sep):
             with open(os.path.join(out_dir, ".gitignore"), "w", encoding="utf-8") as f:
                 f.write("# Release builds, made by tools/release/build_release.py\n*\n")
-    source = source_label(repo, root)
+    source = source_label(repo)
 
     for release, files in plans:
         name = release_name(release, mode, tag, flat)
@@ -755,7 +959,7 @@ def build(repo, chosen, mode, out_dir, tag=None, make_zip=True, allow_pointers=F
             target = native(dest, to)
             os.makedirs(os.path.dirname(target), exist_ok=True)
             shutil.copyfile(native(src_root, rel), target)
-        section = print_section(repo, release.scene)
+        section = print_section(repo, release.scene, release.title)
         with open(os.path.join(dest, MARKER), "w", encoding="utf-8", newline="\n") as f:
             f.write(print_list(release, mode, files, section, source, flat))
         shutil.copyfile(license_path, os.path.join(dest, "LICENSE"))
@@ -768,6 +972,9 @@ def build(repo, chosen, mode, out_dir, tag=None, make_zip=True, allow_pointers=F
         if section is None:
             log("    warning: %s has no print list for %s, so PRINT_LIST.md only lists the files"
                 % (PRINT_LISTS, os.path.basename(release.scene.folder)))
+        else:
+            for path in unexported_paths(release_section(section, release, False), release.scene):
+                log("    warning: the print list asks for `%s`, but no preset exports it" % path)
     if make_zip:
         update_sums(out_dir)
     log("Output: %s" % out_dir)
@@ -813,7 +1020,7 @@ def main(argv=None):
             code, text = check(repo, args.verbose)
             print(text)
             return code
-        scenes, notes = load_scenes(repo)
+        scenes, notes, _ = load_scenes(repo)
         problems = [text for level, text in notes if level == "error"]
         if problems:
             for text in problems:
@@ -821,6 +1028,9 @@ def main(argv=None):
             return EXIT_ERROR
         root = os.path.join(repo, ROOT)
         rels = releases(scenes, scan(root) if os.path.isdir(root) else [])
+        same = duplicate_ids(rels)
+        if same:
+            raise BuildError("several releases are called %s: rename one of their scene folders" % ", ".join(same))
         if args.list:
             for release in rels:
                 print("%-20s %s/%s/%s + %s/" % (release.id, ROOT, release.scene.folder,
@@ -829,7 +1039,7 @@ def main(argv=None):
         if args.print_list:
             release = find_release(rels, args.print_list)
             sys.stdout.write(print_list(release, mode, layout(release, mode, flat),
-                                        print_section(repo, release.scene), None, flat))
+                                        print_section(repo, release.scene, release.title), None, flat))
             return EXIT_OK
         chosen = [find_release(rels, s) for s in args.shape] if args.shape else rels
         if not chosen:

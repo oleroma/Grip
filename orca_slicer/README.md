@@ -1,6 +1,6 @@
 # Printed parts
 
-<!-- tools/release/build_release.py copies each "## Print list" section below into the PRINT_LIST.md of the zips of the scene its heading names (GripV, GripX). -->
+<!-- tools/release/build_release.py copies each "## Print list" section below into the PRINT_LIST.md of the zips whose shape (GripV hollow) or scene (GripV) its heading names, without the table rows of the other shapes and with the paths of the zip. Keep the paths in backticks. -->
 
 This folder holds every printable part of Grip, exported from `blender/Grip.blend` as `.stl` files, plus a few OrcaSlicer projects (`.3mf`). This page tells you which files to print for each shape, how many of each, and which tolerance folder to start with.
 
@@ -54,7 +54,7 @@ The capacitive part sits in the middle of the face buttons, probably as a touch 
 | `parts/scrollwheel/` | the scroll wheel: wheel, core and holder |
 | `parts/battery_cover/`, `parts/cable_holder/`, `parts/pins/` | small parts |
 | `parts/misc/` | `nut_lock.stl` (optional) and `pin.stl`, a copy of `parts/pins/pin.stl` |
-| `GripV_case_standard.3mf`, `GripV_case_hollow.3mf`, `GripV_parts.3mf` | OrcaSlicer projects with the parts laid out on plates |
+| `GripV_case_standard.3mf`, `GripV_case_hollow.3mf`, `GripV_parts.3mf` | OrcaSlicer projects with the parts of the print list laid out on plates, probably with the `default` files. If a part was exported again after a project was saved, the `.stl` is the newer one. |
 | `GripV_case_za3tarani.3mf` | probably a case made for one tester; not part of a print list |
 
 ### GripX/
@@ -109,7 +109,7 @@ On GripX some neighbouring folders hold the same file for now, so reprinting the
 
 ## Print list: GripV standard and GripV hollow
 
-Paths are under `GripV/`, shown for the `default` tolerance. "Only with" means the part depends on the case top you picked. Quantities marked *probably* are not confirmed.
+Paths start in `GripV/` here, or in the top folder of a release zip, and fit parts are listed at the `default` tolerance. "Only with" means the part depends on the case top you picked. Quantities marked *probably* are not confirmed.
 
 | Qty | Part | File | Notes |
 | ---: | --- | --- | --- |
@@ -127,7 +127,7 @@ Paths are under `GripV/`, shown for the `default` tolerance. "Only with" means t
 | 1 each | Bumpers L1, R1 | `parts/bumpers/press_default/` | |
 | 2 | Stick | `parts/sticks/<top>/<curvature>/<texture>/stick_<range>_deg.stl` | one per side. Both holes are the same, so you can print one design twice or two different ones. The range is the tilt the stick's neck is shaped for. |
 | 1 each | Rocker D-pad: cap, stick, rocker, rocker ball, ball support, rocker support | `parts/dpad_stick/` | only with a `dpad_stick` top |
-| 1 each | Scroll wheel: wheel, core, holder | `parts/scrollwheel/` | the preset copy in `blender/GripV_preset.json` does not list them, so they may be older than the Blender file |
+| 1 each | Scroll wheel: wheel, core, holder | `parts/scrollwheel/` | |
 | 1 | Battery cover | `parts/battery_cover/battery_cover.stl` | |
 | 1 | Cable holder | `parts/cable_holder/cable_holder.stl` | *probably* needed, see [Known gaps](#known-gaps) |
 | 2 | Alignment pin | `parts/pins/pin.stl` | standard only, one per side. The hollow shells line up on pins of the middle plate. |
@@ -135,11 +135,9 @@ Paths are under `GripV/`, shown for the `default` tolerance. "Only with" means t
 
 **Not printed:** four M2.5 DIN 912 socket-head screws with nuts (the [printing guide](../docs/print-guide.md) recommends them for the hollow version too, for now) and the electronics: board, joystick modules, battery and cable.
 
-The OrcaSlicer projects `GripV_case_standard.3mf`, `GripV_case_hollow.3mf` and `GripV_parts.3mf` hold these parts laid out on plates, probably with the `default` files. If a part was exported again after a project was saved, the `.stl` is the newer one.
-
 ## Print list: GripX xbox and GripX dualsense
 
-Paths are under `GripX/`, shown for the `default` tolerance. `<style>` is `xbox_style` or `dualsense_style`.
+Paths start in `GripX/` here, or in the top folder of a release zip, and fit parts are listed at the `default` tolerance. `<style>` is `xbox_style` or `dualsense_style`.
 
 | Qty | Part | File | Notes |
 | ---: | --- | --- | --- |
