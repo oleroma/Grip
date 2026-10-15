@@ -30,8 +30,7 @@ On GripX some neighbouring folders hold the same file for now (the `cap_*` folde
 
 Each button is a shaft and a cap. With the case top upside down, slide each shaft into its hole from the inside. The collar (stopper) on the shaft keeps it from going through.
 
-- ABXY: `buttons/default/button.stl`. On GripV the D-pad probably uses the same file.
-- Select, Home and the GripX D-pad have their own shafts, which are not exported yet ([known gaps](../orca_slicer/README.md#known-gaps)).
+- Every button uses the same shaft, `buttons/default/button.stl`: all button holes are the same for now.
 
 **Check:** each shaft slides in and out freely without catching, and does not wobble.
 

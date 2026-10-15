@@ -45,33 +45,13 @@
       ]
     },
 
-    "buttons-GripV": {
+    "buttons": {
       "title": "Button shafts",
-      "note": "A shaft sits on a switch on the board and its cap clips on from above the case.",
+      "note": "A shaft sits on a switch on the board and its cap clips on from above the case. All button holes are the same for now, so every button uses the one exported shaft.",
       "items": [
-        {"name": "Shaft for A, B, X and Y", "file": "parts/buttons/{tolerance}/button.stl", "qty": 4},
+        {"name": "Shaft for A, B, X, Y, Home and the four Select buttons", "file": "parts/buttons/{tolerance}/button.stl", "qty": 9},
         {"name": "Shaft for the D-pad", "file": "parts/buttons/{tolerance}/button.stl", "qty": 4,
-         "when": "with a D-pad caps top (no `dpad_stick` in its name)",
-         "unconfirmed": "The D-pad preset has the same `curve parameters` and `button parameters` as ABXY. It differs in `caps flex cut` and `custom cap`, which may also shape the clip at the top of the shaft."},
-        {"name": "Shaft for Home", "qty": 1,
-         "missing": "The Home preset differs from ABXY in `middle bevel` (the rounding of the shaft's edges) and in `caps flex cut`, which may also shape the clip on the shaft, so Home has its own shaft (`home button`), which no preset exports. The ABXY `button.stl` has the same outline and probably works until then (not tested)."},
-        {"name": "Shafts for Select", "qty": 4,
-         "missing": "The Select buttons are narrower than ABXY (`width`, `fillet subdiv` and `caps offset` differ), so they need their own shaft (`select button`), which no preset exports."}
-      ]
-    },
-
-    "buttons-GripX": {
-      "title": "Button shafts",
-      "note": "A shaft sits on a switch on the board and its cap clips on from above the case.",
-      "items": [
-        {"name": "Shaft for A, B, X and Y", "file": "parts/buttons/{tolerance}/button.stl", "qty": 4},
-        {"name": "Shafts for the D-pad", "qty": 4,
-         "when": "with a D-pad caps top (no `dpad_stick` in its name)",
-         "missing": "The GripX D-pad preset differs from ABXY in `fillet` (the corner rounding of the outline), so it needs its own shaft (`dpad button`), which no preset exports. A `dpad_stick` top does not need these shafts."},
-        {"name": "Shaft for Home", "qty": 1,
-         "missing": "The GripX Home preset differs from ABXY in `fillet`, so it needs its own shaft (`home button`), which no preset exports."},
-        {"name": "Shafts for Select", "qty": 4,
-         "missing": "The Select buttons are narrower than ABXY (`width`, `fillet`, `fillet subdiv` and `caps offset` differ), so they need their own shaft (`select button`), which no preset exports."}
+         "when": "with a D-pad caps top (no `dpad_stick` in its name)"}
       ]
     },
 
@@ -230,7 +210,7 @@
       "folder": "GripV",
       "about": "The custom ergonomic \"pistol-like\" shape: a solid case bottom with a thin shell top, held together with screws.",
       "vars": {"case": "case_standard", "triggers": "parts/triggers"},
-      "groups": ["case", "buttons-GripV", "caps", "capacitive", "triggers", "bumpers-GripV", "sticks-GripV",
+      "groups": ["case", "buttons", "caps", "capacitive", "triggers", "bumpers-GripV", "sticks-GripV",
                  "dpad-stick", "scroll-wheel-GripV", "small-parts", "pins", "nut-lock-GripV"],
       "projects": ["GripV_case_standard.3mf", "GripV_parts.3mf"],
       "hardware": "Four M2.5 DIN 912 socket-head screws with nuts hold the case together. The electronics (board, joystick modules, battery, cable) are not printed."
@@ -241,7 +221,7 @@
       "folder": "GripV",
       "about": "The GripV shape as a thin shell top and bottom that clip onto a middle plate carrying the board. Lighter, and also suited to resin and powder printing.",
       "vars": {"case": "case_hollow", "triggers": "parts/triggers"},
-      "groups": ["case", "middle-plate", "buttons-GripV", "caps", "capacitive", "triggers", "bumpers-GripV",
+      "groups": ["case", "middle-plate", "buttons", "caps", "capacitive", "triggers", "bumpers-GripV",
                  "sticks-GripV", "dpad-stick", "scroll-wheel-GripV", "small-parts", "nut-lock-GripV"],
       "notes": ["No alignment pins: the shells line up on pins of the middle plate."],
       "projects": ["GripV_case_hollow.3mf", "GripV_parts.3mf"],
@@ -253,7 +233,7 @@
       "folder": "GripX",
       "about": "The classic Xbox-style shape, solid, held together with screws.",
       "vars": {"case": "xbox_style", "triggers": "xbox_style/triggers"},
-      "groups": ["case", "buttons-GripX", "caps", "capacitive", "triggers", "bumpers-GripX", "sticks-GripX",
+      "groups": ["case", "buttons", "caps", "capacitive", "triggers", "bumpers-GripX", "sticks-GripX",
                  "dpad-stick", "scroll-wheel-GripX", "small-parts", "pins"],
       "projects": [],
       "hardware": "Four M2.5 DIN 912 socket-head screws with nuts hold the case together. The electronics (board, joystick modules, battery, cable) are not printed."
@@ -264,7 +244,7 @@
       "folder": "GripX",
       "about": "The classic DualSense-style shape, solid, held together with screws.",
       "vars": {"case": "dualsense_style", "triggers": "dualsense_style/triggers"},
-      "groups": ["case", "buttons-GripX", "caps", "capacitive", "triggers", "bumpers-GripX", "sticks-GripX",
+      "groups": ["case", "buttons", "caps", "capacitive", "triggers", "bumpers-GripX", "sticks-GripX",
                  "dpad-stick", "scroll-wheel-GripX", "small-parts", "pins"],
       "projects": [],
       "hardware": "Four M2.5 DIN 912 socket-head screws with nuts hold the case together. The electronics (board, joystick modules, battery, cable) are not printed."

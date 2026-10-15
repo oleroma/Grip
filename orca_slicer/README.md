@@ -117,10 +117,8 @@ Paths are under `GripV/`, shown for the `default` tolerance. "Only with" means t
 | 1 | Case bottom | `case_standard/case_bottom.stl` or `case_hollow/case_bottom.stl` | |
 | 1 | Case top | one of the four tops in the same folder | see [Case tops](#case-tops) |
 | 1 | Middle plate | **not exported yet** | hollow only |
-| 4 | Shaft for A, B, X and Y | `parts/buttons/default/button.stl` | |
-| 4 | Shaft for the D-pad | `parts/buttons/default/button.stl` | only with a D-pad caps top. *Probably* right: same `curve parameters` and `button parameters` as ABXY, but two cap settings that may also shape the clip on the shaft differ |
-| 1 | Shaft for Home | **not exported yet** | Home has its own shaft (`middle bevel` differs, and so does `caps flex cut`, which may also shape the clip on the shaft). The ABXY `button.stl` has the same outline and probably works until then (not tested). |
-| 4 | Shaft for Select | **not exported yet** | the Select buttons are narrower than ABXY |
+| 9 | Shaft for A, B, X, Y, Home and the four Select buttons | `parts/buttons/default/button.stl` | all button holes are the same for now, so every button uses this one shaft |
+| 4 | Shaft for the D-pad | `parts/buttons/default/button.stl` | only with a D-pad caps top |
 | 1 each | Caps for the face buttons | `parts/buttons/default/cap_default/` `triangle.stl` (top), `circle.stl` (right), `cross.stl` (bottom), `square.stl` (left) | |
 | 4 | D-pad cap | `parts/buttons/default/cap_default/dpad.stl` | only with a D-pad caps top; one outline turned four ways |
 | 4 | Select cap | `parts/buttons/default/cap_default/select.stl` | *probably* 4 of the same: the file has four Select caps that share one preset |
@@ -148,10 +146,8 @@ Paths are under `GripX/`, shown for the `default` tolerance. `<style>` is `xbox_
 | ---: | --- | --- | --- |
 | 1 | Case bottom | `<style>/case_bottom.stl` | |
 | 1 | Case top | one of the four tops in `<style>/` | use a `cap_plate` top for now: `parts/capacitive/capacitive_knob.stl` is still the plate |
-| 4 | Shaft for A, B, X and Y | `parts/buttons/default/button.stl` | |
-| 4 | Shaft for the D-pad | **not exported yet** | only with a D-pad caps top. The GripX D-pad has its own corner rounding (`fillet`), so it needs its own shaft. A `dpad_stick` top does not need them. |
-| 1 | Shaft for Home | **not exported yet** | its own `fillet` |
-| 4 | Shaft for Select | **not exported yet** | the Select buttons are narrower than ABXY |
+| 9 | Shaft for A, B, X, Y, Home and the four Select buttons | `parts/buttons/default/button.stl` | the same shaft as on GripV |
+| 4 | Shaft for the D-pad | `parts/buttons/default/button.stl` | only with a D-pad caps top; a `dpad_stick` top does not need them |
 | 1 each | Caps for the face buttons | `parts/buttons/default/cap_default/` `triangle.stl` (top), `circle.stl` (right), `cross.stl` (bottom), `square.stl` (left) | |
 | 4 | D-pad cap | `parts/buttons/default/cap_default/dpad.stl` | only with a D-pad caps top; one outline turned four ways |
 | 4 | Select cap | `parts/buttons/default/cap_default/select.stl` | *probably* 4 of the same |
@@ -173,7 +169,6 @@ Paths are under `GripX/`, shown for the `default` tolerance. `<style>` is `xbox_
 
 The release is still a beta. These parts are missing or not confirmed yet:
 
-- **Button shafts.** Only the ABXY shaft (`button.stl`) is exported. The Select shafts (every shape), the Home shaft (every shape) and the GripX D-pad shafts are made from presets that differ from ABXY, so they need their own export: `select button`, `home button` and `dpad button` ([Buttons and caps](../docs/blender/customize/parts/buttons-and-caps.md#export)).
 - **GripV middle plate.** The "Case hollow" export skips it, because the GripV view layer excludes its collection ([Exporting](../docs/blender/customize/05-exporting.md#known-problems)).
 - **GripV hollow screws.** The printing guide recommends screws for the hollow case for now. The "Case hollow" export does not turn on `screws hollow` (the screw bosses of shell bodies) and the saved file has it off, so the exported shells probably have no screw bosses. Check yours before you buy screws.
 - **GripX capacitive knob.** `GripX/parts/capacitive/capacitive_knob.stl` was exported before the preset was fixed and is really the plate.

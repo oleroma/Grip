@@ -90,8 +90,8 @@ TOOLTIPS = {
     "curve parameters": {
         "width": "Size of the button. Shaft, cap and case hole grow together.",
         "octagonal fillet": "Switches the outline between two corner styles.",
-        "fillet": "How round the corners of the outline are.",
-        "fillet subdiv": "Smoothness of the rounded corners. Ignored while horizontal buttons is on.",
+        "fillet": "How round the corners of the cap are. The shaft ignores it while horizontal buttons is on.",
+        "fillet subdiv": "Smoothness of the rounded cap corners. It does not change the shaft.",
         "fillet tolerance": "Extra rounding of the case hole corners only, so a square cap does not catch in its hole.",
     },
     "caps parameters": {
@@ -113,7 +113,7 @@ TOOLTIPS = {
         "caps hook inset": "How far the snap hook that holds the cap reaches in.",
         "caps hook height": "Height of the snap hook that holds the cap.",
         "caps flex cut": "Depth of the slit that lets the cap clip flex.",  # guess
-        "caps offset": "How much wider the cap is than the shaft. Raising it makes the shaft and its case hole thinner; the cap keeps its size.",
+        "caps offset": "How much wider the cap is than the shaft: subtracted from width for the shaft and its case hole. The cap keeps its size.",
     },
     "button parameters": {
         "button tolerance": "How loosely the shaft slides in its case hole: the shaft gets this much narrower, half per side. " + TOLERANCE_LINK.format("tolerance"),
