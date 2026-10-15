@@ -14,7 +14,7 @@ Recipes for common changes, and the traps that make a change silently do nothing
 2. Add the same key to the *Separate Bundle* in the matching `… outputs` group (`trigger outputs`) and expose it as an output.
 3. Use the output in the geometry group.
 4. **Type the value in every preset that uses the constructor**: both variants, and both style nodes in GripX where they exist. A new input starts at its interface default.
-5. Give it a tooltip: add a line for the input to `scripts/apply_tooltips.py` and run the script.
+5. Give it a tooltip: add a line for the input to `scripts/apply_tooltips.py`, check the table with `python scripts/check_tooltips.py` (it compares it with `tracking.json` after your save) and run the script in Blender.
 
 Keys are matched by name, and a missing key quietly comes out as zero. So check the spelling on both sides, or the new value will do nothing without any error.
 
