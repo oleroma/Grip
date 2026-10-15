@@ -46,7 +46,7 @@ Every printer is a little different. The global parameters in `Grip.blend` have 
 ## Still missing
 
 - Photos and a video guide for cleaning and assembly. The written [assembly guide](assembly-guide.md) is a draft that has not been checked step by step on a build yet.
-- A checked bill of materials. The [draft](bom.md) still has screw lengths, the board revision and the filament amounts to confirm.
+- A checked bill of materials. The [draft](bom.md) still has the filament amounts to confirm.
 - Some parts are not exported yet, among them the GripV middle plate (see [Known gaps](../orca_slicer/README.md#known-gaps)).
 - Recommended slicer profiles
 - A tolerance test print
