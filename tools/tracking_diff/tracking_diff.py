@@ -39,6 +39,7 @@ TRACKING_PATH = "blender/tracking.json"
 PANELS = {
     "GripV controls": ("GripV", "custom ergonomic shape"),
     "GripX contols": ("GripX", "classic xbox and dualsense styles"),
+    "GripX controls": ("GripX", "classic xbox and dualsense styles"),    # the name after scripts/fix_names.py
 }
 # What each tracked basemesh is (docs/blender/customize/04-case.md).
 MESH_NOTES = {
@@ -124,8 +125,43 @@ def base_name(key):
 
 def alike(a, b):
     """True for names that differ only in spacing and case, or in a letter or two."""
-    return " ".join(a.split()).lower() == " ".join(b.split()).lower() or \
-        difflib.SequenceMatcher(None, a, b).ratio() >= RENAME_RATIO
+    if " ".join(a.split()).lower() == " ".join(b.split()).lower():
+        return True
+    m = difflib.SequenceMatcher(None, a, b)
+    return m.real_quick_ratio() >= RENAME_RATIO and m.quick_ratio() >= RENAME_RATIO and m.ratio() >= RENAME_RATIO
+
+
+def value_key(value):
+    """A value as hashable text, with 1 and 1.0 alike but booleans apart (see same())."""
+    def norm(v):
+        if is_number(v):
+            return float(v)
+        return [norm(x) for x in v] if isinstance(v, list) else v
+    return json.dumps(norm(value), sort_keys=True)
+
+
+def keys_alike(a, b):
+    """Two (node path, label) keys whose names are alike one by one."""
+    return len(a[0]) == len(b[0]) and all(x == y or alike(x, y) for x, y in zip(a[0] + (a[1],), b[0] + (b[1],)))
+
+
+def match_rows(old, new):
+    """(rows matched, rows equal) between two {(node path, label): value} dicts. A row matches the row with the same
+    key, or else one row whose names are all alike and whose value is the same (renamed together with its node)."""
+    common = [k for k in old if k in new]
+    equal = sum(1 for k in common if same(old[k], new[k]))
+    waiting = defaultdict(list)
+    for k in new:
+        if k not in old:
+            waiting[(len(k[0]), value_key(new[k]))].append(k)
+    candidates = []
+    for o in (k for k in old if k not in new):
+        for n in waiting.get((len(o[0]), value_key(old[o])), ()):
+            if keys_alike(o, n):
+                candidates.append((difflib.SequenceMatcher(None, " ".join(o[0] + (o[1],)),
+                                                           " ".join(n[0] + (n[1],))).ratio(), o, n))
+    renamed = len(pair_up(candidates))
+    return len(common) + renamed, equal + renamed
 
 
 def pair_up(candidates):
@@ -184,7 +220,8 @@ def diff_values(old, new):
 
 def node_renames(old, new):
     """{new key: old key} for removed and added nodes that are probably one node renamed:
-    the same base name (or a similar name), the same inputs, at least half the values equal."""
+    the same base name (or a similar name), the same inputs (also when some were renamed with it, see
+    match_rows), at least half the values equal."""
     candidates = []
     for o in (k for k in old if k not in new):
         for n in (k for k in new if k not in old):
@@ -192,10 +229,10 @@ def node_renames(old, new):
                 continue
             ov = {(p, label): v for p, label, v in flatten(old[o])}
             nv = {(p, label): v for p, label, v in flatten(new[n])}
-            if set(ov) != set(nv):
+            if len(ov) != len(nv):
                 continue
-            equal = sum(1 for k in ov if same(ov[k], nv[k]))
-            if equal * 2 >= len(ov):
+            matched, equal = match_rows(ov, nv)
+            if matched == len(ov) and equal * 2 >= len(ov):
                 candidates.append((equal, o, n))
     return pair_up(candidates)
 
@@ -338,9 +375,16 @@ def diff_tree(name, old_links, new_links):
 
 
 def diff_trees(old, new):
-    """(trees added, trees removed, [TreeDiff]) between two all_node_trees dicts."""
-    changed = (diff_tree(name, old[name] or [], new[name] or []) for name in sorted(set(old) & set(new)))
-    return sorted(set(new) - set(old)), sorted(set(old) - set(new)), [d for d in changed if d]
+    """(trees added, trees removed, trees renamed [(old, new)], [TreeDiff]) between two all_node_trees dicts.
+    A removed and an added tree with a similar name and as many links count as one tree renamed."""
+    added, removed = sorted(set(new) - set(old)), sorted(set(old) - set(new))
+    renames = pair_up((difflib.SequenceMatcher(None, o, n).ratio(), o, n) for o in removed for n in added
+                      if len(old[o] or []) == len(new[n] or []) and alike(o, n))
+    renamed = sorted((o, n) for n, o in renames.items())
+    pairs = [(name, name) for name in set(old) & set(new)] + renamed
+    changed = (diff_tree(n, old[o] or [], new[n] or []) for o, n in sorted(pairs, key=lambda p: p[1]))
+    return ([n for n in added if n not in renames], [o for o in removed if o not in renames.values()], renamed,
+            [d for d in changed if d])
 
 
 # --------------------------------------------------------------------------
@@ -353,6 +397,7 @@ class Section:
     panel: str = None       # the panel's name in the file
     note: str = ""          # shown instead of a panel name
     groups: dict = field(default_factory=dict)   # {preset group: [NodeDiff]}
+    renamed_from: str = None    # the panel's previous name, when it was probably renamed
 
 
 @dataclass
@@ -365,6 +410,7 @@ class Report:
     meshes: list = field(default_factory=list)
     trees_added: list = field(default_factory=list)
     trees_removed: list = field(default_factory=list)
+    trees_renamed: list = field(default_factory=list)   # [(old name, new name)]
     trees: list = field(default_factory=list)       # [TreeDiff]
     old_trees: dict = field(default_factory=dict)
     new_trees: dict = field(default_factory=dict)
@@ -377,7 +423,7 @@ class Report:
     @property
     def empty(self):
         return not (self.note or self.sections or self.modifiers or self.meshes or self.wiring_count
-                    or self.versions[0] != self.versions[1])
+                    or self.trees_renamed or self.versions[0] != self.versions[1])
 
 
 def panel_order(panel):
@@ -395,10 +441,16 @@ def compare(old, new, old_label="old", new_label="new"):
     old_inputs = old.get("tracked_inputs") or {}
     new_inputs = new.get("tracked_inputs") or {}
 
+    # A renamed panel (GripX contols -> GripX controls) is compared with its old self, like a renamed node.
+    panel_renames = node_renames({p: {"nodes": v} for p, v in old_inputs.items() if isinstance(v, dict)},
+                                 {p: {"nodes": v} for p, v in new_inputs.items() if isinstance(v, dict)})
     per_panel = {}
     for panel in sorted(set(old_inputs) | set(new_inputs), key=panel_order):
-        groups = group_by_first(diff_nodes(old_inputs.get(panel) or {}, new_inputs.get(panel) or {}))
-        if groups:
+        if panel in panel_renames.values():
+            continue    # shown under its new name
+        before = old_inputs.get(panel_renames.get(panel, panel)) or {}
+        groups = group_by_first(diff_nodes(before, new_inputs.get(panel) or {}))
+        if groups or panel in panel_renames:
             per_panel[panel] = groups
 
     # A group with the same change in several panels (the shared group 'global') is shown once.
@@ -416,10 +468,14 @@ def compare(old, new, old_label="old", new_label="new"):
                     shared_panels.append(panel)
 
     for panel, groups in per_panel.items():
-        if groups and panel in PANELS:
-            report.sections.append(Section("{} ({})".format(*PANELS[panel]), panel=panel, groups=groups))
-        elif groups:
-            report.sections.append(Section(show(panel), groups=groups))
+        if not groups and panel not in panel_renames:
+            continue
+        old_name = panel_renames.get(panel)
+        if panel in PANELS:
+            report.sections.append(Section("{} ({})".format(*PANELS[panel]), panel=panel, groups=groups,
+                                           renamed_from=old_name))
+        else:
+            report.sections.append(Section(show(panel), groups=groups, renamed_from=old_name))
     if shared:
         names = [short_panel(p) for p in sorted(shared_panels, key=panel_order)]
         note = "same change in both panels" if len(names) == 2 else "same change in each panel"
@@ -433,7 +489,8 @@ def compare(old, new, old_label="old", new_label="new"):
     report.meshes = diff_meshes(old.get("meshes") or {}, new.get("meshes") or {})
     report.old_trees = old.get("all_node_trees") or {}
     report.new_trees = new.get("all_node_trees") or {}
-    report.trees_added, report.trees_removed, report.trees = diff_trees(report.old_trees, report.new_trees)
+    report.trees_added, report.trees_removed, report.trees_renamed, report.trees = diff_trees(report.old_trees,
+                                                                                              report.new_trees)
     report.versions = (old.get("version"), new.get("version"))
     return report
 
@@ -467,8 +524,9 @@ def summary_line(report):
                 else:
                     c[(words[len(d.path) > 1], "renamed")] += d.kind == "renamed"
                     c.update(("input", change.kind) for change in d.changes)
+    c[("panel", "renamed")] = sum(1 for section in report.sections if section.renamed_from)
     parts = [f"{plural(c[('input', 'changed')], 'value')} changed"] if c[("input", "changed")] else []
-    for word in ("input", "node", "preset group", "modifier", "object"):
+    for word in ("panel", "input", "node", "preset group", "modifier", "object"):
         for kind in ("added", "removed", "renamed"):
             if c[(word, kind)]:
                 parts.append(f"{plural(c[(word, kind)], word)} {kind}")
@@ -478,6 +536,8 @@ def summary_line(report):
         parts.append("no parameter changes")
     if report.meshes:
         parts.append(f"{plural(len(report.meshes), 'mesh', 'meshes')} changed")
+    if report.trees_renamed:
+        parts.append(f"{plural(len(report.trees_renamed), 'node group')} renamed")
     if report.wiring_count:
         parts.append(f"wiring changed in {plural(report.wiring_count, 'node group')}")
     text = ", ".join(parts)
@@ -581,6 +641,9 @@ def wiring_lines(report, verbose, code=show):
         if trees:
             items = [f"{code(t)} ({plural(len(links.get(t) or []), 'link')})" for t in trees]
             lines.append((0, f"{title}: {name_list(items, verbose, str)}"))
+    if report.trees_renamed:
+        items = [f"{code(o)} -> {code(n)}" for o, n in report.trees_renamed]
+        lines.append((0, f"Node groups probably renamed: {name_list(items, verbose, str)}"))
     labels_only = []
     for diff in report.trees:
         if not diff.rewired and not verbose:
@@ -662,6 +725,9 @@ def render_text(report, verbose=False):
     lines += [version_line(report, "->")] if version_line(report, "->") else []
     for section in report.sections:
         detail = f"panel {show(section.panel)}" if section.panel else section.note
+        if section.renamed_from:
+            renamed = f"probably renamed from {show(section.renamed_from)}"
+            detail = f"{detail}, {renamed}" if detail else renamed
         lines += ["", f"{section.title}, {detail}" if detail else section.title]
         for group, diffs in section.groups.items():
             lines += group_text(group, diffs, verbose)
@@ -672,7 +738,7 @@ def render_text(report, verbose=False):
     if report.meshes:
         lines += ["", "Meshes"]
         lines += [f"  {mesh_text(name, kind)}" for name, kind in report.meshes]
-    if report.wiring_count:
+    if report.wiring_count or report.trees_renamed:
         lines += ["", "Node wiring"]
         lines += ["  " + "    " * depth + text for depth, text in wiring_lines(report, verbose)]
     return "\n".join(lines) + "\n"
@@ -744,10 +810,13 @@ def render_markdown(report, verbose=False, title=None, heading="###"):
     lines += ["", version_line(report, "→")] if version_line(report, "→") else []
     for section in report.sections:
         lines += ["", f"{sub} {section.title}"]
+        renamed = f"probably renamed from {md_name(section.renamed_from)}" if section.renamed_from else ""
         if section.panel:
-            lines += ["", f"Panel {md_code(section.panel)}."]
+            lines += ["", f"Panel {md_code(section.panel)}" + (f", {renamed}" if renamed else "") + "."]
         elif section.note:
             lines += ["", section.note.capitalize() + "."]
+        elif renamed:
+            lines += ["", renamed.capitalize() + "."]
         for group, diffs in section.groups.items():
             lines += ["", f"**{md_name(group)}**", ""] + md_group_table(diffs, verbose)
     if report.modifiers:
@@ -757,9 +826,9 @@ def render_markdown(report, verbose=False, title=None, heading="###"):
     if report.meshes:
         lines += ["", f"{sub} Meshes", ""]
         lines += [f"- {mesh_text(name, kind, md_name)}" for name, kind in report.meshes]
-    if report.wiring_count:
-        lines += ["", "<details>",
-                  f"<summary>Node wiring: {plural(report.wiring_count, 'node group')} changed</summary>", ""]
+    if report.wiring_count or report.trees_renamed:
+        count = report.wiring_count + len(report.trees_renamed)
+        lines += ["", "<details>", f"<summary>Node wiring: {plural(count, 'node group')} changed</summary>", ""]
         lines += ["  " * depth + "- " + text for depth, text in wiring_lines(report, verbose, md_name)]
         lines += ["", "</details>"]
     return "\n".join(lines) + "\n"

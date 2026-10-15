@@ -58,7 +58,7 @@ The report starts with one line that counts the changes. Then come the sections 
 
 **New and removed inputs and nodes.** These read `fresh: new input, 0.5`, `gone: removed, was 2` and `curve parameters: removed node, 6 inputs`. Add `--verbose` to see the values of a whole added or removed node.
 
-**"probably renamed".** Keys in `tracking.json` are names, so a rename normally looks like one thing removed and another added. The tool pairs them up again when the old and the new name are alike and the values match: for inputs, the same value; for nodes, the same inputs with at least half of the values equal. Treat it as a hint and check in Blender. A renamed node also lists the values that changed with the rename.
+**"probably renamed".** Keys in `tracking.json` are names, so a rename normally looks like one thing removed and another added. The tool pairs them up again when the old and the new name are alike and the values match: for inputs, the same value; for nodes, preset groups and the controls panels, the same inputs (inputs renamed along with them count) with at least half of the values equal; for node groups under node wiring, the same number of links. Treat it as a hint and check in Blender. A renamed node also lists the values that changed with the rename. This is what makes the diff of a name cleanup such as `scripts/fix_names.py` readable: it should list only renames. Link lines name nodes and sockets, so a renamed group node or input still shows under node wiring as links added and removed in the node groups that use it.
 
 **"same change in both panels".** Both controls panels contain the group `global`, which is one node group, so a global setting changes in both at once. The tool shows such a change once instead of twice.
 

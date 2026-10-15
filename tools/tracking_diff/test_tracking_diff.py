@@ -165,6 +165,33 @@ class NodeTests(unittest.TestCase):
         self.assertIn("  GripV screw parameters: probably renamed from GripV screw paramters\n"
                       "    screw parameters (FRONT)\n      b: 2 -> 3 (+1)", out)
 
+    def test_renamed_preset_group_with_renamed_inputs(self):
+        """scripts/fix_names.py renames a preset group and inputs inside it in the same save."""
+        old = tracking({"GripV  lever R1L1": preset({"R1L1 lever parameters": {"wdith": 20.0, "height": 9.0,
+                                                                               "X": 1.0}})})
+        new = tracking({"GripV lever R1L1": preset({"R1L1 lever parameters": {"width": 20.0, "height": 9.0,
+                                                                              "X": 1.0}})})
+        out = text(old, new)
+        self.assertIn("1 input renamed, 1 preset group renamed.", out)
+        self.assertIn('  GripV lever R1L1: probably renamed from "GripV  lever R1L1"\n'
+                      "    R1L1 lever parameters\n      width: probably renamed from wdith, value 20", out)
+
+    def test_renamed_panel(self):
+        before = {"GripX screw paramters": preset({"screw parameters": {"sheild": 1.0, "b": 2.0}})}
+        after = {"GripX screw parameters": preset({"screw parameters": {"shield": 1.0, "b": 2.0}})}
+        old = {"tracked_inputs": {V: {}, "GripX contols": before}}
+        new = {"tracked_inputs": {V: {}, "GripX controls": after}}
+        out = text(old, new)
+        self.assertIn("1 panel renamed, 1 input renamed, 1 preset group renamed.", out)
+        self.assertIn("GripX (classic xbox and dualsense styles), panel GripX controls, probably renamed from "
+                      "GripX contols\n  GripX screw parameters: probably renamed from GripX screw paramters\n", out)
+        self.assertNotIn("removed preset group", out)
+        md = markdown(old, new)
+        self.assertIn("Panel `GripX controls`, probably renamed from `GripX contols`.", md)
+        # renamed and nothing else changed: still reported
+        same = {"tracked_inputs": {V: {}, "GripX controls": before}}
+        self.assertIn("1 panel renamed.", text(old, same))
+
     def test_different_nodes_are_not_a_rename(self):
         old = tracking({"g": preset({"advanced stick parameters": {"a": 1, "b": 2}})})
         new = tracking({"g": preset({"advanced stick parameters.001": {"a": 5, "b": 6}})})
@@ -239,6 +266,18 @@ class MeshAndTreeTests(unittest.TestCase):
         verbose = text(old, new, verbose=True)
         self.assertIn("added [Menu Switch] Output -> Bundle [Group Output]", verbose)
         self.assertIn("removed [B] Bundle -> Bundle [Join]", verbose)
+
+    def test_renamed_node_groups(self):
+        old = tracking(trees={"neighboor direction": ["[A] x -> y [B]"], "pins postion": ["[A] x -> y [B]"],
+                              "gone": ["[A] x -> y [B]"]})
+        new = tracking(trees={"neighbour direction": ["[A] x -> y [B]"], "pins position": ["[A] x -> z [B]"],
+                              "fresh": ["[A] x -> y [B]"]})
+        out = text(old, new)
+        self.assertIn("2 node groups renamed, wiring changed in 3 node groups.", out)
+        self.assertIn("  Node groups added: fresh (1 link)\n  Node groups removed: gone (1 link)\n"
+                      "  Node groups probably renamed: neighboor direction -> neighbour direction, "
+                      "pins postion -> pins position\n  pins position: 1 link added, 1 removed", out)
+        self.assertIn("<summary>Node wiring: 5 node groups changed</summary>", markdown(old, new))
 
     def test_relabels_and_mutes_are_not_rewiring(self):
         old = tracking(trees={"labels": ["[screw parameters] Bundle -> Bundle [Join Bundle]"],
