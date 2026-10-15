@@ -267,8 +267,11 @@ class FixNamesTest(unittest.TestCase):
         self.assertEqual(fix_names.fixed_name("coVer base"), "cover base")
         self.assertEqual(fix_names.fixed_name("Sheild"), "Shield")
         self.assertEqual(fix_names.fixed_name("case cutout thickness ", numbered=False), "case cutout thickness")
+        self.assertEqual(fix_names.fixed_name("swich tolerance.002"), "switch tolerance.002")
+        self.assertEqual(fix_names.fixed_name("caps fit Z olerance"), "caps fit Z tolerance")
         # whole words only, and correct names stay
-        for name in ("coerce", "subdivision level", "shield radius", "cover parameters", "position", "R1L1"):
+        for name in ("coerce", "subdivision level", "shield radius", "cover parameters", "position", "R1L1",
+                     "caps fit Z tolerance", "but rotat", "ofs", "Schwarz", "gemini"):
             self.assertEqual(fix_names.fixed_name(name), name)
         self.assertEqual(fix_names.following_name("neighboor direction.002", "neighboor direction.001",
                                                   "neighbour direction.001"), "neighbour direction.002")

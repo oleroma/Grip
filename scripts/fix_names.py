@@ -59,6 +59,7 @@ REPORT_TEXT = ""    # name of a text block to also write the report to, e.g. "fi
 # Misspelled words and their fix. A word only matches whole (no letter right before or after it), and its
 # capitalised form is fixed too. Used for node group and input names, and to find the names that are only reported.
 WORD_FIXES = {
+    # the list in docs/blender/develop/07-known-issues.md, D5
     "wdith": "width",
     "heght": "height",
     "stiick": "stick",
@@ -76,6 +77,15 @@ WORD_FIXES = {
     "syle": "style",
     "coer": "cover",
     "coVer": "cover",   # 'coVer base'
+    # also in tracking.json: group names, the input 'isntance', node labels and a bundle item
+    "circlularize": "circularize",
+    "deault": "default",
+    "swich": "switch",
+    "isntance": "instance",
+    "heigth": "height",
+    "componetn": "component",
+    "compontent": "component",
+    "olerance": "tolerance",
 }
 
 # Old names to leave as they are for now, e.g. ("GripX contols",) while code that spells it is not updated yet.
