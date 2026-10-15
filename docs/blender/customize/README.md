@@ -4,8 +4,8 @@ This guide is for changing parts of the controller and printing them. Each page 
 
 ## The workflow in four steps
 
-1. **Open the file and pick the controller.** Set the variant (GripV or GripX) and, for GripX, the style. See [Getting started](01-getting-started.md).
-2. **Find the part's settings** in the controls panel and change them. Each part has its own page below.
+1. **Open the file and pick the controller.** Go to the GripV or GripX scene and make sure the variant matches it (the Grip tab does that for you), and for GripX pick the style. See [Getting started](01-getting-started.md).
+2. **Find the part's settings** and change them: the most used ones are in the [Grip tab](01-getting-started.md#the-grip-tab) of the 3D Viewport sidebar, all of them in the controls panel. Each part has its own page below.
 3. **Check the fit.** Parts and their openings in the case are generated together, so changing a part usually changes the case too. Look at both. [Fit and tolerances](03-fit-and-tolerances.md) explains which values decide how tight things are.
 4. **Export** with the `combi_export` presets. See [Exporting](05-exporting.md).
 
@@ -13,7 +13,7 @@ This guide is for changing parts of the controller and printing them. Each page 
 
 | Page | What it covers |
 |---|---|
-| [1. Getting started](01-getting-started.md) | setup, scenes, choosing the variant, the controls panel, keeping Blender fast |
+| [1. Getting started](01-getting-started.md) | setup, scenes, choosing the variant, the Grip tab, the controls panel, keeping Blender fast |
 | [2. Global settings](02-global-settings.md) | the switches that apply to the whole controller |
 | [3. Fit and tolerances](03-fit-and-tolerances.md) | how parts fit each other and the case, and how to tune that for your printer |
 | [4. Case and body types](04-case.md) | the case shape, solid versus shell versus patterned cases, the middle plate |

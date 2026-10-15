@@ -23,7 +23,7 @@ You do not need to set `variant`, the subdivision level or the voxel resolution 
 | **Triggers** | L2, R2, L4, R4 at each `tolerance` × `press tolerance` | the same, per style |
 | **Bumpers** | (in "Parts") | L1, R1 per style at each `press tolerance` |
 
-Folder and file names come from the preset. A tolerance gets a folder (`tight/`, `press_loose/`, `cap_default/`), and an option gets a tag in the file name (`_dpad_stick`, `_cap_plate`, `_14_deg`).
+Folder and file names come from the preset. A tolerance gets a folder (`tight/`, `press_loose/`, `cap_default/`), and an option gets a tag in the file name (`_dpad_stick`, `_cap_plate`, `_14_deg`). Which of the exported files make up one controller is in the [print list](../../../orca_slicer/README.md).
 
 ## Changing a preset
 
@@ -42,5 +42,5 @@ Each preset lists collections and objects, and overrides at four levels (whole s
 | The GripX bumpers do not read `press tolerance` | the three GripX `pres_*` bumper folders are identical | see [Bumpers](parts/bumpers.md) |
 | GripX caps have one cap tolerance for all three settings | the three GripX `cap_*` folders are identical | give tight and loose their own values |
 | GripX triggers: `default` = `loose` | two identical folders | give loose its own value |
-| GripV uses `press_*` folders, GripX `pres_*` | two spellings | pick one |
+| The GripX bumpers use `pres_*` folders; the GripV bumpers and all triggers use `press_*` | two spellings for the same setting | pick one |
 | Text marks need the Windows font Segoe UI Bold | exports on macOS/Linux have no letters | see [Marks](parts/marks-and-logos.md) |
