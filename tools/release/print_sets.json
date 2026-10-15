@@ -54,7 +54,7 @@
          "when": "with a D-pad caps top (no `dpad_stick` in its name)",
          "unconfirmed": "The D-pad preset has the same `curve parameters` and `button parameters` as ABXY. It differs in `caps flex cut` and `custom cap`, which may also shape the clip at the top of the shaft."},
         {"name": "Shaft for Home", "qty": 1,
-         "missing": "The Home preset differs from ABXY in `middle bevel` (the rounding of the shaft's edges), so Home has its own shaft (`home button`), which no preset exports. The ABXY `button.stl` has the same outline and probably works until then (not tested)."},
+         "missing": "The Home preset differs from ABXY in `middle bevel` (the rounding of the shaft's edges) and in `caps flex cut`, which may also shape the clip on the shaft, so Home has its own shaft (`home button`), which no preset exports. The ABXY `button.stl` has the same outline and probably works until then (not tested)."},
         {"name": "Shafts for Select", "qty": 4,
          "missing": "The Select buttons are narrower than ABXY (`width`, `fillet subdiv` and `caps offset` differ), so they need their own shaft (`select button`), which no preset exports."}
       ]

@@ -98,7 +98,7 @@ A path combines them. `buttons/default/cap_tight/cross.stl` is a cross cap with 
 | a button shaft sticks in its hole | the shaft from `loose/`, and its caps from `loose/` too |
 | a button shaft wobbles | the shaft from `tight/`, and its caps from `tight/` too |
 | a cap falls off | the cap from `cap_tight/`, in the same `<tolerance>` folder as its shaft |
-| a cap does not go on, or cracks | the cap from `cap_loose/` |
+| a cap does not go on, or cracks | the cap from `cap_loose/`, in the same `<tolerance>` folder as its shaft |
 | a trigger rubs or sticks in its opening | the trigger from `triggers/loose/` |
 | a trigger rattles | the trigger from `triggers/tight/` |
 | a trigger or bumper has a lot of free play before it clicks | the part from `press_tight/` (probably) |
@@ -119,7 +119,7 @@ Paths are under `GripV/`, shown for the `default` tolerance. "Only with" means t
 | 1 | Middle plate | **not exported yet** | hollow only |
 | 4 | Shaft for A, B, X and Y | `parts/buttons/default/button.stl` | |
 | 4 | Shaft for the D-pad | `parts/buttons/default/button.stl` | only with a D-pad caps top. *Probably* right: same `curve parameters` and `button parameters` as ABXY, but two cap settings that may also shape the clip on the shaft differ |
-| 1 | Shaft for Home | **not exported yet** | Home has its own shaft (`middle bevel` differs). The ABXY `button.stl` has the same outline and probably works until then (not tested). |
+| 1 | Shaft for Home | **not exported yet** | Home has its own shaft (`middle bevel` differs, and so does `caps flex cut`, which may also shape the clip on the shaft). The ABXY `button.stl` has the same outline and probably works until then (not tested). |
 | 4 | Shaft for Select | **not exported yet** | the Select buttons are narrower than ABXY |
 | 1 each | Caps for the face buttons | `parts/buttons/default/cap_default/` `triangle.stl` (top), `circle.stl` (right), `cross.stl` (bottom), `square.stl` (left) | |
 | 4 | D-pad cap | `parts/buttons/default/cap_default/dpad.stl` | only with a D-pad caps top; one outline turned four ways |
@@ -147,7 +147,7 @@ Paths are under `GripX/`, shown for the `default` tolerance. `<style>` is `xbox_
 | Qty | Part | File | Notes |
 | ---: | --- | --- | --- |
 | 1 | Case bottom | `<style>/case_bottom.stl` | |
-| 1 | Case top | one of the four tops in `<style>/` | use a `cap_plate` top for now: the knob file is not right yet |
+| 1 | Case top | one of the four tops in `<style>/` | use a `cap_plate` top for now: `parts/capacitive/capacitive_knob.stl` is still the plate |
 | 4 | Shaft for A, B, X and Y | `parts/buttons/default/button.stl` | |
 | 4 | Shaft for the D-pad | **not exported yet** | only with a D-pad caps top. The GripX D-pad has its own corner rounding (`fillet`), so it needs its own shaft. A `dpad_stick` top does not need them. |
 | 1 | Shaft for Home | **not exported yet** | its own `fillet` |
@@ -177,7 +177,7 @@ The release is still a beta. These parts are missing or not confirmed yet:
 - **GripV middle plate.** The "Case hollow" export skips it, because the GripV view layer excludes its collection ([Exporting](../docs/blender/customize/05-exporting.md#known-problems)).
 - **GripV hollow screws.** The printing guide recommends screws for the hollow case for now. The "Case hollow" export does not turn on `screws hollow` (the screw bosses of shell bodies) and the saved file has it off, so the exported shells probably have no screw bosses. Check yours before you buy screws.
 - **GripX capacitive knob.** `GripX/parts/capacitive/capacitive_knob.stl` was exported before the preset was fixed and is really the plate.
-- **GripX scroll wheel.** The scroll wheel slot is cut into every case, but only GripV's wheel is exported, and the GripX wheel has its own sizes.
+- **GripX scroll wheel.** The GripX case probably has the scroll wheel slot (the slot is not switched per variant), but only GripV's wheel is exported, and the GripX wheel has its own `scroll wheel shift X` and `scroll wheel tolerance`.
 - **GripX tolerance folders.** The `cap_*` folders, the trigger folders `default/` and `loose/`, and the bumper `pres_*` folders hold the same files.
 - **Cable holder.** It only fits a case exported with the global `cable holder` setting on. The export presets do not set it and the saved file has it on, so the exported cases probably have the opening for it.
 
