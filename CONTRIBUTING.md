@@ -16,7 +16,7 @@ For anything else that is wrong (a broken export, a part that does not assemble,
 2. **Keep `blender_tracking` on.** On every save it rewrites `blender/tracking.json` with every preset value. That file is the only readable record of what changed in the `.blend`, so commit it together with the `.blend`.
 3. **Make the change.** The [contributor guide](docs/blender/develop/README.md) explains how the file is built and what to check after a change.
 4. **Review the `tracking.json` diff.** `python tools/tracking_diff/tracking_diff.py blender/tracking.json` lists what changed since your last commit ([Tracking diff](tools/tracking_diff/README.md)). Only the values you meant to change should be in it.
-5. **Export** the affected parts with the `combi_export` presets, as described in [Exporting](docs/blender/customize/05-exporting.md). If you change a preset, update its copy in `blender/GripV_preset.json` or `blender/GripX_preset.json` too.
+5. **Export** the affected parts with the `combi_export` presets, as described in [Exporting](docs/blender/customize/05-exporting.md). On every save `combi_export` rewrites `blender/GripV_preset.json` and `blender/GripX_preset.json`, with the files each preset exports, so commit them with the `.blend`. The release zips are made from those lists. `python tools/release/build_release.py --check` then shows any exported file that is missing from `orca_slicer/`, and any file there that no preset exports any more.
 6. **Describe the change in the commit message:** what you changed, why, and which parts have to be reprinted. "upd" does not tell testers anything.
 
 ## Extensions
