@@ -40,8 +40,7 @@
     "middle-plate": {
       "title": "Middle plate",
       "items": [
-        {"name": "Middle plate", "qty": 1,
-         "missing": "The GripV view layer excludes the `case middle plate` collection, so the \"Case hollow\" preset skips it."}
+        {"name": "Middle plate", "file": "case_hollow/case_middle_plate.stl", "qty": 1}
       ]
     },
 
@@ -102,8 +101,8 @@
     "bumpers-GripX": {
       "title": "Bumpers",
       "items": [
-        {"name": "L1", "file": "{case}/bumpers/pres_{press}/L1.stl", "qty": 1},
-        {"name": "R1", "file": "{case}/bumpers/pres_{press}/R1.stl", "qty": 1}
+        {"name": "L1", "file": "{case}/bumpers/L1.stl", "qty": 1},
+        {"name": "R1", "file": "{case}/bumpers/R1.stl", "qty": 1}
       ]
     },
 
@@ -172,8 +171,9 @@
     "scroll-wheel-GripX": {
       "title": "Scroll wheel",
       "items": [
-        {"name": "Wheel, wheel core and wheel holder", "qty": 1,
-         "missing": "The scroll wheel slot is cut for every variant, so the GripX case probably has it, but no preset exports the GripX scroll wheel. The GripV files do not match: the GripX preset has its own `scroll wheel shift X` and `scroll wheel tolerance`."}
+        {"name": "Wheel", "file": "parts/scrollwheel/scrollwheel.stl", "qty": 1},
+        {"name": "Wheel core", "file": "parts/scrollwheel/scrollwheel_core.stl", "qty": 1},
+        {"name": "Wheel holder", "file": "parts/scrollwheel/scrollwheel_holder.stl", "qty": 1}
       ]
     },
 

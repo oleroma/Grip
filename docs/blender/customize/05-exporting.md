@@ -37,10 +37,6 @@ Each preset lists collections and objects, and overrides at four levels (whole s
 
 | Problem | Effect | What to do |
 |---|---|---|
-| The GripV view layer excludes the `case middle plate` collection | "Case hollow" silently skips the middle plate | include the collection in the view layer before exporting |
-| The GripX `capacitive_knob.stl` in `orca_slicer/` was exported before the preset was fixed | it is really the plate | re-run the GripX "Parts" preset |
-| The GripX bumpers do not read `press tolerance` | the three GripX `pres_*` bumper folders are identical | see [Bumpers](parts/bumpers.md) |
 | GripX caps have one cap tolerance for all three settings | the three GripX `cap_*` folders are identical | give tight and loose their own values |
 | GripX triggers: `default` = `loose` | two identical folders | give loose its own value |
-| The GripX bumpers use `pres_*` folders; the GripV bumpers and all triggers use `press_*` | two spellings for the same setting | pick one |
 | Text marks need the Windows font Segoe UI Bold | exports on macOS/Linux have no letters | see [Marks](parts/marks-and-logos.md) |

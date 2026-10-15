@@ -61,7 +61,7 @@ The capacitive part sits in the middle of the face buttons, probably as a touch 
 
 | Folder | What is in it |
 | --- | --- |
-| `xbox_style/`, `dualsense_style/` | the case bottom and four tops of each style, with that style's `triggers/<tolerance>/press_<press tolerance>/` and `bumpers/pres_<press tolerance>/` |
+| `xbox_style/`, `dualsense_style/` | the case bottom and four tops of each style, with that style's `triggers/<tolerance>/press_<press tolerance>/` and `bumpers/` (one L1 and R1, no tolerance variants) |
 | `parts/buttons/<tolerance>/` | the button shaft and caps, laid out as on GripV |
 | `parts/sticks/StickL/` | left sticks, one file per design: `Xbox_cap`, `Xbox_cap_easy_print_tall`, `Xbox_cap_easy_print_short_(60%)`, `Octagonal_18d_range` and `Xbox_Elite2_stick_base` |
 | `parts/sticks/StickR/` | right sticks: `normal/` (concave, convex or flat), `small_round`, `small_square` and `8_dir` |
@@ -83,14 +83,13 @@ The folder names say which of the three tolerance settings in `Grip.blend` made 
 | --- | --- | --- | --- |
 | `tight/`, `default/`, `loose/` | `tolerance` | button shafts (`buttons/<tolerance>/`) and triggers (`triggers/<tolerance>/`) | more room between the shaft and its hole in the case, and between the trigger and its opening |
 | `cap_tight/`, `cap_default/`, `cap_loose/` | `cap tolerance` | caps | the cap clips on more easily and holds less firmly |
-| `press_tight/`, `press_default/`, `press_loose/` | `press tolerance` | triggers (GripV and GripX) and the GripV bumpers | the end that presses the switch is trimmed more, which probably gives more free play before the click |
-| `pres_tight/`, `pres_default/`, `pres_loose/` | `press tolerance` | the GripX bumpers | the same setting under another spelling. For now these three folders hold the same file. |
+| `press_tight/`, `press_default/`, `press_loose/` | `press tolerance` | triggers (GripV and GripX) and the GripV bumpers. The GripX bumpers come in one fit only. | the end that presses the switch is trimmed more, which probably gives more free play before the click |
 
 A path combines them. `buttons/default/cap_tight/cross.stl` is a cross cap with a firm clip, made for the `default` shaft. `triggers/loose/press_default/R2.stl` is an R2 that slides loosely, with the default press travel.
 
 ### Start with default, reprint only what does not fit
 
-1. Print every part from its `default` folders: `buttons/default/button.stl`, the caps in `buttons/default/cap_default/`, the triggers in `triggers/default/press_default/` and the bumpers in `bumpers/press_default/` (GripX: `bumpers/pres_default/`).
+1. Print every part from its `default` folders: `buttons/default/button.stl`, the caps in `buttons/default/cap_default/`, the triggers in `triggers/default/press_default/` and the bumpers in `bumpers/press_default/` (GripX: `bumpers/`).
 2. Test the fit. If one part does not fit, reprint only that part from the neighbouring folder. The case stays: these settings change the part, not its opening in the case.
 
 | If | Print |
@@ -106,7 +105,7 @@ A path combines them. `buttons/default/cap_tight/cross.stl` is a cross cap with 
 
 **Caps belong to their shaft.** A cap in `buttons/<tolerance>/` is made for the shaft in the same folder. When you change the shaft, reprint its caps from the new folder.
 
-On GripX some neighbouring folders hold the same file for now, so reprinting them changes nothing: the three `cap_*` folders, the trigger folders `default/` and `loose/`, and the three bumper `pres_*` folders. To get a different fit there, change the part in `Grip.blend` and export it ([Fit and tolerances](../docs/blender/customize/03-fit-and-tolerances.md)).
+On GripX some neighbouring folders hold the same file for now, so reprinting them changes nothing: the three `cap_*` folders and the trigger folders `default/` and `loose/`. To get a different fit there, change the part in `Grip.blend` and export it ([Fit and tolerances](../docs/blender/customize/03-fit-and-tolerances.md)).
 
 ## Print list: GripV standard and GripV hollow
 
@@ -116,7 +115,7 @@ Paths are under `GripV/`, shown for the `default` tolerance. "Only with" means t
 | ---: | --- | --- | --- |
 | 1 | Case bottom | `case_standard/case_bottom.stl` or `case_hollow/case_bottom.stl` | |
 | 1 | Case top | one of the four tops in the same folder | see [Case tops](#case-tops) |
-| 1 | Middle plate | **not exported yet** | hollow only |
+| 1 | Middle plate | `case_hollow/case_middle_plate.stl` | hollow only |
 | 9 | Shaft for A, B, X, Y, Home and the four Select buttons | `parts/buttons/default/button.stl` | all button holes are the same for now, so every button uses this one shaft |
 | 4 | Shaft for the D-pad | `parts/buttons/default/button.stl` | only with a D-pad caps top |
 | 1 each | Caps for the face buttons | `parts/buttons/default/cap_default/` `triangle.stl` (top), `circle.stl` (right), `cross.stl` (bottom), `square.stl` (left) | |
@@ -145,20 +144,20 @@ Paths are under `GripX/`, shown for the `default` tolerance. `<style>` is `xbox_
 | Qty | Part | File | Notes |
 | ---: | --- | --- | --- |
 | 1 | Case bottom | `<style>/case_bottom.stl` | |
-| 1 | Case top | one of the four tops in `<style>/` | use a `cap_plate` top for now: `parts/capacitive/capacitive_knob.stl` is still the plate |
+| 1 | Case top | one of the four tops in `<style>/` | |
 | 9 | Shaft for A, B, X, Y, Home and the four Select buttons | `parts/buttons/default/button.stl` | the same shaft as on GripV |
 | 4 | Shaft for the D-pad | `parts/buttons/default/button.stl` | only with a D-pad caps top; a `dpad_stick` top does not need them |
 | 1 each | Caps for the face buttons | `parts/buttons/default/cap_default/` `triangle.stl` (top), `circle.stl` (right), `cross.stl` (bottom), `square.stl` (left) | |
 | 4 | D-pad cap | `parts/buttons/default/cap_default/dpad.stl` | only with a D-pad caps top; one outline turned four ways |
 | 4 | Select cap | `parts/buttons/default/cap_default/select.stl` | *probably* 4 of the same |
 | 1 | Home cap | `parts/buttons/default/cap_default/home.stl` | |
-| 1 | Capacitive plate | `parts/capacitive/capacitive_plate.stl` | `capacitive_knob.stl` is currently the same file as the plate |
+| 1 | Capacitive knob or plate | `parts/capacitive/capacitive_knob.stl` or `capacitive_plate.stl` | the one your case top names |
 | 1 each | Triggers L2, R2 and back paddles L4, R4 | `<style>/triggers/default/press_default/` | |
-| 1 each | Bumpers L1, R1 | `<style>/bumpers/pres_default/` | |
+| 1 each | Bumpers L1, R1 | `<style>/bumpers/` | |
 | 1 | Left stick | one file from `parts/sticks/StickL/` | the left and right holes differ in size, so take one stick from each folder |
 | 1 | Right stick | one file from `parts/sticks/StickR/` or `parts/sticks/StickR/normal/` | |
 | 1 each | Rocker D-pad: cap, stick, rocker, rocker ball, ball support, rocker support | `parts/dpad_stick/` | only with a `dpad_stick` top |
-| 1 each | Scroll wheel: wheel, core, holder | **not exported yet** | the GripX case probably has the slot |
+| 1 each | Scroll wheel: wheel, core, holder | `parts/scrollwheel/` | |
 | 1 | Battery cover | `parts/battery_cover/battery_cover.stl` | |
 | 1 | Cable holder | `parts/cable_holder/cable_holder.stl` | *probably* needed, see [Known gaps](#known-gaps) |
 | 2 | Alignment pin | `parts/pins/pin.stl` | one per side |
@@ -169,11 +168,8 @@ Paths are under `GripX/`, shown for the `default` tolerance. `<style>` is `xbox_
 
 The release is still a beta. These parts are missing or not confirmed yet:
 
-- **GripV middle plate.** The "Case hollow" export skips it, because the GripV view layer excludes its collection ([Exporting](../docs/blender/customize/05-exporting.md#known-problems)).
 - **GripV hollow screws.** The printing guide recommends screws for the hollow case for now. The "Case hollow" export does not turn on `screws hollow` (the screw bosses of shell bodies) and the saved file has it off, so the exported shells probably have no screw bosses. Check yours before you buy screws.
-- **GripX capacitive knob.** `GripX/parts/capacitive/capacitive_knob.stl` was exported before the preset was fixed and is really the plate.
-- **GripX scroll wheel.** The GripX case probably has the scroll wheel slot (the slot is not switched per variant), but only GripV's wheel is exported, and the GripX wheel has its own `scroll wheel shift X` and `scroll wheel tolerance`.
-- **GripX tolerance folders.** The `cap_*` folders, the trigger folders `default/` and `loose/`, and the bumper `pres_*` folders hold the same files.
+- **GripX tolerance folders.** The `cap_*` folders and the trigger folders `default/` and `loose/` hold the same files.
 - **Cable holder.** It only fits a case exported with the global `cable holder` setting on. The export presets do not set it and the saved file has it on, so the exported cases probably have the opening for it.
 
 To see the file problems at a glance, run `python tools/release/build_release.py --check` from the repository folder.

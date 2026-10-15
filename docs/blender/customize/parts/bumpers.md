@@ -68,4 +68,4 @@ There are two designs:
 
 ## Export
 
-GripV exports L1 and R1 in the "Parts" preset at each `press tolerance` (folders `press_*`). GripX exports them per style in the "Bumpers" preset (folders `pres_*`); those three folders are identical because of the fit issue above.
+GripV exports L1 and R1 in the "Parts" preset at each `press tolerance` (folders `press_*`). GripX exports one L1 and R1 per style in the "Bumpers" preset, straight into `<style>/bumpers/`, because the GripX bumpers do not read `press tolerance` (see above).

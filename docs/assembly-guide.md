@@ -15,7 +15,7 @@ Most fits come in three versions, `tight`, `default` and `loose`, in separate fo
 
 Some fits have no folders (caps in the case, sticks on the joystick, the battery cover, the pins, the board in its slot). For those, change the value in `Grip.blend` and export the part again: [Fit and tolerances](blender/customize/03-fit-and-tolerances.md) lists which value decides which fit.
 
-On GripX some neighbouring folders hold the same file for now (the `cap_*` folders, the trigger folders `default/` and `loose/`, the bumper `pres_*` folders), so reprinting from them changes nothing.
+On GripX some neighbouring folders hold the same file for now (the `cap_*` folders and the trigger folders `default/` and `loose/`), so reprinting from them changes nothing.
 
 ## 1. Clean the prints
 
@@ -86,7 +86,7 @@ Press travel is checked in step 7, once the board is in.
 
 L1 and R1 sit in the openings at the top edge of the case. Each has a round stem: the GripX bumpers pivot on it, while the GripV bumpers have an extra arm towards the centre that probably flexes instead ([Bumpers](blender/customize/parts/bumpers.md)). The back of each bumper reaches under the edge of the case top, which holds it once the case is closed. Set them in place in the case bottom (*unverified* order).
 
-- GripV: `bumpers/press_default/`. GripX: `<style>/bumpers/pres_default/`.
+- GripV: `bumpers/press_default/`. GripX: `<style>/bumpers/`.
 
 **Check:** the bumper moves freely on its stem and does not catch on the case edge. Press travel is checked in step 7 and again after closing.
 
@@ -107,7 +107,7 @@ The scroll wheel is three pieces: wheel, core and holder. Put them together and 
 | a trigger or bumper has a lot of free play before it clicks | print it from `press_tight/` (probably) |
 | a trigger or bumper clicks by itself or has no travel | print it from `press_loose/` (probably) |
 
-On GripX the bumper `pres_*` folders hold the same file for now; change `button press tol` on the GripX bumper nodes instead ([Bumpers](blender/customize/parts/bumpers.md)).
+The GripX bumpers come in one fit only; to change it, `button press tol` on the GripX bumper nodes instead ([Bumpers](blender/customize/parts/bumpers.md)).
 
 ## 8. Battery and cover
 
@@ -136,7 +136,7 @@ Push the two printed pins into their holes in the case bottom, one on each side.
 
 The hollow GripV case has three parts: the top shell, the bottom shell and a middle plate that holds the board ([printing guide](print-guide.md#hollow-version)). What is different:
 
-- The board sits in a pocket of the **middle plate**, and the plate clips into the shells. The middle plate is not exported yet ([known gaps](../orca_slicer/README.md#known-gaps)).
+- The board sits in a pocket of the **middle plate**, and the plate clips into the shells.
 - The shells line up on pins of the middle plate, so the two printed alignment pins are not used.
 - **Screws are still recommended.** The case is designed to go together without screws, but the current middle plate may not clamp hard enough on its own. Note that the exported hollow shells probably have no screw holes yet; check yours before you buy screws.
 - Parts that warped will not assemble. Clean each part thoroughly and check the critical spots before you start.

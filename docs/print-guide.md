@@ -4,7 +4,7 @@
 
 ## What to print
 
-Exported files live in `orca_slicer/`, each as `.stl` and, where available, as an OrcaSlicer `.3mf`. The [print list](../orca_slicer/README.md) says which files to print for each shape, how many of each, and which parts are not exported yet.
+Exported files live in `orca_slicer/`, each as `.stl` and, where available, as an OrcaSlicer `.3mf`. The [print list](../orca_slicer/README.md) says which files to print for each shape and how many of each.
 
 | Folder | Contents |
 | --- | --- |
@@ -47,6 +47,6 @@ Every printer is a little different. The global parameters in `Grip.blend` have 
 
 - Photos and a video guide for cleaning and assembly. The written [assembly guide](assembly-guide.md) is a draft that has not been checked step by step on a build yet.
 - A checked bill of materials. The [draft](bom.md) still has the filament amounts to confirm.
-- Some parts are not exported yet, among them the GripV middle plate (see [Known gaps](../orca_slicer/README.md#known-gaps)).
+- A few files are not confirmed yet (see [Known gaps](../orca_slicer/README.md#known-gaps)).
 - Recommended slicer profiles
 - A tolerance test print
