@@ -15,6 +15,7 @@ import unittest
 
 import bpy
 
+sys.dont_write_bytecode = True     # no __pycache__ in extensions/, which is synced from the add-on repositories
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 TEMP = tempfile.TemporaryDirectory()
 tempfile.tempdir = TEMP.name    # combi_export cleans its old temp folders on register: keep it in ours

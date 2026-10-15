@@ -1,4 +1,4 @@
-"""Fix typos and stray spaces in the names of Grip.blend, keeping export presets and tracking working.
+r"""Fix typos and stray spaces in the names of Grip.blend, keeping export presets and tracking working.
 
 Run it inside Blender on Grip.blend (Scripting workspace > Text Editor > Open this file > Run Script). With
 DRY_RUN = True (the default) it changes nothing: it prints a table of what it would rename, where each name is used
@@ -37,7 +37,7 @@ How to use it:
 4. Set DRY_RUN = False and run again. The report ends with a second pass, which should find nothing left to rename.
 5. Export the same presets into a second scratch folder and compare the two. The add-on writes a fixed STL header,
    so the files should be byte-identical. In Blender's Python Console:
-       import filecmp; filecmp.dircmp(r"C:\\before", r"C:\\after").report_full_closure()
+       import filecmp; filecmp.dircmp(r"C:\before", r"C:\after").report_full_closure()
    lists the differing files; there should be none.
 6. Remove this script's text block if you opened it in the Text Editor, then save. blender_tracking rewrites
    tracking.json: its diff should only rename keys and change the link lines that show a renamed name, with no value
