@@ -44,7 +44,7 @@ Everything found while documenting the file that is wrong, fragile, misleading o
 | C5 | `home button` has `tolerance` and `cap tolerance` modifier inputs that lead nowhere; the `marks` input on every button and cap modifier is unused. | Changing them does nothing. |
 | C6 | The `… fill controls` panels hold skeleton and hollow presets per fill type that nothing reads. | Edits there do nothing. |
 | C7 | `PCB z tolerance` (on `middle supports`) and `extra thickness` (clip objects) read keys no constructor writes. | The board supports get no Z tolerance. |
-| C8 | The scenes do not set `variant`; the sync script is not registered and `w2g` is not in the repository. | After opening, the GripX scene can show GripV numbers. |
+| C8 | **Fixed** with the Grip tab (`extensions/grip_controls`): its variant sync, on by default, sets `variant` after opening and on every switch to the GripV or GripX scene. The scenes themselves still do not set `variant`, and the unregistered `Auto sync workspaces` text block and the `w2g` settings (add-on not in the repository) are still in the file. | Without the add-on enabled, the GripX scene can show GripV numbers after opening. See [Add-ons](05-add-ons.md#keeping-variant-in-step-with-the-scene). |
 | C9 | `subdivision level` is saved as `low ` with a trailing space. | Trips scripts that compare menu names. |
 | C10 | `pillars` and the pin holes are applied with `lattice` because the exclusion is `lattice AND False`. | Probably a temporary switch-off; decide which is wanted. |
 | C11 | The press and cap tolerance conversion nodes in `global parameters` are named the wrong way round. | Only confusing when reading the group. |
