@@ -85,7 +85,7 @@ Press travel is checked in step 7, once the board is in.
 
 ## 6. Place the bumpers
 
-L1 and R1 sit in the openings at the top edge of the case. Each pivots on a round stem, and its back reaches under the edge of the case top, which holds it once the case is closed. Set them in place in the case bottom (*unverified* order).
+L1 and R1 sit in the openings at the top edge of the case. Each has a round stem: the GripX bumpers pivot on it, while the GripV bumpers have an extra arm towards the centre that probably flexes instead ([Bumpers](blender/customize/parts/bumpers.md)). The back of each bumper reaches under the edge of the case top, which holds it once the case is closed. Set them in place in the case bottom (*unverified* order).
 
 - GripV: `bumpers/press_default/`. GripX: `<style>/bumpers/pres_default/`.
 
@@ -112,7 +112,7 @@ On GripX the bumper `pres_*` folders hold the same file for now; change `button 
 
 ## 8. Battery and cover
 
-The battery goes into the compartment in the underside of the case bottom and plugs into the board's JST connector. The compartment opens from the outside, so this step can probably also wait until the case is closed (*unverified*).
+The battery goes into the compartment in the underside of the case bottom and plugs into the board's battery connector. The compartment opens from the outside, so this step can probably also wait until the case is closed (*unverified*).
 
 Press the cover in until its lips snap into the case.
 

@@ -19,13 +19,13 @@ These come from the Alpakka. Input Labs sells them as a set and as a complete DI
 | Trigger buttons, Alps SKQGAFE010 | 4 | On the back of the board, pressed by the L2 and R2 triggers and the L4 and R4 back paddles. | [Alpakka solder guide](https://inputlabs.io/alpakka/manual/diy_solder); [Triggers](blender/customize/parts/triggers.md) |
 | Thumbsticks, Alps RKJXV122400R | 2 | The joystick modules. The printed sticks push onto their shafts; `shaft tolerance` and `base size` set that fit. | [Alpakka specs](https://inputlabs.io/alpakka/manual/specs); [Sticks](blender/customize/parts/sticks.md) |
 | Rotary encoder, Alps EC10E1220503 | 1 | Probably what the scroll wheel turns: Grip's wheel has the same three pieces as the Alpakka's (wheel, core, holder). | [Alpakka specs](https://inputlabs.io/alpakka/manual/specs); [Alpakka case printing](https://inputlabs.io/alpakka/manual/diy_case); [Scroll wheel](blender/customize/parts/scroll-wheel.md) |
-| Battery connector, JST PH 2-pin (XUNPU WAFER-PH2-0-2PWZ) | 1 | The battery plug on the board. The case has fixed clearances for it (`JST-2P (B)`, `jst2p pass`). | [Alpakka components](https://inputlabs.io/alpakka/components); [File structure](blender/develop/01-file-structure.md) |
+| Battery connector, PH 2-pin (XUNPU WAFER-PH2-0-2PWZ) | 1 | The battery plug on the board. The case has fixed clearances for it (`JST-2P (B)`, `jst2p pass`). | [Alpakka components](https://inputlabs.io/alpakka/components); [File structure](blender/develop/01-file-structure.md) |
 
 ## Battery
 
 | Part | Qty | What it does in Grip | Source |
 | --- | --- | --- | --- |
-| LiPo cell 503562, 1200 mAh, 3.7 V, JST PH 2-pin plug | 1 | Optional on the Alpakka, needed for wireless play. Grip's battery compartment and cover are made for a cell of about 63 × 35 × 5 mm (GripV a little thinner than GripX), which is probably this cell. For another battery, change `battery length`, `battery width` and `battery height`. | [Alpakka specs](https://inputlabs.io/alpakka/manual/specs); [tracking.json](../blender/tracking.json) `advanced cover parameters`; [Battery cover](blender/customize/parts/battery-cover.md) |
+| Battery cell, PKCell 503562, 1200 mAh, 3.7 V, PH 2-pin plug | 1 | Optional on the Alpakka, needed for wireless play. Grip's battery compartment and cover are made for a cell of about 63 × 35 × 5 mm (GripV a little thinner than GripX), which is probably this cell. For another battery, change `battery length`, `battery width` and `battery height`. | [Alpakka specs](https://inputlabs.io/alpakka/manual/specs); [Alpakka components](https://inputlabs.io/alpakka/components) (optional, for wireless); [tracking.json](../blender/tracking.json) `advanced cover parameters`; [Battery cover](blender/customize/parts/battery-cover.md) |
 
 ## Screws and nuts
 
@@ -34,7 +34,7 @@ Four screws hold the case together, two at the front and two at the back. The [p
 | Part | Qty | What it does in Grip | Source |
 | --- | --- | --- | --- |
 | M2.5 DIN 912 socket-head screw, front | 2 | The front pair. Probably 12 mm long (the file's `screw length` is just over 12 on GripV and 12 on GripX; the Alpakka uses 12 mm screws at the top). Length to confirm. | [Screws](blender/customize/parts/screws.md); [tracking.json](../blender/tracking.json) `screw parameters (FRONT)` › `screw length`; [Alpakka assembly](https://inputlabs.io/alpakka/manual/diy_assembly) |
-| M2.5 DIN 912 socket-head screw, back | 2 | The back pair. Probably 20 mm on GripV and 25 mm on GripX (`screw length` just over 20 and 25). Lengths to confirm. | [tracking.json](../blender/tracking.json) `screw parameters.001 (BACK)`, `screw parameters.002 (BACK)` › `screw length` |
+| M2.5 DIN 912 socket-head screw, back | 2 | The back pair. Probably 20 mm on GripV and 25 mm on GripX (`screw length` is just over 20 on GripV and 25 on GripX). Lengths to confirm. | [tracking.json](../blender/tracking.json) `screw parameters.001 (BACK)`, `screw parameters.002 (BACK)` › `screw length` |
 | M2.5 hex nut | 4 | Pressed into the nut pockets, probably in the case top. The pockets fit a standard M2.5 nut (5 mm across flats, 2 mm thick), probably DIN 934 as on the Alpakka. Standard to confirm. | [Printing guide](print-guide.md#solid-case); [tracking.json](../blender/tracking.json) `nut width`, `nut height`; [Alpakka components](https://inputlabs.io/alpakka/components) |
 
 **Hollow case:** the printing guide recommends the screws for now. The exported hollow shells probably have no screw holes yet, because the "Case hollow" export does not turn on `screws hollow` ([known gaps](../orca_slicer/README.md#known-gaps)). Check your print before you buy screws for it.
