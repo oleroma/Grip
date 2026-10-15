@@ -176,4 +176,4 @@ To see the file problems at a glance, run `python tools/release/build_release.py
 
 ## Release zips
 
-For a release, each shape is packed into its own zip with only its files, a `PRINT_LIST.md` with the list above and the license. The paths inside are the same as here. See [tools/release](../tools/release/README.md) for how they are built.
+For a release, each shape is packed into its own zip with only its files, a `PRINT_LIST.md` with the list above and the license. A zip holds the `default` tolerance only, so its paths leave out the tolerance folders: `parts/buttons/default/cap_default/` here is `parts/buttons/cap/` in the zip, and `parts/bumpers/press_default/` is `parts/bumpers/`. For another tolerance, take the part from this folder. See [tools/release](../tools/release/README.md) for how they are built.

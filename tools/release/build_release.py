@@ -8,8 +8,12 @@ with those files, a PRINT_LIST.md and the license.
 
 Usage:
     python build_release.py --check
-    python build_release.py [--shape ID ...] [--tolerance LEVEL | --all-tolerances]
+    python build_release.py [--shape ID ...] [--tolerance LEVEL | --all-tolerances] [--full-paths]
     python build_release.py --print-list ID
+
+A build with one tolerance leaves the tolerance folders out of the paths
+(parts/buttons/default/cap_default/ becomes parts/buttons/cap/, see
+flat_folders in print_sets.json); --full-paths keeps the paths of orca_slicer/.
 
 --check works on Git LFS pointer files too, so it runs on a clone without the
 models. Building needs the real files. Only the Python standard library is
@@ -101,6 +105,11 @@ def validate(sets):
     if ALL in levels:
         problems.append("%r cannot be a tolerance level" % ALL)
     tol_names = set(sets["tolerance_placeholders"])
+    for key, name in sets.get("flat_folders", {}).items():
+        if key not in tol_names:
+            problems.append("flat_folders: %r is not a tolerance placeholder" % key)
+        if not isinstance(name, str) or (name and not SAFE_NAME.match(name)):
+            problems.append("flat_folders: %r must be a folder name or \"\"" % key)
     seen = set()
     for shape in sets["shapes"]:
         sid = shape.get("id", "?")
@@ -200,22 +209,60 @@ def alternatives(item, tol):
     return []
 
 
-def item_files(sets, item, mode):
+def flat_template(sets, template):
+    """A path template without its tolerance folders: a folder named only by
+    tolerance placeholders (`{tolerance}`, `cap_{cap}`) becomes its name in
+    flat_folders, or goes when that is "". Other folders and the file name stay."""
+    names = sets.get("flat_folders", {})
+    tol = set(sets["tolerance_placeholders"])
+    parts = template.split("/")
     out = []
-    for tol in tolerance_combos(sets, item, mode):
-        out += alternatives(item, tol)
-    return list(dict.fromkeys(out))
+    for part in parts[:-1]:
+        found = PLACEHOLDER.findall(part)
+        if found and set(found) <= tol:
+            part = "_".join(n for n in (names.get(p, "") for p in dict.fromkeys(found)) if n)
+        if part:
+            out.append(part)
+    return "/".join(out + parts[-1:])
+
+
+def flat_item(sets, item):
+    item = dict(item)
+    if "file" in item:
+        item["file"] = flat_template(sets, item["file"])
+    if "files" in item:
+        item["files"] = [flat_template(sets, t) for t in item["files"]]
+    return item
+
+
+def layout(sets, shape, mode, flat=False):
+    """{file under the shape folder: its path in the release}, in list order.
+    flat leaves the tolerance folders out of the release paths; a build with
+    one tolerance needs them nowhere."""
+    out = {}
+    for _, items in resolve(sets, shape):
+        for item in items:
+            shown = flat_item(sets, item) if flat else item
+            for tol in tolerance_combos(sets, item, mode):
+                for src, dest in zip(alternatives(item, tol), alternatives(shown, tol)):
+                    out.setdefault(src, dest)
+    if mode == sets["default_tolerance"]:
+        for project in shape.get("projects", []):
+            out.setdefault(project, project)
+    return out
 
 
 def shape_files(sets, shape, mode):
     """Every file a shape's release needs, relative to its folder, in list order."""
-    out = []
-    for _, items in resolve(sets, shape):
-        for item in items:
-            out += item_files(sets, item, mode)
-    if mode == sets["default_tolerance"]:
-        out += shape.get("projects", [])
-    return list(dict.fromkeys(out))
+    return list(layout(sets, shape, mode))
+
+
+def clashes(paths):
+    """[(release path, [files])] where several files would land on one path."""
+    by_dest = {}
+    for src, dest in paths.items():
+        by_dest.setdefault(dest.lower(), []).append(src)
+    return [(paths[srcs[0]], srcs) for srcs in by_dest.values() if len(srcs) > 1]
 
 
 def check_mode(sets, mode):
@@ -400,6 +447,13 @@ def identical_alternatives(sets, shape, digest_of):
     return out
 
 
+def same_in_release(sets, shape, paths, digest_of):
+    """identical_alternatives() among the files of one release, shown by their
+    release paths. paths is layout(), digest_of reads the source files."""
+    found = identical_alternatives(sets, shape, lambda rel: digest_of(rel) if rel in paths else None)
+    return [(name, [paths[rel] for rel in rels]) for name, rels in found]
+
+
 # --------------------------------------------------------------------------
 # --check
 
@@ -448,6 +502,11 @@ def check(repo, sets, verbose=False):
     for path in [sets["license"]] + [g["path"] for g in sets.get("guides", []) if "path" in g]:
         if not os.path.isfile(os.path.join(repo, *path.split("/"))):
             (error if path == sets["license"] else warn)("missing %s (linked from every print list)" % path)
+    for shape in sets["shapes"]:
+        folder = shape["folder"]
+        for dest, srcs in clashes(layout(sets, shape, sets["default_tolerance"], flat=True)):
+            error("%s land on the same path %s in the %s release without tolerance folders (see flat_folders)"
+                  % (" and ".join(folder + "/" + s for s in srcs), dest, shape["title"]))
 
     section("File and folder names")
     name_errors, name_warnings = name_problems(sorted(set(tree) | set(tracked(repo, sets["root"]) or [])))
@@ -526,8 +585,10 @@ def link(sets, guide):
     return "%s/blob/%s/%s" % (sets["repo_url"], sets.get("branch", "main"), guide["path"])
 
 
-def show_path(sets, template, mode):
+def show_path(sets, template, mode, flat=False):
     """A path template as printed: tolerance levels filled in, choices as <name>."""
+    if flat:
+        template = flat_template(sets, template)
     if mode == ALL:
         labels = {k: "<%s>" % v for k, v in sets["tolerance_placeholders"].items()}
     else:
@@ -536,9 +597,10 @@ def show_path(sets, template, mode):
     return PLACEHOLDER.sub(lambda m: "<%s>" % m.group(1), shown)
 
 
-def print_list(sets, shape, mode, source=None, same_files=()):
+def print_list(sets, shape, mode, source=None, same_files=(), flat=False):
     """The PRINT_LIST.md text of one shape. source says what it was built from,
-    same_files is identical_alternatives()."""
+    same_files is same_in_release(), flat says the paths have no tolerance folders."""
+    flat = flat and mode != ALL
     folder = shape["folder"]
     out = ["# %s: print list" % shape["title"], ""]
     if shape.get("about"):
@@ -553,11 +615,24 @@ def print_list(sets, shape, mode, source=None, same_files=()):
     if source:
         out.append("Built from %s." % source)
     tol_link = link(sets, {"path": sets["root"] + "/README.md"}) + "#tolerances"
-    out += ["",
-            "The paths are the same as in `%s/%s/` in the repository, so the folder names show the "
-            "tolerance of each part. If a part does not fit, reprint only that part from the "
-            "neighbouring tolerance (`tight` or `loose`); the case stays. See [tolerances](%s)."
-            % (sets["root"], folder, tol_link)]
+    start = sets["default_tolerance"] if mode == ALL else mode
+    others = " or ".join("`%s`" % l for l in sets["tolerance_levels"] if l != start)
+    repo_folder = "`%s/%s/`" % (sets["root"], folder)
+    if flat:
+        text = "Every fit part here is the `%s` one, so the paths leave out the tolerance folders " \
+               "that %s in the repository has." % (mode, repo_folder)
+        dirs = [(s.rpartition("/")[0], d.rpartition("/")[0]) for s, d in layout(sets, shape, mode, True).items()]
+        moved = [(s, d) for s, d in dirs if s != d and d]
+        if moved:
+            text += " For example `%s/` there is `%s/` here." % moved[0]
+        text += " If a part does not fit, reprint only that part from another tolerance (%s) " \
+                "in the repository; the case stays. See [tolerances](%s)." % (others, tol_link)
+    else:
+        text = "The paths are the same as in %s in the repository, so the folder names show the " \
+               "tolerance of each part. If a part does not fit, reprint only that part from the " \
+               "neighbouring tolerance (%s); the case stays. See [tolerances](%s)." \
+               % (repo_folder, others, tol_link)
+    out += ["", text]
 
     groups = resolve(sets, shape)
     gaps = sum(1 for _, items in groups for item in items if "missing" in item)
@@ -579,7 +654,7 @@ def print_list(sets, shape, mode, source=None, same_files=()):
         if intro:
             out += [" ".join(intro), ""]
         for item in items:
-            out += _item_lines(sets, item, mode)
+            out += _item_lines(sets, item, mode, flat)
 
     projects = shape.get("projects", [])
     if projects and mode == sets["default_tolerance"]:
@@ -605,7 +680,7 @@ def print_list(sets, shape, mode, source=None, same_files=()):
     return "\n".join(out) + "\n"
 
 
-def _item_lines(sets, item, mode):
+def _item_lines(sets, item, mode, flat=False):
     head = "- %d x %s" % (item["qty"], item["name"])
     if item.get("optional"):
         head += " (optional)"
@@ -620,11 +695,11 @@ def _item_lines(sets, item, mode):
         return [head + ": **not exported yet.** " + " ".join(tail)]
     if "files" in item:
         lines = [head + ", one of:"]
-        lines += ["  - `%s`" % show_path(sets, t, mode) for t in item["files"]]
+        lines += ["  - `%s`" % show_path(sets, t, mode, flat) for t in item["files"]]
         if tail:
             lines.append("  " + " ".join(tail))
         return lines
-    line = head + ": `%s`" % show_path(sets, item["file"], mode)
+    line = head + ": `%s`" % show_path(sets, item["file"], mode, flat)
     choose = item.get("choose", {})
     if choose:
         line += ", with " + "; ".join("%s one of %s" % (k, ", ".join("`%s`" % v for v in vals))
@@ -653,8 +728,11 @@ def source_label(repo, root):
     return label
 
 
-def release_name(shape, mode, tag=None):
-    return "-".join(p for p in (shape["id"], tag, mode) if p)
+def release_name(sets, shape, mode, tag=None, flat=False):
+    """GripV-standard, GripV-standard-tight, GripV-standard-all-tolerances: the
+    default tolerance gets no suffix in a flat build. --full-paths names it."""
+    shown = None if flat and mode == sets["default_tolerance"] else mode
+    return "-".join(p for p in (shape["id"], tag, shown) if p)
 
 
 def prepare_folder(path):
@@ -698,13 +776,17 @@ def update_sums(out_dir):
             f.write("%s  %s\n" % (sha256_file(os.path.join(out_dir, name)), name))
 
 
-def build(repo, sets, shapes, mode, out_dir, tag=None, make_zip=True, allow_pointers=False, log=print):
-    """Build a folder (and zip) per shape. Returns the exit code."""
+def build(repo, sets, shapes, mode, out_dir, tag=None, make_zip=True, allow_pointers=False, log=print,
+          flat=True):
+    """Build a folder (and zip) per shape. Returns the exit code. flat leaves the
+    tolerance folders out of the paths, except with every tolerance."""
+    flat = flat and mode != ALL
     root = os.path.join(repo, sets["root"])
     tree = scan(root) if os.path.isdir(root) else []
-    plans, missing, pointers = [], set(), set()
+    plans, missing, pointers, clashing = [], set(), set(), []
     for shape in shapes:
-        files = shape_files(sets, shape, mode)
+        files = layout(sets, shape, mode, flat)
+        clashing += [(shape, dest, srcs) for dest, srcs in clashes(files)]
         paths = [shape["folder"] + "/" + rel for rel in files]
         lost = set(rel for rel, _ in missing_files(tree, paths))
         missing |= lost
@@ -717,6 +799,9 @@ def build(repo, sets, shapes, mode, out_dir, tag=None, make_zip=True, allow_poin
         missing.add(sets["license"])
     for path in sorted(missing):
         log("ERROR  missing %s" % path)
+    for shape, dest, srcs in clashing:
+        log("ERROR  %s: %s land on the same path %s; build with --full-paths or see flat_folders"
+            % (shape["id"], " and ".join(srcs), dest))
     if pointers:
         shown = sorted(pointers)[:5]
         log("ERROR  %d file%s %s Git LFS pointer%s, not the model%s: %s%s" % (
@@ -724,7 +809,7 @@ def build(repo, sets, shapes, mode, out_dir, tag=None, make_zip=True, allow_poin
             "" if len(pointers) == 1 else "s", "" if len(pointers) == 1 else "s",
             ", ".join(shown), ", ..." if len(pointers) > len(shown) else ""))
         log("Run git lfs pull to download the models first.")
-    if missing or pointers:
+    if missing or pointers or clashing:
         return EXIT_ERROR
 
     if not os.path.isdir(out_dir):
@@ -736,20 +821,19 @@ def build(repo, sets, shapes, mode, out_dir, tag=None, make_zip=True, allow_poin
     source = source_label(repo, root)
 
     for shape, files in plans:
-        name = release_name(shape, mode, tag)
+        name = release_name(sets, shape, mode, tag, flat)
         dest = os.path.join(out_dir, name)
         prepare_folder(dest)
         src_root = native(root, shape["folder"])
-        for rel in files:
-            target = native(dest, rel)
+        for rel, to in files.items():
+            target = native(dest, to)
             os.makedirs(os.path.dirname(target), exist_ok=True)
             shutil.copyfile(native(src_root, rel), target)
-        same = identical_alternatives(
-            sets, shape, lambda rel: fingerprint(native(dest, rel))[0] if os.path.isfile(native(dest, rel)) else None)
+        same = same_in_release(sets, shape, files, lambda rel: fingerprint(native(src_root, rel))[0])
         with open(os.path.join(dest, MARKER), "w", encoding="utf-8", newline="\n") as f:
-            f.write(print_list(sets, shape, mode, source, same))
+            f.write(print_list(sets, shape, mode, source, same, flat))
         shutil.copyfile(license_path, os.path.join(dest, "LICENSE"))
-        size = sum(os.path.getsize(native(dest, rel)) for rel in files)
+        size = sum(os.path.getsize(native(dest, to)) for to in files.values())
         line = "%-32s %4d files, %6.1f MB" % (name, len(files), size / 1e6)
         if make_zip:
             write_zip(dest, dest + ".zip")
@@ -783,6 +867,9 @@ def main(argv=None):
     which.add_argument("--tolerance", metavar="LEVEL",
                        help="the tolerance of the included parts: tight, default or loose (default: default)")
     which.add_argument("--all-tolerances", action="store_true", help="include every tolerance variant")
+    p.add_argument("--full-paths", action="store_true",
+                   help="keep the tolerance folders and names of orca_slicer/ in the release, "
+                        "for example parts/buttons/default/cap_default/ (always on with --all-tolerances)")
     p.add_argument("--out", metavar="DIR", help="output folder (default: dist/ in the repository)")
     p.add_argument("--tag", metavar="TEXT", help="added to folder and zip names, for example v0.1")
     p.add_argument("--no-zip", action="store_true", help="build the folders only")
@@ -803,6 +890,7 @@ def main(argv=None):
         return EXIT_ERROR
     repo = os.path.abspath(args.repo)
     mode = ALL if args.all_tolerances else (args.tolerance or sets["default_tolerance"])
+    flat = not args.full_paths and mode != ALL
 
     try:
         check_mode(sets, mode)
@@ -817,14 +905,15 @@ def main(argv=None):
         if args.print_list:
             shape = find_shape(sets, args.print_list)
             root = native(os.path.join(repo, sets["root"]), shape["folder"])
-            same = identical_alternatives(
-                sets, shape, lambda rel: fingerprint(native(root, rel))[0]
+            same = same_in_release(
+                sets, shape, layout(sets, shape, mode, flat), lambda rel: fingerprint(native(root, rel))[0]
                 if os.path.isfile(native(root, rel)) else None)
-            sys.stdout.write(print_list(sets, shape, mode, None, same))
+            sys.stdout.write(print_list(sets, shape, mode, None, same, flat))
             return EXIT_OK
         shapes = [find_shape(sets, s) for s in args.shape] if args.shape else sets["shapes"]
         out_dir = os.path.abspath(args.out) if args.out else os.path.join(repo, "dist")
-        return build(repo, sets, shapes, mode, out_dir, args.tag, not args.no_zip, args.allow_pointers)
+        return build(repo, sets, shapes, mode, out_dir, args.tag, not args.no_zip, args.allow_pointers,
+                     flat=flat)
     except BuildError as e:
         print("ERROR  %s" % e, file=sys.stderr)
         return EXIT_ERROR
