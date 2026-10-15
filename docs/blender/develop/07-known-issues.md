@@ -57,8 +57,22 @@ Everything found while documenting the file that is wrong, fragile, misleading o
 | D2 | GripR1 is still fully wired. With `variant` = GripR1 the file evaluates, but L1/R1 and the ABXY, D-pad and Home caps come out empty, and the shafts are plain blocks. |
 | D3 | The old selection chain (`part and variant`, `main switch`, `bundle variant switching base`, `GripR1  parameters`) is dead code behind the unconnected `trigger cap`. `R2 tip`, `R4 tip` and the `R4` group's 16 unconnected marks inputs belong to the same era. |
 | D4 | `scrollwheel holder` has a Geometry Nodes modifier with no group. |
-| D5 | Typos in names people see: `wdith`, `heght`, `stiick`, `sheild`, `sbdiv`, `paramters` / `paramteters`, `contols`, `neighboor`, `suppprts`, `roker`, `postion`, `coer Y tolerance`, `Xbox syle`, `holllow lattice parameters`, `voroni`, `coVer base`. Double spaces in `GripV  lever R1L1`, `GripV  lattice parameters`, `GripR1  parameters`, `hollow  parameters`, `stick  XY correction`, `custom shape  gripV`. |
+| D5 | Typos in names people see: `wdith`, `heght`, `stiick`, `sheild`, `sbdiv`, `paramters` / `paramteters`, `contols`, `neighboor`, `suppprts`, `roker`, `postion`, `coer Y tolerance`, `Xbox syle`, `holllow lattice parameters`, `voroni`, `coVer base`. Double spaces in `GripV  lever R1L1`, `GripV  lattice parameters`, `GripR1  parameters`, `hollow  parameters`, `stick  XY correction`, `custom shape  gripV`. [`scripts/fix_names.py`](../../../scripts/fix_names.py) fixes the node group names, the input names and the group nodes named after a renamed group, and rewrites the export preset entries that name them in the same run. Menu items (`low `, C9), objects, collections, labels and bundle items it only lists. See [Fixing the names](#fixing-the-names-d5). |
 | D6 | Automatic `.001` names on real alternatives (`fill parameters.001`, `basic stick parameters.001`, `screw parameters.001`, …) say nothing about what they are for. |
 | D7 | `test` / `tests` and `Tool.001` are unused. |
 | D8 | `GripR1 controls` is not tracked by `tracking.json`. |
 | D9 | The battery compartment logic exists twice: `battery bool and cover` and `coVer base`. |
+
+## Fixing the names (D5)
+
+`scripts/fix_names.py` runs inside Blender. With `DRY_RUN = True`, the default, it changes nothing: it prints what it would rename, where each name is used, which export preset entries it would rewrite, and what it skips and why. A rename is skipped when the new name is already taken, or when the old name is also stored somewhere the script cannot update safely (a driver expression, another add-on's setting, presets while `combi_export` is disabled). Links, modifier values and defaults survive because a renamed input keeps its identifier; `tracking.json` follows on the next save. In the current file the dry run should skip `GripR1  parameters`, because `GripR1 parameters` exists too (both are GripR1 leftovers, D3).
+
+1. Save a copy of `Grip.blend` in the same folder (File › Save Copy) and open it, with `combi_export` and `blender_tracking` enabled. Saved there, the copy writes the same `blender/tracking.json`.
+2. Open the script in the Text Editor and run it. Read the dry run. Names that code still spells, such as the panel `GripX contols`, can wait in `KEEP` at the top of the script.
+3. Export the presets you want to check into a scratch folder.
+4. Set `DRY_RUN = False` and run again. The report ends with a second pass, which should find nothing left to rename.
+5. Export the same presets into a second folder and compare the two. The STLs should be byte-identical; the script's docstring has a one-line check for Blender's Python Console.
+6. Remove the script's text block, then save. The `tracking.json` diff should only rename keys and change the link lines that show a renamed name, with no value changes. `tools/tracking_diff` helps here: it pairs renamed keys as "probably renamed".
+7. Replace `Grip.blend` with the copy, re-export the preset JSON copies and update the docs and code that spell the old names. The JSON copies in the repository name none of the renamed names, so re-exporting them probably changes nothing.
+
+Menu items are stored by name in preset values and in `tracking.json`, and bundle items are matched by name between *Combine Bundle* and *Separate Bundle* nodes, so both stay a manual job: rename them on every side at once.

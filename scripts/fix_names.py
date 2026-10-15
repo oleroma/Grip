@@ -190,11 +190,14 @@ def raw_edits_of(entry):
     common = sys.modules.get(package + ".common")
     return getattr(common, "raw_edits", None)
 
-def action_fcurves(action):
+def action_fcurves(anim):
+    """F-curves of the action assigned to animation data (of its slot, for a layered action)."""
+    action, slot = anim.action, getattr(anim, "action_slot", None)
     if hasattr(action, "layers"):
-        for layer in action.layers:
+        for layer in action.layers if slot else ():
             for strip in layer.strips:
-                for bag in getattr(strip, "channelbags", ()):
+                bag = strip.channelbag(slot) if hasattr(strip, "channelbag") else None
+                if bag:
                     yield from bag.fcurves
     else:
         yield from getattr(action, "fcurves", ())
@@ -221,7 +224,7 @@ def anim_texts():
                     if target.data_path:
                         yield data, target.data_path, "driver variable", target.id
         if anim.action:
-            for fc in action_fcurves(anim.action):
+            for fc in action_fcurves(anim):
                 yield data, fc.data_path, "animation path", data
 
 def walk_strings(path, value):
@@ -484,11 +487,12 @@ def find_unsafe(renames):
                 r.block(f"named in a {kind} on {q(data.name)} that goes through another datablock: {text}")
             elif f'"{r.old}"' in bare or f"'{r.old}'" in bare:
                 r.block(f"named in a {kind} on {q(data.name)}: {text}")
+    by_old = defaultdict(list)
+    for r in active:
+        by_old[r.old].append(r)
     for path, text in stored_texts():
-        if path in IGNORED_PROPERTIES:
-            continue
-        for r in active:
-            if text == r.old:
+        if path not in IGNORED_PROPERTIES:
+            for r in by_old.get(text, ()):
                 r.block(f"stored in {path} (add the path to IGNORED_PROPERTIES if it may stay)")
     return notes
 
