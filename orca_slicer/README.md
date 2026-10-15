@@ -130,7 +130,7 @@ Paths are under `GripV/`, shown for the `default` tolerance. "Only with" means t
 | 1 each | Bumpers L1, R1 | `parts/bumpers/press_default/` | |
 | 2 | Stick | `parts/sticks/<top>/<curvature>/<texture>/stick_<range>_deg.stl` | one per side. Both holes are the same, so you can print one design twice or two different ones. The range is the tilt the stick's neck is shaped for. |
 | 1 each | Rocker D-pad: cap, stick, rocker, rocker ball, ball support, rocker support | `parts/dpad_stick/` | only with a `dpad_stick` top |
-| 1 each | Scroll wheel: wheel, core, holder | `parts/scrollwheel/` | exported by hand, so they can be older than the Blender file |
+| 1 each | Scroll wheel: wheel, core, holder | `parts/scrollwheel/` | the preset copy in `blender/GripV_preset.json` does not list them, so they may be older than the Blender file |
 | 1 | Battery cover | `parts/battery_cover/battery_cover.stl` | |
 | 1 | Cable holder | `parts/cable_holder/cable_holder.stl` | *probably* needed, see [Known gaps](#known-gaps) |
 | 2 | Alignment pin | `parts/pins/pin.stl` | standard only, one per side. The hollow shells line up on pins of the middle plate. |

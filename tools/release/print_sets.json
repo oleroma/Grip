@@ -181,7 +181,7 @@
 
     "scroll-wheel-GripV": {
       "title": "Scroll wheel",
-      "note": "These three are exported by hand, not by a preset, so they can be older than the Blender file.",
+      "note": "The preset copy in `blender/GripV_preset.json` does not list these three, so they may be older than the Blender file.",
       "items": [
         {"name": "Wheel", "file": "parts/scrollwheel/scrollwheel.stl", "qty": 1},
         {"name": "Wheel core", "file": "parts/scrollwheel/scrollwheel_core.stl", "qty": 1},
