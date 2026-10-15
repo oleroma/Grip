@@ -1,5 +1,5 @@
 {
-    "data_version": 3,
+    "data_version": 4,
     "root_dir": "D:\\Grip\\orca_slicer\\GripV\\",
     "global_nodegroups": [
         {
@@ -39,11 +39,12 @@
     "presets": [
         {
             "name": "Case standard",
-            "data_version": 3,
+            "data_version": 4,
             "preset_prefix": "case_standard",
             "collections": [
                 {
                     "collection_name": "case",
+                    "export": true,
                     "use_tag": false,
                     "tag": "",
                     "sub_path": "",
@@ -270,11 +271,12 @@
         },
         {
             "name": "Case hollow",
-            "data_version": 3,
+            "data_version": 4,
             "preset_prefix": "case_hollow",
             "collections": [
                 {
                     "collection_name": "case",
+                    "export": true,
                     "use_tag": false,
                     "tag": "",
                     "sub_path": "",
@@ -446,6 +448,7 @@
                 },
                 {
                     "collection_name": "case middle plate",
+                    "export": true,
                     "use_tag": false,
                     "tag": "",
                     "sub_path": "",
@@ -500,11 +503,12 @@
         },
         {
             "name": "Parts",
-            "data_version": 3,
+            "data_version": 4,
             "preset_prefix": "parts",
             "collections": [
                 {
                     "collection_name": "capacitive",
+                    "export": true,
                     "use_tag": false,
                     "tag": "",
                     "sub_path": "capacitive",
@@ -569,6 +573,7 @@
                 },
                 {
                     "collection_name": "bumpers",
+                    "export": true,
                     "use_tag": false,
                     "tag": "",
                     "sub_path": "bumpers",
@@ -628,6 +633,7 @@
                 },
                 {
                     "collection_name": "dpad stick",
+                    "export": true,
                     "use_tag": false,
                     "tag": "",
                     "sub_path": "dpad_stick",
@@ -719,6 +725,7 @@
                 },
                 {
                     "collection_name": "battery cover",
+                    "export": true,
                     "use_tag": false,
                     "tag": "",
                     "sub_path": "battery_cover",
@@ -736,6 +743,7 @@
                 },
                 {
                     "collection_name": "cable holder",
+                    "export": true,
                     "use_tag": false,
                     "tag": "",
                     "sub_path": "cable_holder",
@@ -753,6 +761,7 @@
                 },
                 {
                     "collection_name": "pins",
+                    "export": true,
                     "use_tag": false,
                     "tag": "",
                     "sub_path": "pins",
@@ -767,17 +776,52 @@
                         }
                     ],
                     "nodegroups": []
+                },
+                {
+                    "collection_name": "scrollwheel",
+                    "export": true,
+                    "use_tag": true,
+                    "tag": "",
+                    "sub_path": "scrollwheel",
+                    "objects": [
+                        {
+                            "name": "scrollwheel",
+                            "name_override": "",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        },
+                        {
+                            "name": "scrollwheel core",
+                            "name_override": "",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        },
+                        {
+                            "name": "scrollwheel holder",
+                            "name_override": "",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        }
+                    ],
+                    "nodegroups": []
                 }
             ],
             "nodegroups": []
         },
         {
             "name": "Sticks",
-            "data_version": 3,
+            "data_version": 4,
             "preset_prefix": "parts/sticks",
             "collections": [
                 {
                     "collection_name": "sticks",
+                    "export": true,
                     "use_tag": false,
                     "tag": "",
                     "sub_path": "",
@@ -904,11 +948,12 @@
         },
         {
             "name": "Buttons",
-            "data_version": 3,
+            "data_version": 4,
             "preset_prefix": "parts",
             "collections": [
                 {
                     "collection_name": "abxy",
+                    "export": true,
                     "use_tag": false,
                     "tag": "",
                     "sub_path": "buttons",
@@ -960,6 +1005,7 @@
                 },
                 {
                     "collection_name": "caps",
+                    "export": true,
                     "use_tag": false,
                     "tag": "",
                     "sub_path": "buttons",
@@ -1129,11 +1175,12 @@
         },
         {
             "name": "Triggers",
-            "data_version": 3,
+            "data_version": 4,
             "preset_prefix": "parts",
             "collections": [
                 {
                     "collection_name": "triggers",
+                    "export": true,
                     "use_tag": false,
                     "tag": "",
                     "sub_path": "triggers",
@@ -1229,5 +1276,245 @@
             ],
             "nodegroups": []
         }
-    ]
+    ],
+    "exports": {
+        "complete": true,
+        "presets": [
+            {
+                "name": "Case standard",
+                "files": [
+                    "case_standard/case_bottom.stl",
+                    "case_standard/case_top_cap_knob.stl",
+                    "case_standard/case_top_cap_plate.stl",
+                    "case_standard/case_top_dpad_stick_cap_knob.stl",
+                    "case_standard/case_top_dpad_stick_cap_plate.stl"
+                ]
+            },
+            {
+                "name": "Case hollow",
+                "files": [
+                    "case_hollow/case_bottom.stl",
+                    "case_hollow/case_middle_plate.stl",
+                    "case_hollow/case_top_cap_knob.stl",
+                    "case_hollow/case_top_cap_plate.stl",
+                    "case_hollow/case_top_dpad_stick_cap_knob.stl",
+                    "case_hollow/case_top_dpad_stick_cap_plate.stl"
+                ]
+            },
+            {
+                "name": "Parts",
+                "files": [
+                    "parts/battery_cover/battery_cover.stl",
+                    "parts/bumpers/press_default/L1.stl",
+                    "parts/bumpers/press_default/R1.stl",
+                    "parts/bumpers/press_loose/L1.stl",
+                    "parts/bumpers/press_loose/R1.stl",
+                    "parts/bumpers/press_tight/L1.stl",
+                    "parts/bumpers/press_tight/R1.stl",
+                    "parts/cable_holder/cable_holder.stl",
+                    "parts/capacitive/capacitive_knob.stl",
+                    "parts/capacitive/capacitive_plate.stl",
+                    "parts/dpad_stick/ball_support.stl",
+                    "parts/dpad_stick/dpad_stick_cap.stl",
+                    "parts/dpad_stick/rocker.stl",
+                    "parts/dpad_stick/rocker_ball.stl",
+                    "parts/dpad_stick/rocker_support.stl",
+                    "parts/dpad_stick/stick.stl",
+                    "parts/pins/pin.stl",
+                    "parts/scrollwheel/scrollwheel.stl",
+                    "parts/scrollwheel/scrollwheel_core.stl",
+                    "parts/scrollwheel/scrollwheel_holder.stl"
+                ]
+            },
+            {
+                "name": "Sticks",
+                "files": [
+                    "parts/sticks/circle/concave/grid/stick_10_deg.stl",
+                    "parts/sticks/circle/concave/grid/stick_12_deg.stl",
+                    "parts/sticks/circle/concave/grid/stick_14_deg.stl",
+                    "parts/sticks/circle/concave/grid/stick_16_deg.stl",
+                    "parts/sticks/circle/concave/grid/stick_18_deg.stl",
+                    "parts/sticks/circle/concave/grid/stick_20_deg.stl",
+                    "parts/sticks/circle/concave/icosahedron/stick_10_deg.stl",
+                    "parts/sticks/circle/concave/icosahedron/stick_12_deg.stl",
+                    "parts/sticks/circle/concave/icosahedron/stick_14_deg.stl",
+                    "parts/sticks/circle/concave/icosahedron/stick_16_deg.stl",
+                    "parts/sticks/circle/concave/icosahedron/stick_18_deg.stl",
+                    "parts/sticks/circle/concave/icosahedron/stick_20_deg.stl",
+                    "parts/sticks/circle/convex/grid/stick_10_deg.stl",
+                    "parts/sticks/circle/convex/grid/stick_12_deg.stl",
+                    "parts/sticks/circle/convex/grid/stick_14_deg.stl",
+                    "parts/sticks/circle/convex/grid/stick_16_deg.stl",
+                    "parts/sticks/circle/convex/grid/stick_18_deg.stl",
+                    "parts/sticks/circle/convex/grid/stick_20_deg.stl",
+                    "parts/sticks/circle/convex/icosahedron/stick_10_deg.stl",
+                    "parts/sticks/circle/convex/icosahedron/stick_12_deg.stl",
+                    "parts/sticks/circle/convex/icosahedron/stick_14_deg.stl",
+                    "parts/sticks/circle/convex/icosahedron/stick_16_deg.stl",
+                    "parts/sticks/circle/convex/icosahedron/stick_18_deg.stl",
+                    "parts/sticks/circle/convex/icosahedron/stick_20_deg.stl",
+                    "parts/sticks/circle/flat/grid/stick_10_deg.stl",
+                    "parts/sticks/circle/flat/grid/stick_12_deg.stl",
+                    "parts/sticks/circle/flat/grid/stick_14_deg.stl",
+                    "parts/sticks/circle/flat/grid/stick_16_deg.stl",
+                    "parts/sticks/circle/flat/grid/stick_18_deg.stl",
+                    "parts/sticks/circle/flat/grid/stick_20_deg.stl",
+                    "parts/sticks/circle/flat/icosahedron/stick_10_deg.stl",
+                    "parts/sticks/circle/flat/icosahedron/stick_12_deg.stl",
+                    "parts/sticks/circle/flat/icosahedron/stick_14_deg.stl",
+                    "parts/sticks/circle/flat/icosahedron/stick_16_deg.stl",
+                    "parts/sticks/circle/flat/icosahedron/stick_18_deg.stl",
+                    "parts/sticks/circle/flat/icosahedron/stick_20_deg.stl",
+                    "parts/sticks/square/concave/grid/stick_10_deg.stl",
+                    "parts/sticks/square/concave/grid/stick_12_deg.stl",
+                    "parts/sticks/square/concave/grid/stick_14_deg.stl",
+                    "parts/sticks/square/concave/grid/stick_16_deg.stl",
+                    "parts/sticks/square/concave/grid/stick_18_deg.stl",
+                    "parts/sticks/square/concave/grid/stick_20_deg.stl",
+                    "parts/sticks/square/concave/icosahedron/stick_10_deg.stl",
+                    "parts/sticks/square/concave/icosahedron/stick_12_deg.stl",
+                    "parts/sticks/square/concave/icosahedron/stick_14_deg.stl",
+                    "parts/sticks/square/concave/icosahedron/stick_16_deg.stl",
+                    "parts/sticks/square/concave/icosahedron/stick_18_deg.stl",
+                    "parts/sticks/square/concave/icosahedron/stick_20_deg.stl",
+                    "parts/sticks/square/convex/grid/stick_10_deg.stl",
+                    "parts/sticks/square/convex/grid/stick_12_deg.stl",
+                    "parts/sticks/square/convex/grid/stick_14_deg.stl",
+                    "parts/sticks/square/convex/grid/stick_16_deg.stl",
+                    "parts/sticks/square/convex/grid/stick_18_deg.stl",
+                    "parts/sticks/square/convex/grid/stick_20_deg.stl",
+                    "parts/sticks/square/convex/icosahedron/stick_10_deg.stl",
+                    "parts/sticks/square/convex/icosahedron/stick_12_deg.stl",
+                    "parts/sticks/square/convex/icosahedron/stick_14_deg.stl",
+                    "parts/sticks/square/convex/icosahedron/stick_16_deg.stl",
+                    "parts/sticks/square/convex/icosahedron/stick_18_deg.stl",
+                    "parts/sticks/square/convex/icosahedron/stick_20_deg.stl",
+                    "parts/sticks/square/flat/grid/stick_10_deg.stl",
+                    "parts/sticks/square/flat/grid/stick_12_deg.stl",
+                    "parts/sticks/square/flat/grid/stick_14_deg.stl",
+                    "parts/sticks/square/flat/grid/stick_16_deg.stl",
+                    "parts/sticks/square/flat/grid/stick_18_deg.stl",
+                    "parts/sticks/square/flat/grid/stick_20_deg.stl",
+                    "parts/sticks/square/flat/icosahedron/stick_10_deg.stl",
+                    "parts/sticks/square/flat/icosahedron/stick_12_deg.stl",
+                    "parts/sticks/square/flat/icosahedron/stick_14_deg.stl",
+                    "parts/sticks/square/flat/icosahedron/stick_16_deg.stl",
+                    "parts/sticks/square/flat/icosahedron/stick_18_deg.stl",
+                    "parts/sticks/square/flat/icosahedron/stick_20_deg.stl"
+                ]
+            },
+            {
+                "name": "Buttons",
+                "files": [
+                    "parts/buttons/default/button.stl",
+                    "parts/buttons/default/cap_default/circle.stl",
+                    "parts/buttons/default/cap_default/cross.stl",
+                    "parts/buttons/default/cap_default/dpad.stl",
+                    "parts/buttons/default/cap_default/home.stl",
+                    "parts/buttons/default/cap_default/select.stl",
+                    "parts/buttons/default/cap_default/square.stl",
+                    "parts/buttons/default/cap_default/triangle.stl",
+                    "parts/buttons/default/cap_loose/circle.stl",
+                    "parts/buttons/default/cap_loose/cross.stl",
+                    "parts/buttons/default/cap_loose/dpad.stl",
+                    "parts/buttons/default/cap_loose/home.stl",
+                    "parts/buttons/default/cap_loose/select.stl",
+                    "parts/buttons/default/cap_loose/square.stl",
+                    "parts/buttons/default/cap_loose/triangle.stl",
+                    "parts/buttons/default/cap_tight/circle.stl",
+                    "parts/buttons/default/cap_tight/cross.stl",
+                    "parts/buttons/default/cap_tight/dpad.stl",
+                    "parts/buttons/default/cap_tight/home.stl",
+                    "parts/buttons/default/cap_tight/select.stl",
+                    "parts/buttons/default/cap_tight/square.stl",
+                    "parts/buttons/default/cap_tight/triangle.stl",
+                    "parts/buttons/loose/button.stl",
+                    "parts/buttons/loose/cap_default/circle.stl",
+                    "parts/buttons/loose/cap_default/cross.stl",
+                    "parts/buttons/loose/cap_default/dpad.stl",
+                    "parts/buttons/loose/cap_default/home.stl",
+                    "parts/buttons/loose/cap_default/select.stl",
+                    "parts/buttons/loose/cap_default/square.stl",
+                    "parts/buttons/loose/cap_default/triangle.stl",
+                    "parts/buttons/loose/cap_loose/circle.stl",
+                    "parts/buttons/loose/cap_loose/cross.stl",
+                    "parts/buttons/loose/cap_loose/dpad.stl",
+                    "parts/buttons/loose/cap_loose/home.stl",
+                    "parts/buttons/loose/cap_loose/select.stl",
+                    "parts/buttons/loose/cap_loose/square.stl",
+                    "parts/buttons/loose/cap_loose/triangle.stl",
+                    "parts/buttons/loose/cap_tight/circle.stl",
+                    "parts/buttons/loose/cap_tight/cross.stl",
+                    "parts/buttons/loose/cap_tight/dpad.stl",
+                    "parts/buttons/loose/cap_tight/home.stl",
+                    "parts/buttons/loose/cap_tight/select.stl",
+                    "parts/buttons/loose/cap_tight/square.stl",
+                    "parts/buttons/loose/cap_tight/triangle.stl",
+                    "parts/buttons/tight/button.stl",
+                    "parts/buttons/tight/cap_default/circle.stl",
+                    "parts/buttons/tight/cap_default/cross.stl",
+                    "parts/buttons/tight/cap_default/dpad.stl",
+                    "parts/buttons/tight/cap_default/home.stl",
+                    "parts/buttons/tight/cap_default/select.stl",
+                    "parts/buttons/tight/cap_default/square.stl",
+                    "parts/buttons/tight/cap_default/triangle.stl",
+                    "parts/buttons/tight/cap_loose/circle.stl",
+                    "parts/buttons/tight/cap_loose/cross.stl",
+                    "parts/buttons/tight/cap_loose/dpad.stl",
+                    "parts/buttons/tight/cap_loose/home.stl",
+                    "parts/buttons/tight/cap_loose/select.stl",
+                    "parts/buttons/tight/cap_loose/square.stl",
+                    "parts/buttons/tight/cap_loose/triangle.stl",
+                    "parts/buttons/tight/cap_tight/circle.stl",
+                    "parts/buttons/tight/cap_tight/cross.stl",
+                    "parts/buttons/tight/cap_tight/dpad.stl",
+                    "parts/buttons/tight/cap_tight/home.stl",
+                    "parts/buttons/tight/cap_tight/select.stl",
+                    "parts/buttons/tight/cap_tight/square.stl",
+                    "parts/buttons/tight/cap_tight/triangle.stl"
+                ]
+            },
+            {
+                "name": "Triggers",
+                "files": [
+                    "parts/triggers/default/press_default/L2.stl",
+                    "parts/triggers/default/press_default/L4.stl",
+                    "parts/triggers/default/press_default/R2.stl",
+                    "parts/triggers/default/press_default/R4.stl",
+                    "parts/triggers/default/press_loose/L2.stl",
+                    "parts/triggers/default/press_loose/L4.stl",
+                    "parts/triggers/default/press_loose/R2.stl",
+                    "parts/triggers/default/press_loose/R4.stl",
+                    "parts/triggers/default/press_tight/L2.stl",
+                    "parts/triggers/default/press_tight/L4.stl",
+                    "parts/triggers/default/press_tight/R2.stl",
+                    "parts/triggers/default/press_tight/R4.stl",
+                    "parts/triggers/loose/press_default/L2.stl",
+                    "parts/triggers/loose/press_default/L4.stl",
+                    "parts/triggers/loose/press_default/R2.stl",
+                    "parts/triggers/loose/press_default/R4.stl",
+                    "parts/triggers/loose/press_loose/L2.stl",
+                    "parts/triggers/loose/press_loose/L4.stl",
+                    "parts/triggers/loose/press_loose/R2.stl",
+                    "parts/triggers/loose/press_loose/R4.stl",
+                    "parts/triggers/loose/press_tight/L2.stl",
+                    "parts/triggers/loose/press_tight/L4.stl",
+                    "parts/triggers/loose/press_tight/R2.stl",
+                    "parts/triggers/loose/press_tight/R4.stl",
+                    "parts/triggers/tight/press_default/L2.stl",
+                    "parts/triggers/tight/press_default/L4.stl",
+                    "parts/triggers/tight/press_default/R2.stl",
+                    "parts/triggers/tight/press_default/R4.stl",
+                    "parts/triggers/tight/press_loose/L2.stl",
+                    "parts/triggers/tight/press_loose/L4.stl",
+                    "parts/triggers/tight/press_loose/R2.stl",
+                    "parts/triggers/tight/press_loose/R4.stl",
+                    "parts/triggers/tight/press_tight/L2.stl",
+                    "parts/triggers/tight/press_tight/L4.stl",
+                    "parts/triggers/tight/press_tight/R2.stl",
+                    "parts/triggers/tight/press_tight/R4.stl"
+                ]
+            }
+        ]
+    }
 }

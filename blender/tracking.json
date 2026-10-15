@@ -1515,11 +1515,6 @@
             "[advanced trigger parameters] Bundle -> Bundle [Join Bundle]",
             "[trigger parameters] Bundle -> Bundle [Join Bundle]"
         ],
-        "GripR1 R4R2 parameters": [
-            "[Join Bundle] Bundle -> Bundle [Group Output]",
-            "[advanced R4R2 parameters] Bundle -> Bundle [Join Bundle]",
-            "[basic R4R2 parameters] Bundle -> Bundle [Join Bundle]"
-        ],
         "GripR1 abxy": [
             "[Join Bundle.003] Bundle -> Bundle [Group Output]",
             "[Join Bundle] Bundle -> Bundle [cap plate outputs]",
@@ -1534,25 +1529,10 @@
             "[capacitive plate parameters] Bundle -> Bundle [Join Bundle]",
             "[caps parameters] Bundle -> Bundle [Join Bundle.003]"
         ],
-        "GripR1 abxy_OLD": [
-            "[Join Bundle.003] Bundle -> abxy [Group Output]",
-            "[abxy advanced parameters] Bundle -> Bundle [Join Bundle.003]",
-            "[advanced button parameters] Bundle -> Bundle [Join Bundle.003]",
-            "[button parameters] Bundle -> Bundle [Join Bundle.003]",
-            "[capacitive plate advanced parameters] Bundle -> Bundle [Join Bundle.003]",
-            "[capacitive plate parameters] Bundle -> Bundle [Join Bundle.003]"
-        ],
         "GripR1 controls": [],
         "GripR1 cover parameters": [
             "[Join Bundle] Bundle -> Bundle [Group Output]",
             "[advanced cover parameters] Bundle -> Bundle [Join Bundle]",
-            "[basic cover parameters] Bundle -> Bundle [Join Bundle]"
-        ],
-        "GripR1 cover parameters_OLD": [
-            "[Join Bundle.001] Bundle -> cover [Group Output]",
-            "[advanced cover parameters.001] Bundle -> Bundle [Join Bundle.001]",
-            "[advanced cover parameters] Bundle -> Bundle [Join Bundle]",
-            "[basic cover parameters.001] Bundle -> Bundle [Join Bundle.001]",
             "[basic cover parameters] Bundle -> Bundle [Join Bundle]"
         ],
         "GripR1 cubic hollow array parameters": [
@@ -1595,12 +1575,6 @@
             "[dpad stick parameters] Bundle -> Bundle [Group Output]",
             "[dpad stick parameters] Bundle -> Bundle [dpad stick outputs]"
         ],
-        "GripR1 dpad_OLD": [
-            "[Join Bundle.003] Bundle -> dpad [Group Output]",
-            "[advanced button parameters] Bundle -> Bundle [Join Bundle.003]",
-            "[button parameters] Bundle -> Bundle [Join Bundle.003]",
-            "[dpad advanced parameters (advanced buttons parameters)] Bundle -> Bundle [Join Bundle.003]"
-        ],
         "GripR1 fill controls": [],
         "GripR1 gyroid hollow parameters": [
             "[fill parameters.001] Bundle -> Bundle [Group Output]"
@@ -1618,12 +1592,6 @@
             "[button parameters] Bundle -> Bundle [Join Bundle.003]",
             "[caps parameters] Bundle -> Bundle [Join Bundle.003]",
             "[home advanced parameters] Bundle -> Bundle [Join Bundle.003]"
-        ],
-        "GripR1 home_OLD": [
-            "[Join Bundle.003] Bundle -> home [Group Output]",
-            "[advanced button parameters] Bundle -> Bundle [Join Bundle.003]",
-            "[button parameters] Bundle -> Bundle [Join Bundle.003]",
-            "[home advanced parameters (advanced buttons parameters)] Bundle -> Bundle [Join Bundle.003]"
         ],
         "GripR1 middle plate parameters": [
             "[middle plate parameters] Bundle -> Bundle [Group Output]"
@@ -1664,9 +1632,6 @@
         "GripR1 pcb cutout parameters": [
             "[pcb cutout parameters] Bundle -> Bundle [Group Output]"
         ],
-        "GripR1 pcb cutout parameters.001": [
-            "[pcb cutout parameters] Bundle -> pcb [Group Output]"
-        ],
         "GripR1 pins": [
             "[Join Bundle] Bundle -> pin [Group Output]",
             "[pins params] Bundle -> Bundle [Join Bundle]",
@@ -1706,12 +1671,6 @@
             "[caps parameters] Bundle -> Bundle [Join Bundle.004]",
             "[curve parameters] Bundle -> Bundle [Join Bundle.004]",
             "[curve parameters] Bundle -> Bundle [base curve outputs]"
-        ],
-        "GripR1 select_OLD": [
-            "[Join Bundle.003] Bundle -> select [Group Output]",
-            "[advanced button parameters] Bundle -> Bundle [Join Bundle.003]",
-            "[button parameters] Bundle -> Bundle [Join Bundle.003]",
-            "[curve parameters] Bundle -> Bundle [Join Bundle.003]"
         ],
         "GripR1 shell middle plate parameters": [
             "[middle plate parameters] Bundle -> Bundle [Group Output]"
@@ -1755,13 +1714,6 @@
             "[shield parameters] Bundle -> Bundle [Join Bundle.012]",
             "[stick top parameters.001] Bundle -> Bundle [Join Bundle.013]",
             "[stick top parameters] Bundle -> Bundle [Join Bundle.012]"
-        ],
-        "GripR1 stick L parameters_OLD": [
-            "[Join Bundle.001] Bundle -> stick L [Group Output]",
-            "[advanced stick parameters.001] Bundle -> Bundle [Join Bundle]",
-            "[advanced stick parameters.002] Bundle -> Bundle [Join Bundle.001]",
-            "[basic stick parameters.001] Bundle -> Bundle [Join Bundle]",
-            "[basic stick parameters.002] Bundle -> Bundle [Join Bundle.001]"
         ],
         "GripR1 stick R parameters": [
             "[Join Bundle.012] Bundle -> Input [Reroute.002 (connect here)]",
@@ -2776,37 +2728,6 @@
             "[flipX] Geometry -> L [Menu Switch]",
             "[selector] selected bundle -> Bundle [Separate Bundle.001]"
         ],
-        "R1 lever parameters": [
-            "[Combine Bundle] Bundle -> Bundle [Group Output (r1 params)]",
-            "[Group Input] X tolerance -> X tolerance [Combine Bundle]",
-            "[Group Input] Z tolerance -> Z tolerance [Combine Bundle]",
-            "[Group Input] bevel inner -> bevel inner [Combine Bundle]",
-            "[Group Input] bevel inner subdiv -> bevel inner sbdiv [Combine Bundle]",
-            "[Group Input] button front shift X -> button front shift X [Combine Bundle]",
-            "[Group Input] button height -> button height [Combine Bundle]",
-            "[Group Input] button inset offset -> button inset offset [Combine Bundle]",
-            "[Group Input] button press tol -> button press tol [Combine Bundle]",
-            "[Group Input] curved R1L1 -> curved R1L1 [Combine Bundle]",
-            "[Group Input] depth -> depth [Combine Bundle]",
-            "[Group Input] height -> height [Combine Bundle]",
-            "[Group Input] insert depth -> insert depth [Combine Bundle]",
-            "[Group Input] overlap -> overlap [Combine Bundle]",
-            "[Group Input] overlap slant -> overlap slant [Combine Bundle]",
-            "[Group Input] overlap tolerance -> overlap tolerance [Combine Bundle]",
-            "[Group Input] stem radius -> stem radius [Combine Bundle]",
-            "[Group Input] stem tolerance -> stem tolerance [Combine Bundle]",
-            "[Group Input] top bevel -> top bevel [Combine Bundle]",
-            "[Group Input] width -> wdith [Combine Bundle]"
-        ],
-        "R1 lever position": [
-            "[Combine Bundle] Bundle -> Bundle [Group Output]",
-            "[Group Input] X -> X [Combine Bundle]",
-            "[Group Input] X -> X [Group Output]",
-            "[Group Input] Y -> Y [Combine Bundle]",
-            "[Group Input] Y -> Y [Group Output]",
-            "[Group Input] Z -> Z [Combine Bundle]",
-            "[Group Input] Z -> Z [Group Output]"
-        ],
         "R1 parameters": [
             "[Combine Bundle] Bundle -> Bundle [Group Output]",
             "[Group Input] front offset -> front offset [Combine Bundle]",
@@ -3214,10 +3135,6 @@
             "[Group Input] top lip -> top lip [Combine Bundle]",
             "[Group Input] width -> wdith [Combine Bundle]"
         ],
-        "advanced R4R2 parameters": [
-            "[Combine Bundle] Bundle -> Bundle [Group Output (R2)]",
-            "[Group Input] subdivision length -> subdivision length [Combine Bundle]"
-        ],
         "advanced button parameters": [
             "[Combine Bundle] Bundle -> Bundle [Group Output]",
             "[Group Input] case bool bevel -> case bool bevel [Combine Bundle]",
@@ -3586,14 +3503,6 @@
             "[Group Input] button press tolerance -> button press tolerance [Combine Bundle]",
             "[Group Input] jump fix shear -> jump fix shear [Combine Bundle]",
             "[Group Input] top bevel -> top bevel [Combine Bundle]"
-        ],
-        "basic R4R2 parameters": [
-            "[Combine Bundle] Bundle -> Bundle [Group Output (R2R4)]",
-            "[Group Input] bevel -> bevel [Combine Bundle]",
-            "[Group Input] bevel subd -> bevel subd [Combine Bundle]",
-            "[Group Input] radius tolerance -> radius tolerance [Combine Bundle]",
-            "[Group Input] top bevel -> top bevel [Combine Bundle]",
-            "[Group Input] x tolerance -> x tolerance [Combine Bundle]"
         ],
         "basic cover parameters": [
             "[Combine Bundle] Bundle -> Bundle [Group Output]",
@@ -5086,27 +4995,6 @@
             "[Vector Math.001] Vector -> Offset [Set Position.001]",
             "[Vector Math] Vector -> Vector[0] [Vector Math.001]"
         ],
-        "combine": [
-            "[Combine Bundle] Bundle -> Bundle [Group Output]",
-            "[Group Input] L1 -> L1 [Combine Bundle]",
-            "[Group Input] R1 -> R1 [Combine Bundle]",
-            "[Group Input] R1L1 -> R1L1 [Combine Bundle]",
-            "[Group Input] R2 -> R2 [Combine Bundle]",
-            "[Group Input] R2R4 -> R2R4 [Combine Bundle]",
-            "[Group Input] R4 -> R4 [Combine Bundle]",
-            "[Group Input] abxy -> abxy [Combine Bundle]",
-            "[Group Input] cover -> cover [Combine Bundle]",
-            "[Group Input] dpad -> dpad [Combine Bundle]",
-            "[Group Input] home -> home [Combine Bundle]",
-            "[Group Input] lever R1L1 -> lever R1L1 [Combine Bundle]",
-            "[Group Input] pcb -> pcb [Combine Bundle]",
-            "[Group Input] screw -> screw [Combine Bundle]",
-            "[Group Input] screw positions -> screw positions [Combine Bundle]",
-            "[Group Input] scrollwheel -> scrollwheel [Combine Bundle]",
-            "[Group Input] select -> select [Combine Bundle]",
-            "[Group Input] stick L -> stick L [Combine Bundle]",
-            "[Group Input] stick R -> stick R [Combine Bundle]"
-        ],
         "common R1L1": [
             "[Group Input] Bundle -> Bundle [Separate Bundle]",
             "[Separate Bundle] X tolerance -> X tolerance [Group Output]",
@@ -5961,11 +5849,6 @@
             "[Merge by Distance.001] Geometry -> Geometry [Group Output]",
             "[Mesh Circle.001] Mesh -> Mesh [Extrude Mesh.002]",
             "[Mesh Circle.001] Mesh -> Mesh [Flip Faces.001]"
-        ],
-        "default lever R1L1": [
-            "[Join Bundle] Bundle -> Bundle [Group Output]",
-            "[R1 lever parameters] Bundle -> Bundle [Join Bundle]",
-            "[R1 lever position] Bundle -> Bundle [Join Bundle]"
         ],
         "delete half": [
             "[Compare.001] Result -> top [Menu Switch]",
