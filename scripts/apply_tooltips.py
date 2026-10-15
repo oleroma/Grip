@@ -152,7 +152,7 @@ TOOLTIPS = {
         "bump": "How far a raised mark stands out from the face.",
         "mark depth": "How deep the mark is engraved.",
         "insertion": "On: the mark is added onto the part. Off: it is cut into the part.",  # guess
-        "axis": "Axis that picks the face the mark goes on.",
+        "axis": "The mark goes on the face at one end of this axis.",
         "side": "Which end of that axis the mark goes on: min or max.",
         "translate": "Moves the mark on the part.",
         "rotate": "Turns the mark on its face, in radians. Only read when type is parameter.",  # guess
@@ -350,7 +350,7 @@ TOOLTIPS = {
         "bevel": "Rounding of the pin edges.",
     },
     "pins postion": {
-        "X": "Sideways position of the pin and its hole. The hole on the other side is mirrored.",
+        "X": "Sideways position of the pin and its holes. The holes on the other side are mirrored.",
         "Y": "Front-to-back position of the pin and its holes.",
         "Z": "Height of the pin and its holes. Keep it at the split height (40) so the pin is shared evenly between the halves.",
     },
@@ -397,10 +397,10 @@ TOOLTIPS = {
     },
     # Shell bodies (hollow, lattice, and the GripV hollow top)
     "hollow  parameters": {
-        "shell thickness": "Wall thickness of the shell.",
+        "shell thickness": "Wall thickness of the shell. The lattice body does not use it.",
         "protect geometry": "Thickness of the solid bosses grown around every opening and screw. The openings are cut through them, so this sets how strong those walls are.",
         "band remesh width": "Width of the band the shell's distance field is computed in. Technical; leave it.",
-        "voxel remesh size": "Detail of the shell. Linked to the global voxel resolution; change that instead.",
+        "voxel remesh size": "Voxel size of the shell. Linked to the global voxel resolution; change that instead.",
         "smooth sdf": "Not used.",
     },
     "top face parameters": {
