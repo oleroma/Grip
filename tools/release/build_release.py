@@ -273,6 +273,31 @@ def native(root, rel):
     return os.path.join(root, *rel.split("/"))
 
 
+def tracked(repo, root_rel):
+    """The files git tracks under root_rel, relative to it; None without git.
+    On Windows and macOS the disk holds only one of two names that differ by
+    case, but git's list still has both."""
+    try:
+        out = subprocess.run(["git", "-C", repo, "ls-files", "-z", "--", root_rel],
+                             capture_output=True, check=True).stdout
+    except (OSError, subprocess.CalledProcessError):
+        return None
+    prefix = root_rel.strip("/") + "/"
+    paths = (p.decode("utf-8", "replace") for p in out.split(b"\0") if p)
+    return [p[len(prefix):] for p in paths if p.startswith(prefix)]
+
+
+def missing_files(tree, rels):
+    """[(rel, the spelling on disk or None)] for each rel that tree does not
+    hold with exactly that spelling. A case-blind disk (Windows, macOS) finds
+    such a file, but a clone on Linux would not."""
+    by_lower = {}
+    for rel in tree:
+        by_lower.setdefault(rel.lower(), rel)
+    have = set(tree)
+    return [(rel, by_lower.get(rel.lower())) for rel in rels if rel not in have]
+
+
 def name_problems(rel_paths):
     """(errors, warnings) about file and folder names that break somewhere."""
     errors, warnings = [], []
@@ -411,9 +436,13 @@ def check(repo, sets, verbose=False):
     for shape in sets["shapes"]:
         for rel in shape_files(sets, shape, ALL) + shape.get("projects", []):
             needed.setdefault(shape["folder"] + "/" + rel, []).append(shape["title"])
-    missing = [rel for rel in needed if not os.path.isfile(native(root, rel))]
-    for rel in sorted(missing):
-        error("missing %s (%s)" % (rel, ", ".join(dict.fromkeys(needed[rel]))))
+    missing = missing_files(tree, sorted(needed))
+    for rel, other in missing:
+        shapes = ", ".join(dict.fromkeys(needed[rel]))
+        if other:
+            error("case differs: the print sets name %s, the file is %s (%s)" % (rel, other, shapes))
+        else:
+            error("missing %s (%s)" % (rel, shapes))
     if not missing:
         info("%d shapes need %d files at all tolerances: all found." % (len(sets["shapes"]), len(needed)))
     for path in [sets["license"]] + [g["path"] for g in sets.get("guides", []) if "path" in g]:
@@ -421,7 +450,7 @@ def check(repo, sets, verbose=False):
             (error if path == sets["license"] else warn)("missing %s (linked from every print list)" % path)
 
     section("File and folder names")
-    name_errors, name_warnings = name_problems(tree)
+    name_errors, name_warnings = name_problems(sorted(set(tree) | set(tracked(repo, sets["root"]) or [])))
     for text in name_errors:
         error(text)
     for text in name_warnings:
@@ -672,14 +701,15 @@ def update_sums(out_dir):
 def build(repo, sets, shapes, mode, out_dir, tag=None, make_zip=True, allow_pointers=False, log=print):
     """Build a folder (and zip) per shape. Returns the exit code."""
     root = os.path.join(repo, sets["root"])
+    tree = scan(root) if os.path.isdir(root) else []
     plans, missing, pointers = [], set(), set()
     for shape in shapes:
         files = shape_files(sets, shape, mode)
-        for rel in files:
-            path = shape["folder"] + "/" + rel
-            if not os.path.isfile(native(root, path)):
-                missing.add(path)
-            elif not allow_pointers and is_pointer(native(root, path)):
+        paths = [shape["folder"] + "/" + rel for rel in files]
+        lost = set(rel for rel, _ in missing_files(tree, paths))
+        missing |= lost
+        for path in paths:
+            if path not in lost and not allow_pointers and is_pointer(native(root, path)):
                 pointers.add(path)
         plans.append((shape, files))
     license_path = os.path.join(repo, *sets["license"].split("/"))

@@ -59,8 +59,8 @@ The exit code is 0 when all is well and 1 when a file is missing, a name is wron
 
 | Section | What it looks for | Result |
 | --- | --- | --- |
-| Print sets | every file a print set names, at every tolerance, and the OrcaSlicer projects; also `LICENSE` and the guides the print lists link to | a missing part, project or license is an **error**; a missing guide is a warning |
-| File and folder names | spaces, characters Windows does not allow, and names that differ only by case (they collide on Windows and macOS) in all of `orca_slicer/` | **errors**. Other unusual characters, such as `%` or `( )`, are warnings: they work on disk but are awkward in links and shells. |
+| Print sets | every file a print set names, at every tolerance, and the OrcaSlicer projects; also `LICENSE` and the guides the print lists link to | a missing part, project or license is an **error**, and so is a file whose name differs from the print set only by case (Windows and macOS find it, a Linux clone does not); a missing guide is a warning |
+| File and folder names | spaces, characters Windows does not allow, and names that differ only by case (they collide on Windows and macOS) in all of `orca_slicer/`. It reads git's file list as well as the disk, because on Windows and macOS the disk only holds one of two such names. | **errors**. Other unusual characters, such as `%` or `( )`, are warnings: they work on disk but are awkward in links and shells. |
 | Tolerance variants that are the same file | files in sibling tolerance folders (`tight`/`default`/`loose`, `cap_*`, `press_*`, `pres_*`) with the same content | warning, summarised per folder pattern, for example `GripX/parts/buttons/*/<cap tolerance>/: cap_tight = cap_default = cap_loose` |
 | Choices that are the same file | the alternatives of one item (case tops, knob or plate, sticks) that are identical, so one was probably exported with the wrong setting | warning |
 | Not exported yet | the parts the print sets mark as `missing` | warning |

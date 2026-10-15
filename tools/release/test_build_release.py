@@ -10,6 +10,7 @@ import io
 import json
 import os
 import shutil
+import subprocess
 import tempfile
 import unittest
 import zipfile
@@ -222,6 +223,30 @@ class CheckTests(Fixture):
         self.assertEqual(code, br.EXIT_ERROR)
         self.assertIn("names differ only by case: V/Parts, V/parts", text)
 
+    def test_wrong_case_in_the_print_sets_fails(self):
+        # A case-blind disk (Windows, macOS) would find the file, a Linux clone would not.
+        os.remove(br.native(self.root, "V/parts/buttons/default/button.stl"))
+        self.put("V/parts/buttons/default/Button.stl")
+        code, text = self.check()
+        self.assertEqual(code, br.EXIT_ERROR)
+        self.assertIn("case differs: the print sets name V/parts/buttons/default/button.stl, "
+                      "the file is V/parts/buttons/default/Button.stl", text)
+
+    def test_names_that_differ_only_by_case_in_git_fail(self):
+        # The disk holds one spelling, git's file list both: what a Windows clone sees.
+        if not shutil.which("git"):
+            self.skipTest("git not found")
+        git = ["git", "-C", self.tmp, "-c", "core.autocrlf=false"]
+        subprocess.run(git + ["init", "-q"], check=True)
+        subprocess.run(git + ["add", "orca_slicer"], check=True)
+        blob = subprocess.run(git + ["hash-object", "-w", "LICENSE"], check=True,
+                              capture_output=True, text=True).stdout.strip()
+        subprocess.run(git + ["update-index", "--add", "--cacheinfo",
+                              "100644,%s,orca_slicer/V/Parts/pin.stl" % blob], check=True)
+        code, text = self.check()
+        self.assertEqual(code, br.EXIT_ERROR)
+        self.assertIn("names differ only by case: V/Parts, V/parts", text)
+
     def test_unusual_characters_only_warn(self):
         self.put("V/parts/sticks/stick_(60%).stl")
         code, text = self.check()
@@ -364,6 +389,13 @@ class BuildTests(Fixture):
 
     def test_build_refuses_missing_files(self):
         os.remove(br.native(self.root, "V/case_hollow/case_top_plate.stl"))
+        code, out = self.build("--shape", "V-hollow")
+        self.assertEqual(code, br.EXIT_ERROR)
+        self.assertIn("missing V/case_hollow/case_top_plate.stl", out)
+
+    def test_build_refuses_a_file_spelt_with_another_case(self):
+        os.remove(br.native(self.root, "V/case_hollow/case_top_plate.stl"))
+        self.put("V/case_hollow/Case_top_plate.stl")
         code, out = self.build("--shape", "V-hollow")
         self.assertEqual(code, br.EXIT_ERROR)
         self.assertIn("missing V/case_hollow/case_top_plate.stl", out)
