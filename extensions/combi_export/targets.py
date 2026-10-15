@@ -4,6 +4,8 @@ import os
 
 import bpy
 
+from .common import COUNT_LIMIT
+from .nodes import cached_menu_items
 from .naming import build_export_dir_parts, clash_key, format_export_filename
 from .engine import generate_named_combinations, get_flat_overrides, get_override_signature, resolve_overrides
 
@@ -162,16 +164,39 @@ def group_by_signature(export_objects):
         batches.setdefault(get_override_signature(ovrs), (ovrs, []))[1].append((c, obj_prop, bl_obj))
     return batches
 
+def iter_export_files(scene, preset, global_ovrs=None):
+    """(folder names below the root, filename) of every file the preset writes, duplicates included."""
+    for ovrs, items in group_by_signature(iter_export_objects(scene, preset, global_ovrs)).values():
+        for _combo, tags_by_level, paths_by_level in generate_named_combinations(ovrs):
+            for c, obj_prop, bl_obj in items:
+                yield export_file_parts(preset, c, obj_prop, bl_obj, tags_by_level, paths_by_level)
+
 def find_export_clashes(scene, preset, root):
     """{clash key: path} of the output paths that more than one file of the preset would be written to. No limit:
     every collision overwrites a file."""
     seen, clashes = set(), {}
-    for ovrs, items in group_by_signature(iter_export_objects(scene, preset)).values():
-        for _combo, tags_by_level, paths_by_level in generate_named_combinations(ovrs):
-            for c, obj_prop, bl_obj in items:
-                dir_parts, filename = export_file_parts(preset, c, obj_prop, bl_obj, tags_by_level, paths_by_level)
-                path = os.path.join(root, *dir_parts, filename)
-                key = clash_key(path)
-                if key in seen: clashes.setdefault(key, path)
-                else: seen.add(key)
+    for dir_parts, filename in iter_export_files(scene, preset):
+        path = os.path.join(root, *dir_parts, filename)
+        key = clash_key(path)
+        if key in seen: clashes.setdefault(key, path)
+        else: seen.add(key)
     return clashes
+
+def export_manifest(scene, limit=COUNT_LIMIT):
+    """The files each preset of `scene` writes, for the JSON saved with the file: {"complete", "presets": [{"name",
+    "files"}]}. Files are paths below the root folder with `/` between names, sorted, each once. After `limit` files in
+    all the rest are left out and `complete` is false. Call sync_collection_objects() first."""
+    global_ovrs = get_flat_overrides(scene.batch_stl_global_nodegroups, "GLOBAL")
+    presets, total, complete = [], 0, True
+    with cached_menu_items():
+        for preset in scene.batch_stl_presets:
+            files = set()
+            for dir_parts, filename in iter_export_files(scene, preset, global_ovrs):
+                if total == limit:
+                    complete = False
+                    break
+                total += 1
+                files.add("/".join([*dir_parts, filename]))
+            presets.append({"name": preset.name, "files": sorted(files)})
+            if not complete: break
+    return {"complete": complete, "presets": presets}

@@ -26,7 +26,7 @@ ICONS = {
     'TIME': 'TIME', 'MODIFIER': 'MODIFIER', 'TREE': 'OUTLINER_OB_EMPTY', 'ERROR': 'ERROR',
     'RIGHT': 'TRIA_RIGHT', 'BLANK': 'BLANK1', 'FILE': 'FILE_3D',
     'EXPAND_ALL': 'FULLSCREEN_ENTER', 'COLLAPSE_ALL': 'FULLSCREEN_EXIT', 'EXPAND_LAST': 'TRIA_DOWN_BAR',
-    'MERGE': 'AUTOMERGE_ON', 'PLAIN': 'DOT', 'STANDBY': 'FF'
+    'MERGE': 'AUTOMERGE_ON', 'PLAIN': 'DOT', 'STANDBY': 'FF', 'SAVE_JSON': 'FILE_TICK'
 }
 
 def draw_tree_dict(layout, tree_node, current_path="", toggled_list=None, duplicates=None, actual_path=""):
@@ -488,7 +488,8 @@ class VIEW3D_PT_batch_export_stl_main(bpy.types.Panel):
 
         any_exporting = is_any_exporting()
 
-        # The root folder, with the global overrides' buttons before it and the JSON import / export buttons next to it.
+        # The root folder, with the global overrides' buttons before it and the JSON import / export buttons and the
+        # Save JSON with File toggle next to it.
         # The label is a row of fixed width whose text sits at its right end, against the field (a field's own label is
         # drawn inside it, from the left).
         dir_row = layout.row()
@@ -502,6 +503,7 @@ class VIEW3D_PT_batch_export_stl_main(bpy.types.Panel):
         json_row = dir_row.row(align=True)
         json_row.operator("batch_stl.import_presets_json", text="", icon=ICONS['IMPORT'])
         json_row.operator("batch_stl.export_presets_json", text="", icon=ICONS['EXPORT'])
+        json_row.prop(scene, "batch_stl_save_json", text="", icon=ICONS['SAVE_JSON'])
 
         layout.separator()
 

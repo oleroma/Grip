@@ -1,5 +1,8 @@
 """The add-on's scene data beyond the property groups: active item lookups, export jobs and their logs, JSON and
-clipboard copies, and versioning of stored data (DATA_VERSION, migrations, append and save handlers)."""
+clipboard copies, the JSON saved with the file, and versioning of stored data (DATA_VERSION, migrations, append and
+save handlers)."""
+import json
+import os
 import uuid
 import traceback
 
@@ -7,8 +10,8 @@ import bpy
 from bpy.app.handlers import persistent
 
 from .common import raw_edits
-from .naming import legacy_naming_template
-from .targets import live_collection_names, restamp_object_uids, untick_unevaluated
+from .naming import legacy_naming_template, sanitize_whole_name
+from .targets import export_manifest, live_collection_names, restamp_object_uids, sync_collection_objects, untick_unevaluated
 
 # --- Active items and export jobs -------------------------------------------------------------------------------------
 
@@ -216,6 +219,40 @@ def paste_preset_from_dict(new_p, data, view_layer=None):
     if version < 4 and view_layer is not None: untick_unevaluated(new_p, live_collection_names(view_layer))
 
 
+# --- The JSON saved with the file -------------------------------------------------------------------------------------
+# With `Scene.batch_stl_save_json` on (the default), saving the .blend file also writes each scene's setup next to it,
+# so the presets can be read without Blender (a release script, a diff in git). It is an Export JSON file (Import JSON
+# reads it) plus `exports`, the files every preset writes, as the add-on names them.
+SAVED_JSON_SUFFIX = "_preset.json"
+
+def saves_json(scene):
+    """Whether saving the file writes this scene's JSON: the tick is on and there is a setup to save."""
+    return scene.batch_stl_save_json and bool(scene.batch_stl_presets or scene.batch_stl_global_nodegroups)
+
+def saved_json_path(scene, blend_path):
+    """Next to the .blend file, named after the scene: `GripV_preset.json` for the scene GripV."""
+    return os.path.join(os.path.dirname(os.path.abspath(blend_path)), sanitize_whole_name(scene.name) + SAVED_JSON_SUFFIX)
+
+def saved_setup_dict(scene):
+    data = copy_setup_to_dict(scene)
+    data["exports"] = export_manifest(scene)
+    return data
+
+def write_saved_json(scene, blend_path):
+    """Write the JSON of `scene` next to `blend_path`. Returns its path, or None when the file already held the same
+    text (it is then left untouched)."""
+    path = saved_json_path(scene, blend_path)
+    text = json.dumps(saved_setup_dict(scene), indent=4) + "\n"
+    try:
+        with open(path, encoding="utf-8") as f:
+            if f.read() == text: return None
+    except (OSError, ValueError): pass
+    temp = path + ".tmp"
+    with open(temp, "w", encoding="utf-8", newline="\n") as f: f.write(text)
+    os.replace(temp, path)
+    return path
+
+
 # --- Data versioning --------------------------------------------------------------------------------------------------
 
 VALUE_PROPS = ('value_string', 'value_menu')
@@ -336,6 +373,30 @@ def batch_stl_import_handler(import_context, *args):
 def batch_stl_save_handler(*args):
     """Stamp the scenes created in this session before they are written, so the next load does not migrate their
     current data again. The UI timer only stamps the scene in view, and timers never run in background Blender: a
-    scene filled by a script, or never viewed, would lose its naming on reload. Linked scenes are not written."""
+    scene filled by a script, or never viewed, would lose its naming on reload. Linked scenes are not written.
+    Scenes that save their JSON get their object entries synced, so the file holds the entries the JSON lists."""
     for scene in bpy.data.scenes:
-        if not scene.library: stamp_data_version(scene)
+        if scene.library: continue
+        stamp_data_version(scene)
+        if saves_json(scene):
+            try:
+                for preset in scene.batch_stl_presets:
+                    for c in preset.collections: sync_collection_objects(c)
+            except Exception: traceback.print_exc()
+
+@persistent
+def batch_stl_saved_handler(filepath="", *args):
+    """After the file is saved, write the JSON of every scene that saves one next to it (write_saved_json). A copy
+    (the worker's snapshot, File > Save Copy) leaves `bpy.data.filepath` at the open file and writes none. Never fails
+    the save: a JSON that cannot be written is reported in the console."""
+    blend = bpy.data.filepath
+    if not filepath or not blend or os.path.normcase(os.path.abspath(filepath)) != os.path.normcase(os.path.abspath(blend)):
+        return
+    for scene in bpy.data.scenes:
+        if scene.library or not saves_json(scene): continue
+        try:
+            path = write_saved_json(scene, blend)
+            if path: print(f"Combi Export: saved the presets of scene '{scene.name}' to {path}")
+        except Exception as e:
+            print(f"Combi Export: could not save the presets of scene '{scene.name}' to JSON: {e}")
+

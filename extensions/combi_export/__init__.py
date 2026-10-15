@@ -23,7 +23,7 @@ from bpy.app.handlers import persistent
 
 from . import export_operator, operators, props, standby, ui
 from .common import OVERRIDES_OPEN_PROPS, mark_dirty
-from .data import batch_stl_import_handler, batch_stl_save_handler, prepare_scenes
+from .data import SAVED_JSON_SUFFIX, batch_stl_import_handler, batch_stl_save_handler, batch_stl_saved_handler, prepare_scenes
 from .export_operator import remove_stale_temp_dirs
 from .props import BatchSTLExportPreset, BatchSTLJob, BatchSTLNodeGroup
 from .ui import ICONS
@@ -46,7 +46,8 @@ classes = props.classes + operators.classes + export_operator.classes + ui.class
 UI_OPEN_PROPS = tuple(OVERRIDES_OPEN_PROPS.values())
 WM_PROPS = ("batch_stl_jobs", "batch_stl_verbose_console", "batch_stl_ui_tips", "batch_stl_collapsed_dirs", "batch_stl_info_tab",
             "batch_stl_info_global") + UI_OPEN_PROPS
-SCENE_PROPS = ("batch_stl_data_version", "batch_stl_root_dir", "batch_stl_presets", "batch_stl_preset_index", "batch_stl_global_nodegroups")
+SCENE_PROPS = ("batch_stl_data_version", "batch_stl_root_dir", "batch_stl_presets", "batch_stl_preset_index", "batch_stl_global_nodegroups",
+               "batch_stl_save_json")
 
 def register():
     for cls in classes: bpy.utils.register_class(cls)
@@ -72,11 +73,15 @@ def register():
     Scene.batch_stl_global_nodegroups = bpy.props.CollectionProperty(type=BatchSTLNodeGroup)
     Scene.batch_stl_preset_index = bpy.props.IntProperty(name="Active Preset", default=0, update=mark_dirty)
     Scene.batch_stl_data_version = bpy.props.IntProperty(default=0, options={'HIDDEN'})
+    Scene.batch_stl_save_json = bpy.props.BoolProperty(name="Save JSON with File", default=True, description=(
+        f"When the .blend file is saved, also write this scene's presets, global overrides and root folder, with the "
+        f"files each preset exports, to <scene name>{SAVED_JSON_SUFFIX} next to it. Import JSON reads it like an exported file"))
 
     reset_batch_stl_state(None)
     if reset_batch_stl_state not in bpy.app.handlers.load_post: bpy.app.handlers.load_post.append(reset_batch_stl_state)
     if batch_stl_import_handler not in bpy.app.handlers.blend_import_post: bpy.app.handlers.blend_import_post.append(batch_stl_import_handler)
     if batch_stl_save_handler not in bpy.app.handlers.save_pre: bpy.app.handlers.save_pre.append(batch_stl_save_handler)
+    if batch_stl_saved_handler not in bpy.app.handlers.save_post: bpy.app.handlers.save_post.append(batch_stl_saved_handler)
 
     if "--batch-stl-headless" not in sys.argv:
         if batch_stl_depsgraph_handler not in bpy.app.handlers.depsgraph_update_post: bpy.app.handlers.depsgraph_update_post.append(batch_stl_depsgraph_handler)
@@ -92,6 +97,7 @@ def unregister():
     if reset_batch_stl_state in bpy.app.handlers.load_post: bpy.app.handlers.load_post.remove(reset_batch_stl_state)
     if batch_stl_import_handler in bpy.app.handlers.blend_import_post: bpy.app.handlers.blend_import_post.remove(batch_stl_import_handler)
     if batch_stl_save_handler in bpy.app.handlers.save_pre: bpy.app.handlers.save_pre.remove(batch_stl_save_handler)
+    if batch_stl_saved_handler in bpy.app.handlers.save_post: bpy.app.handlers.save_post.remove(batch_stl_saved_handler)
     if batch_stl_depsgraph_handler in bpy.app.handlers.depsgraph_update_post: bpy.app.handlers.depsgraph_update_post.remove(batch_stl_depsgraph_handler)
     if batch_stl_undo_handler in bpy.app.handlers.undo_post: bpy.app.handlers.undo_post.remove(batch_stl_undo_handler)
     if batch_stl_undo_handler in bpy.app.handlers.redo_post: bpy.app.handlers.redo_post.remove(batch_stl_undo_handler)
