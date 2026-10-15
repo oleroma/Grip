@@ -20,7 +20,6 @@ def overrides_open_prop(is_collection=False, is_preset=False, is_global=False):
 
 _ui_cache = {
     "is_dirty": True,
-    "live": set(),
     "stats": {"global": {"presets": 0, "cols": 0, "objs": 0, "exp": 0}, "presets": {}, "cols": {}},
     "tree": ({}, set()),
     "preset_metrics": {},

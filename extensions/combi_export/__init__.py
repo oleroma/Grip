@@ -9,7 +9,7 @@ import sys
 
 # Modules in dependency order: each one imports only modules listed before it
 _MODULES = ("common", "nodes", "naming", "fields", "engine", "scope", "targets", "stl", "data", "validation", "headless",
-            "ui_cache", "props", "operators", "export_operator", "ui")
+            "standby", "ui_cache", "props", "operators", "export_operator", "ui")
 
 if "bpy" in locals():
     # Reload Scripts runs this file again but keeps the modules it imported: reload them too, dependencies first, so
@@ -21,7 +21,7 @@ if "bpy" in locals():
 import bpy
 from bpy.app.handlers import persistent
 
-from . import export_operator, operators, props, ui
+from . import export_operator, operators, props, standby, ui
 from .common import OVERRIDES_OPEN_PROPS, mark_dirty
 from .data import batch_stl_import_handler, batch_stl_save_handler, prepare_scenes
 from .export_operator import remove_stale_temp_dirs
@@ -40,7 +40,7 @@ def reset_batch_stl_state(*args):
     if "--batch-stl-headless" not in sys.argv and not bpy.app.timers.is_registered(rebuild_ui_cache_if_dirty):
         bpy.app.timers.register(rebuild_ui_cache_if_dirty)
 
-classes = props.classes + operators.classes + export_operator.classes + ui.classes
+classes = props.classes + operators.classes + export_operator.classes + ui.classes + standby.classes
 
 # Open state of the override tables (Global, Preset, Collection, Object)
 UI_OPEN_PROPS = tuple(OVERRIDES_OPEN_PROPS.values())
@@ -83,8 +83,12 @@ def register():
         if batch_stl_undo_handler not in bpy.app.handlers.undo_post: bpy.app.handlers.undo_post.append(batch_stl_undo_handler)
         if batch_stl_undo_handler not in bpy.app.handlers.redo_post: bpy.app.handlers.redo_post.append(batch_stl_undo_handler)
         if not bpy.app.timers.is_registered(rebuild_ui_cache_if_dirty): bpy.app.timers.register(rebuild_ui_cache_if_dirty)
+        standby.schedule_standby()
 
 def unregister():
+    # A standby worker runs the code it booted with: Reload Scripts or an update must not hand it the next export
+    standby.unschedule_standby()
+    standby.stop_standby()
     if reset_batch_stl_state in bpy.app.handlers.load_post: bpy.app.handlers.load_post.remove(reset_batch_stl_state)
     if batch_stl_import_handler in bpy.app.handlers.blend_import_post: bpy.app.handlers.blend_import_post.remove(batch_stl_import_handler)
     if batch_stl_save_handler in bpy.app.handlers.save_pre: bpy.app.handlers.save_pre.remove(batch_stl_save_handler)

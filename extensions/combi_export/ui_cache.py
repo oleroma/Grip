@@ -12,8 +12,7 @@ from .common import COUNT_LIMIT, bump_revision, mark_dirty, redraw_sidebars, _ui
 from .nodes import cached_menu_items, get_menu_switch_items
 from .naming import clash_key
 from .engine import count_override_combinations, generate_named_combinations, get_flat_overrides, get_override_signature
-from .targets import (SUPPORTED_OBJECT_TYPES, export_file_parts, iter_export_objects, live_collection_names,
-    sync_collection_objects)
+from .targets import SUPPORTED_OBJECT_TYPES, export_file_parts, iter_export_objects, sync_collection_objects
 from .data import ensure_preset_uids, get_active_preset, iter_scene_nodegroup_lists, stamp_data_version
 
 def check_ng_for_overrides(nodegroups):
@@ -82,9 +81,6 @@ def _rebuild_ui_cache():
         preset_metrics[p_idx] = {"has_ovr": ho, "has_perm": hp}
     _ui_cache["preset_metrics"] = preset_metrics
 
-    # What the view layer evaluates no longer decides what is exported; it marks the collections the export switches on
-    _ui_cache["live"] = live_collection_names(context.view_layer)
-
     # "capped": a count stopped at COUNT_LIMIT, so the number is a lower bound
     g_stats = {"presets": len(scene.batch_stl_presets), "cols": 0, "objs": 0, "exp": 0, "capped": False}
     preset_stats, col_stats = {}, {}
@@ -150,17 +146,14 @@ def batch_stl_depsgraph_handler(scene, depsgraph):
         mark_dirty()
         return
 
-    # Renamed objects; excluded, re-included or disabled collections (the note icons of the collection list). Only a
-    # scene update (exclusion, visibility) or an object update that re-evaluates nothing (a rename) can change them:
+    # Renamed objects. Only a scene update or an object update that re-evaluates nothing (a rename) can change them:
     # every step of a transform drag, and every geometry or material edit, only re-evaluates objects, so they skip the
     # walk over the mapped objects.
     if not depsgraph.id_type_updated('SCENE') and not (depsgraph.id_type_updated('OBJECT') and any(
             isinstance(u.id, bpy.types.Object) and not (u.is_updated_transform or u.is_updated_geometry or u.is_updated_shading)
             for u in depsgraph.updates)):
         return
-    if (mapped_objects_state(scene) != _ui_cache.get("objects_state")
-            or live_collection_names(bpy.context.view_layer) != _ui_cache.get("live")):
-        mark_dirty()
+    if mapped_objects_state(scene) != _ui_cache.get("objects_state"): mark_dirty()
 
 # --- Directory tree preview -------------------------------------------------------------------------------------------
 def build_tree_dict(context, is_global=False):

@@ -4,7 +4,7 @@ import os
 import bpy
 
 from .common import _ui_cache, overrides_open_prop
-from .nodes import SUPPORTED_OVERRIDE_TYPES, cached_menu_items
+from .nodes import SUPPORTED_OVERRIDE_TYPES, cached_menu_items, clean_node_name, has_free_target
 from .naming import SCOPE_KINDS, clash_key, value_field_anchors, value_name_parts
 from .fields import value_specs
 from .engine import get_sorted_values
@@ -14,6 +14,7 @@ from .validation import is_override_group_valid, is_override_input_valid, is_ove
 from .ui_cache import is_dir_collapsed, load_toggled_dirs
 from .props import upstream_scope
 from .operators import _clipboard
+from .standby import get_preferences
 
 ICONS = {
     'PRESET': 'PRESET', 'COLLECTION': 'OUTLINER_COLLECTION', 'OBJECT': 'OBJECT_DATA',
@@ -25,7 +26,7 @@ ICONS = {
     'TIME': 'TIME', 'MODIFIER': 'MODIFIER', 'TREE': 'OUTLINER_OB_EMPTY', 'ERROR': 'ERROR',
     'RIGHT': 'TRIA_RIGHT', 'BLANK': 'BLANK1', 'FILE': 'FILE_3D',
     'EXPAND_ALL': 'FULLSCREEN_ENTER', 'COLLAPSE_ALL': 'FULLSCREEN_EXIT', 'EXPAND_LAST': 'TRIA_DOWN_BAR',
-    'MERGE': 'AUTOMERGE_ON', 'PLAIN': 'DOT'
+    'MERGE': 'AUTOMERGE_ON', 'PLAIN': 'DOT', 'STANDBY': 'FF'
 }
 
 def draw_tree_dict(layout, tree_node, current_path="", toggled_list=None, duplicates=None, actual_path=""):
@@ -196,13 +197,11 @@ class BATCH_STL_UL_presets(bpy.types.UIList):
             row.prop(job, "export_progress", text=job.export_status, slider=True)
 
 def collection_note(scene, item):
-    """Tooltip of the note icon on a ticked collection the view layer does not evaluate (it is exported all the same),
-    or None."""
+    """Tooltip of the note icon on a ticked collection that is not in the scene (it is exported all the same), or
+    None."""
     col = bpy.data.collections.get(item.collection_name) if item.export else None
-    if col is None or col.name in _ui_cache.get("live", ()): return None
-    if col not in scene.collection.children_recursive:
-        return "Not in this scene: exported all the same, the export links it into its own copy of the file"
-    return "Excluded or disabled in this view layer: exported all the same (the ticks decide what is exported)"
+    if col is None or col in scene.collection.children_recursive: return None
+    return "Not in this scene: exported all the same, the export links it into its own copy of the file"
 
 class BATCH_STL_UL_collections(bpy.types.UIList):
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
@@ -421,7 +420,10 @@ def _draw_overrides_table(layout, wm, nodegroups, is_collection, title_text, is_
             ng_row = ng_layout.row(align=True)
 
             if ng.group_name:
-                draw_op(ng_row, 'ADD_NODE', ICONS['ADD'], ng_idx=ng_idx)
+                # Greyed out once every target of the group has an entry
+                add_row = ng_row.row(align=True)
+                add_row.enabled = has_free_target(ng_ptr, {clean_node_name(n.name) for n in ng.nodes})
+                draw_op(add_row, 'ADD_NODE', ICONS['ADD'], ng_idx=ng_idx)
             ng_sub = ng_row.row(align=True)
             ng_sub.alert = not is_override_group_valid(ng)
             ng_sub.prop(ng, "group_name", text="")
@@ -665,11 +667,14 @@ class VIEW3D_PT_batch_export_stl_presets(bpy.types.Panel):
 
     def draw_header_preset(self, context):
         active_preset = get_active_preset(context.scene)
+        row = self.layout.row(align=True)
         if active_preset and active_preset.last_export_time > 0:
-            row = self.layout.row(align=True)
-            row.enabled = not is_any_exporting()
-            row.label(text=f"{active_preset.last_export_time:.2f}s", icon=ICONS['TIME'])
-            row.separator()
+            time_row = row.row(align=True)
+            time_row.enabled = not is_any_exporting()
+            time_row.label(text=f"{active_preset.last_export_time:.2f}s", icon=ICONS['TIME'])
+        prefs = get_preferences()
+        if prefs: row.prop(prefs, "keep_worker_ready", text="", icon=ICONS['STANDBY'])
+        row.separator()
 
     def draw(self, context):
         layout = self.layout

@@ -6,6 +6,14 @@
 Blender runs this file as a plain script, outside the package (so it cannot use relative imports), and --factory-startup
 leaves the add-on disabled. The script therefore imports the package from its own folder, registers it and runs the job
 (headless.run_headless_export).
+
+The standby worker (standby.py) starts with no file and `--standby` in place of the job file:
+
+    blender --factory-startup --python-exit-code 1 -b -P headless_main.py -- --batch-stl-headless --standby
+
+It prints BATCH_STL_READY once the package is registered, then reads one line from its input: a JSON list
+[<copy.blend>, <job.json>]. It opens the copy and runs the job like a worker started on it. An empty input (Blender that
+started it is gone) ends it.
 """
 import importlib
 import importlib.util
@@ -28,4 +36,12 @@ if __name__ == "__main__":
     package = load_package()
     if not hasattr(bpy.types.Scene, "batch_stl_root_dir"): package.register()
     headless = importlib.import_module(f"{package.__name__}.headless")
-    headless.run_headless_export(sys.argv[sys.argv.index("--batch-stl-headless") + 1])
+    job_path = sys.argv[sys.argv.index("--batch-stl-headless") + 1]
+    if job_path == "--standby":
+        import json
+        print(importlib.import_module(f"{package.__name__}.standby").READY_LINE, flush=True)
+        line = sys.stdin.readline()
+        if not line.strip(): sys.exit(0)
+        blend_path, job_path = json.loads(line)
+        bpy.ops.wm.open_mainfile(filepath=blend_path)
+    headless.run_headless_export(job_path)

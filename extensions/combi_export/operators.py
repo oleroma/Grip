@@ -308,7 +308,9 @@ class BATCH_STL_OT_table_action(bpy.types.Operator):
         nodes = ng_list[self.ng_idx].nodes
         if self.action == 'ADD_NODE':
             ng_ptr = bpy.data.node_groups.get(ng_list[self.ng_idx].group_name)
-            valid_targets = get_target_node_names(ng_ptr, {clean_node_name(n.name) for n in nodes})
+            # Only targets with sockets left to override: the <Modifier Interface> fallback would add one more entry
+            # to a group that has none left
+            valid_targets = get_target_node_names(ng_ptr, {clean_node_name(n.name) for n in nodes}, fallback=False)
             if valid_targets:
                 nodes.add().name = valid_targets[0]
         elif self.action == 'MOVE_NODE_UP' and 0 < self.n_idx < len(nodes):

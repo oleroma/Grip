@@ -5,9 +5,7 @@ import os
 import time
 import threading
 import queue
-import subprocess
 import tempfile
-import sys
 import shutil
 import traceback
 
@@ -21,6 +19,7 @@ from .stl import collect_instance_arrays, export_object_stl
 from .data import ensure_preset_uids, find_job, find_preset, get_job, log_to_console
 from .validation import is_preset_setup_valid
 from .headless import WORKER_SCRIPT, write_job_file
+from .standby import ensure_standby, start_process, take_standby, worker_args
 
 # Temp folders of a crashed export are removed at startup once they are this old; a younger one may belong to an
 # export running in another Blender instance.
@@ -184,30 +183,28 @@ class EXPORT_OT_batch_stl_multi(bpy.types.Operator):
         # context.view_layer, as for `live` in _start: the worker skips the objects written directly by the same test
         write_job_file(self.job_json, scene, context.view_layer, preset, bpy.path.abspath(scene.batch_stl_root_dir), skip_direct=True)
 
-        # The worker starts with WORKER_SCRIPT, which loads this package from its folder and runs the job.
-        # --factory-startup disables Python auto-run, so mirror the user's setting to keep scripted drivers working.
-        # --python-exit-code: a Python error in the worker exits with code 1 instead of 0.
-        worker_args = [bpy.app.binary_path, "--factory-startup", "--python-exit-code", "1"]
-        if context.preferences.filepaths.use_scripts_auto_execute: worker_args.append("--enable-autoexec")
-        worker_args += ["-b", self.temp_blend, "-P", WORKER_SCRIPT, "--", "--batch-stl-headless", self.job_json]
-
-        try:
-            sub_env = dict(os.environ, PYTHONUNBUFFERED="1")
-            # blender.exe is a console program: without this flag Windows opens a console window for the worker.
-            flags = subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0
-            self.process = subprocess.Popen(worker_args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding="utf-8", errors="replace", env=sub_env, creationflags=flags)
-        except Exception as e:
-            self.report({'ERROR'}, f"Failed to spawn headless Blender: {e}")
-            self.cleanup(context)
-            return False
-
-        self._log(job, f"=== INITIATING HEADLESS EXPORT '{preset.name}' [{time.perf_counter() - t_spawn_start:.4f}s Boot] ===")
-
-        self.q = queue.Queue()
-        def enqueue_output(out, q):
-            for line in iter(out.readline, ''): q.put(line)
-            out.close()
-        self.t = threading.Thread(target=enqueue_output, args=(self.process.stdout, self.q)); self.t.daemon = True; self.t.start()
+        # The standby worker (when the preference keeps one ready) opens the snapshot as soon as it gets the job, so
+        # Blender's boot is not part of the export. Otherwise a worker starts with WORKER_SCRIPT, which loads this package
+        # from its folder and runs the job.
+        autoexec = context.preferences.filepaths.use_scripts_auto_execute
+        standby = take_standby(autoexec)
+        if standby is not None and standby.send(self.temp_blend, self.job_json):
+            self.process, self.q, self.t = standby.process, standby.q, standby.t
+            self._log(job, f"=== INITIATING HEADLESS EXPORT '{preset.name}' [standby worker, {time.perf_counter() - t_spawn_start:.4f}s] ===")
+        else:
+            if standby is not None: standby.stop()
+            try:
+                self.process = start_process(worker_args(autoexec, "-b", self.temp_blend, "-P", WORKER_SCRIPT, "--", "--batch-stl-headless", self.job_json))
+            except Exception as e:
+                self.report({'ERROR'}, f"Failed to spawn headless Blender: {e}")
+                self.cleanup(context)
+                return False
+            self._log(job, f"=== INITIATING HEADLESS EXPORT '{preset.name}' [{time.perf_counter() - t_spawn_start:.4f}s Boot] ===")
+            self.q = queue.Queue()
+            def enqueue_output(out, q):
+                for line in iter(out.readline, ''): q.put(line)
+                out.close()
+            self.t = threading.Thread(target=enqueue_output, args=(self.process.stdout, self.q)); self.t.daemon = True; self.t.start()
         self.worker_done = False
         return True
 
@@ -339,6 +336,8 @@ class EXPORT_OT_batch_stl_multi(bpy.types.Operator):
             self.t.join(timeout=0.5)
         if hasattr(self, 'temp_dir') and os.path.exists(self.temp_dir):
             shutil.rmtree(self.temp_dir, ignore_errors=True)
+        # The next export's worker: started once this one is done, so it does not compete with it
+        ensure_standby()
 
 def remove_stale_temp_dirs():
     """Remove the temp folders of exports that crashed. A recent one may belong to an export running in another Blender

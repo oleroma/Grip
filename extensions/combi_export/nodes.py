@@ -174,20 +174,30 @@ def _supported_socket_names(group_ptr, node_name):
                         supported.append(inp.name)
     return supported
 
-def get_target_node_names(group_ptr, exclude=()):
+def get_target_node_names(group_ptr, exclude=(), fallback=True):
     """Node targets of a node group that have overridable sockets, as shown in the node field, skipping `exclude`
-    (clean names). '<Modifier Interface>' comes last, and is the fallback when nothing else is offered."""
-    targets = []
+    (clean names). '<Modifier Interface>' comes last, and with `fallback` it is offered when nothing else is, even
+    without overridable sockets."""
+    targets = list(_iter_targets(group_ptr, exclude))
+    if fallback and not targets and "<Modifier Interface>" not in exclude:
+        targets.append("<Modifier Interface>")
+    return targets
+
+def has_free_target(group_ptr, exclude):
+    """Whether a node group has a target with overridable sockets that is not in `exclude` (clean names): stops at the
+    first one."""
+    return next(_iter_targets(group_ptr, exclude), None) is not None
+
+def _iter_targets(group_ptr, exclude):
     if group_ptr:
         # Group Input has no input sockets. Group Output is a valid target (its unlinked inputs set the group's
         # outputs) but goes after the regular nodes, so it never becomes the default target of a new override.
         for n in sorted(group_ptr.nodes, key=lambda n: n.type == 'GROUP_OUTPUT'):
             if n.type != 'GROUP_INPUT' and clean_node_name(n.name) not in exclude:
                 if get_supported_inputs(group_ptr, n.name):
-                    targets.append(f"{n.name} [{n.node_tree.name if n.type == 'GROUP' and getattr(n, 'node_tree', None) else n.type}]")
-    if "<Modifier Interface>" not in exclude and (get_supported_inputs(group_ptr, "<Modifier Interface>") or not targets):
-        targets.append("<Modifier Interface>")
-    return targets
+                    yield f"{n.name} [{n.node_tree.name if n.type == 'GROUP' and getattr(n, 'node_tree', None) else n.type}]"
+    if "<Modifier Interface>" not in exclude and get_supported_inputs(group_ptr, "<Modifier Interface>"):
+        yield "<Modifier Interface>"
 
 def get_socket_default_value(group_ptr, node_name, input_name):
     if not group_ptr: return None
