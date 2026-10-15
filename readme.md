@@ -17,10 +17,12 @@
 
 | I want to... | Go to |
 | --- | --- |
-| print a controller | [Printing guide](docs/print-guide.md) and the files in [`orca_slicer/`](orca_slicer/) |
+| print a controller | [Printing guide](docs/print-guide.md) and the [print list](orca_slicer/README.md) for the files in [`orca_slicer/`](orca_slicer/) |
+| put it together | [Assembly guide](docs/assembly-guide.md) and [bill of materials](docs/bom.md) (drafts) |
 | change a part to fit my hand or my printer | [Customize and export](docs/blender/customize/README.md) |
 | work on the Blender node system | [Contributor guide](docs/blender/develop/README.md) |
 | report how my print fit | [Open a fit report](../../issues/new?template=fit-report.yml) |
+| help with the project | [Contributing](CONTRIBUTING.md) |
 
 Clone with Git LFS, not "Download ZIP" (see [below](#lfs-and-file-download)).
 
@@ -101,7 +103,7 @@ Everything is functional, assembles properly, and fits well.
 
 * **Solid Version:** 90% complete. Currently fine-tuning case shapes and button positions.
 * **Hollow Version:** 80% complete. Currently fine-tuning assembly tolerances.
-* **Blender Project:** 80% complete. The underlying logic is robust and functional. The UI is still a bit messy and may feel overwhelming due to the large number of parameters. Need to polish the layout and create simplified controls for frequently used parameters (e.g., tolerances and trigger positions).
+* **Blender Project:** 80% complete. The underlying logic is robust and functional. The UI is still a bit messy and may feel overwhelming due to the large number of parameters. Need to polish the layout and create simplified controls for frequently used parameters (e.g., tolerances and trigger positions). A first step is in: the new **Grip** tab in the 3D Viewport sidebar ([Grip Controls](extensions/grip_controls/README.md)) has the most used settings in one place.
 
 ---
 
@@ -110,7 +112,7 @@ Everything is functional, assembles properly, and fits well.
 
 ## **TO DO**
  
-1. Create documentation and a video guide on printing, cleaning, and assembly (a first [printing guide](docs/print-guide.md) is up).
+1. Create documentation and a video guide on printing, cleaning, and assembly (first drafts are up: [printing guide](docs/print-guide.md), [print list](orca_slicer/README.md), [assembly guide](docs/assembly-guide.md) and [bill of materials](docs/bom.md)).
 2. Create `.3mf` files for each version.
 3. Polish the `.blend` project UI.
 
@@ -126,7 +128,7 @@ See the [roadmap](ROADMAP.md) for what comes after the first release.
 
 ## **DEPENDENCIES**
 * [Git LFS](https://git-lfs.github.com)
-* Blender 5.2 or newer (`blender/Grip.blend` was saved in Blender 5.2, and the Combi Export and Blender tracking extensions in [`extensions/`](extensions/) require 5.2+)
+* Blender 5.2 or newer (`blender/Grip.blend` was saved in Blender 5.2, and the Combi Export, Blender tracking and Grip Controls extensions in [`extensions/`](extensions/) require 5.2+)
 
 ## **LFS AND FILE DOWNLOAD**
 
