@@ -89,7 +89,7 @@ def templates(item):
 def validate(sets):
     """Raise SetError listing every problem in the print sets."""
     problems = []
-    for key in ("root", "license", "tolerance_levels", "default_tolerance",
+    for key in ("root", "repo_url", "license", "tolerance_levels", "default_tolerance",
                 "tolerance_placeholders", "groups", "shapes"):
         if key not in sets:
             problems.append("missing top-level key %r" % key)
@@ -305,7 +305,8 @@ def tolerance_dir(sets):
 
 def identical_siblings(sets, digests):
     """Tolerance variants in sibling folders that hold the same file.
-    digests maps relative path -> sha256. Returns sorted (pattern, summary, n, total)."""
+    digests maps relative path -> sha256.
+    Returns sorted (folder pattern, which levels are equal, files, files in the pattern)."""
     tol_dir = tolerance_dir(sets)
     order = {l: i for i, l in enumerate(sets["tolerance_levels"])}
     labels = sets["tolerance_placeholders"]
@@ -322,9 +323,8 @@ def identical_siblings(sets, digests):
         if len(levels) < 2:
             continue
         axis = "<%s>" % _axis_label(prefix, labels)
-        pattern = "/".join(_wild(p, tol_dir) for p in head) + "/" + axis + "/" + \
-            "/".join(_wild(p, tol_dir) for p in tail[:-1])
-        pattern = pattern.rstrip("/") + "/"
+        pattern = "/".join([_wild(p, tol_dir) for p in head] + [axis] +
+                           [_wild(p, tol_dir) for p in tail[:-1]]) + "/"
         totals[pattern] = totals.get(pattern, 0) + 1
         same = {}
         for level, digest in levels.items():
@@ -334,7 +334,7 @@ def identical_siblings(sets, digests):
             continue
         name = (prefix + "_") if prefix else ""
         summary = "; ".join(" = ".join(name + l for l in c) for c in sorted(classes, key=lambda c: order[c[0]]))
-        found.setdefault((pattern, summary), []).append("/".join(head) + "/" + name + "*/" + "/".join(tail))
+        found.setdefault((pattern, summary), []).append("/".join(list(head) + [name + "*"] + list(tail)))
     return sorted((p, s, sorted(files), totals[p]) for (p, s), files in found.items())
 
 
@@ -672,24 +672,29 @@ def update_sums(out_dir):
 def build(repo, sets, shapes, mode, out_dir, tag=None, make_zip=True, allow_pointers=False, log=print):
     """Build a folder (and zip) per shape. Returns the exit code."""
     root = os.path.join(repo, sets["root"])
-    plans, problems = [], []
+    plans, missing, pointers = [], set(), set()
     for shape in shapes:
         files = shape_files(sets, shape, mode)
         for rel in files:
-            src = native(root, shape["folder"] + "/" + rel)
-            if not os.path.isfile(src):
-                problems.append("missing %s/%s" % (shape["folder"], rel))
-            elif not allow_pointers and is_pointer(src):
-                problems.append("Git LFS pointer, not the model: %s/%s" % (shape["folder"], rel))
+            path = shape["folder"] + "/" + rel
+            if not os.path.isfile(native(root, path)):
+                missing.add(path)
+            elif not allow_pointers and is_pointer(native(root, path)):
+                pointers.add(path)
         plans.append((shape, files))
     license_path = os.path.join(repo, *sets["license"].split("/"))
     if not os.path.isfile(license_path):
-        problems.append("missing %s" % sets["license"])
-    if problems:
-        for text in sorted(set(problems)):
-            log("ERROR  " + text)
-        if any("pointer" in p for p in problems):
-            log("Run git lfs pull to download the models first.")
+        missing.add(sets["license"])
+    for path in sorted(missing):
+        log("ERROR  missing %s" % path)
+    if pointers:
+        shown = sorted(pointers)[:5]
+        log("ERROR  %d file%s %s Git LFS pointer%s, not the model%s: %s%s" % (
+            len(pointers), "" if len(pointers) == 1 else "s", "is a" if len(pointers) == 1 else "are",
+            "" if len(pointers) == 1 else "s", "" if len(pointers) == 1 else "s",
+            ", ".join(shown), ", ..." if len(pointers) > len(shown) else ""))
+        log("Run git lfs pull to download the models first.")
+    if missing or pointers:
         return EXIT_ERROR
 
     if not os.path.isdir(out_dir):

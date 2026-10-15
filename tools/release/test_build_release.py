@@ -239,6 +239,11 @@ class CheckTests(Fixture):
         self.assertIn("V/parts/buttons/*/<cap tolerance>/: cap_tight = cap_default = cap_loose (1 of 3 files)", text)
         self.assertIn("V/parts/triggers/<tolerance>/press_*/: default = loose (1 of 3 files)", text)
 
+    def test_tolerance_folder_at_the_top(self):
+        digests = {"tight/a.stl": "1", "default/a.stl": "1", "loose/a.stl": "2"}
+        self.assertEqual(br.identical_siblings(self.sets, digests),
+                         [("<tolerance>/", "tight = default", ["*/a.stl"], 1)])
+
     def test_listing_identical_files(self):
         self.put("V/parts/buttons/tight/button.stl", b"shaft")
         self.put("V/parts/buttons/default/button.stl", b"shaft")
@@ -353,7 +358,7 @@ class BuildTests(Fixture):
         self.put("V/parts/buttons/default/button.stl", real=False)
         code, out = self.build()
         self.assertEqual(code, br.EXIT_ERROR)
-        self.assertIn("Git LFS pointer, not the model: V/parts/buttons/default/button.stl", out)
+        self.assertIn("1 file is a Git LFS pointer, not the model: V/parts/buttons/default/button.stl", out)
         self.assertIn("git lfs pull", out)
         self.assertFalse(os.path.exists(os.path.join(self.tmp, "dist")))
 
