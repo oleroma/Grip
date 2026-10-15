@@ -8,16 +8,16 @@ Release the parametric controller with its base case shapes, so everyone can tun
 
 - GripV, the custom ergonomic "pistol-like" shape (solid and hollow)
 - GripX, the classic Xbox and DualSense styles (solid first, hollow in progress)
-- Exported `.stl` and OrcaSlicer `.3mf` files for each shape
+- Exported `.stl` and OrcaSlicer `.3mf` files for each shape, with a [print list](orca_slicer/README.md) per shape
 - The Blender project with adjustable triggers, bumpers, sticks, buttons, caps, tolerances and battery cover
 
 Needed before the release:
 
-- [ ] Documentation: printing guide ([first draft](docs/print-guide.md)), cleaning and assembly guide, bill of materials, video guide
+- [ ] Documentation: printing guide ([first draft](docs/print-guide.md)) and [print list](orca_slicer/README.md), cleaning and assembly guide ([draft](docs/assembly-guide.md)), bill of materials ([draft](docs/bom.md)), video guide
 - [ ] Tooltips for the global parameters and the parameters that matter for fit (tolerances, triggers, bumpers, sticks)
-- [ ] Simplified controls for frequently used parameters in the Blender UI
+- [ ] Simplified controls for frequently used parameters in the Blender UI (a first version is the [Grip tab](extensions/grip_controls/README.md))
 - [ ] Clean-up of the Blender file: unused and `_OLD` node groups, duplicated groups, naming typos
-- [ ] `.3mf` files for every released version
+- [ ] `.3mf` files for every released version (what exists so far is in the [print list](orca_slicer/README.md))
 
 ## Next: ergonomics for your hand
 
