@@ -143,7 +143,7 @@ TOOLTIPS = {
         "L-R side": "Custom marks: prints R or L on the right and left part instead of the letter.",
         "parameters": "Parameter marks: names of the part's values to print, separated by commas. Use it to label tolerance variants.",
         "Decimals": "Parameter marks: digits after the decimal point.",
-        "parameter bundle": "The part's values that parameter marks read. Linked in the presets; leave it.",
+        "parameter bundle": "The part's values that parameter marks read. Link the part's constructor here, or parameter marks have nothing to print.",  # guess
         "font size": "Size of the lettering.",
         "Character Spacing": "Space between the letters.",
         "Word Spacing": "Space between words.",
