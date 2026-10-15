@@ -53,7 +53,7 @@ The capacitive part sits in the middle of the face buttons, probably as a touch 
 | `parts/dpad_stick/` | the six pieces of the rocker D-pad |
 | `parts/scrollwheel/` | the scroll wheel: wheel, core and holder |
 | `parts/battery_cover/`, `parts/cable_holder/`, `parts/pins/` | small parts |
-| `parts/misc/` | `nut_lock.stl` (optional) and `pin.stl`, a copy of `parts/pins/pin.stl` |
+| `parts/misc/` | `nut_lock.stl`, a small wedge made from the front screw settings (not released), and `pin.stl`, a copy of `parts/pins/pin.stl` |
 | `GripV_case_standard.3mf`, `GripV_case_hollow.3mf`, `GripV_parts.3mf` | OrcaSlicer projects with the parts of the print list laid out on plates, probably with the `default` files. If a part was exported again after a project was saved, the `.stl` is the newer one. |
 | `GripV_case_za3tarani.3mf` | probably a case made for one tester; not part of a print list |
 
@@ -131,7 +131,6 @@ Paths start in `GripV/` here, or in the top folder of a release zip, and fit par
 | 1 | Battery cover | `parts/battery_cover/battery_cover.stl` | |
 | 1 | Cable holder | `parts/cable_holder/cable_holder.stl` | *probably* needed, see [Known gaps](#known-gaps) |
 | 2 | Alignment pin | `parts/pins/pin.stl` | standard only, one per side. The hollow shells line up on pins of the middle plate. |
-| 2 | Nut lock (optional) | `parts/misc/nut_lock.stl` | a small wedge made from the front screw settings, probably to hold a front nut in its slot, so *probably* one per front screw |
 
 **Not printed:** four M2.5 DIN 912 socket-head screws with nuts (the [printing guide](../docs/print-guide.md) recommends them for the hollow version too, for now) and the electronics: board, joystick modules, battery and cable.
 
