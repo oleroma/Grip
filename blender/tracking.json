@@ -1979,7 +1979,6 @@
             "[Join Bundle] Bundle -> Bundle [Group Output]",
             "[R1L1 lever parameters] Bundle -> Bundle [Join Bundle]",
             "[R1L1 lever parameters] Bundle -> Bundle [lever R1L1 outputs]",
-            "[Value] Value -> stem radius [R1L1 lever parameters]",
             "[global outputs] button press tol -> tolerance [tolerance set (button tolerance)]",
             "[marks parameters] Bundle -> Bundle [Join Bundle]",
             "[marks parameters] Bundle -> Bundle [marks outputs]",
@@ -9106,12 +9105,15 @@
             "[Extrude Mesh] Top -> Input [Reroute]",
             "[Flip Faces.001] Mesh -> Geometry [Join Geometry]",
             "[Flip Faces] Mesh -> Geometry [Join Geometry]",
-            "[Group Input.001] below height -> Value [invert]",
+            "[Group Input.001] below height -> Value[0] [Math.001]",
+            "[Group Input.001] thickness -> Value[1] [Math.001]",
             "[Group Input.002] support edge -> Scale [offset even reddit old]",
             "[Group Input.003] tolerance XY -> Value [invert.001]",
             "[Group Input] Geometry -> Geometry [offset edge even]",
             "[Group Input] thickness -> Offset Scale [Extrude Mesh]",
             "[Join Geometry] Geometry -> Mesh [Set Shade Smooth]",
+            "[Math.001] Value -> Value [invert]",
+            "[Math.002] Value -> Value [Viewer]",
             "[Merge by Distance] Geometry -> Geometry [Group Output]",
             "[MirrorX] Geometry -> Geometry [Separate Geometry.001]",
             "[MirrorX] Geometry -> Geometry [Separate Geometry]",
@@ -9129,6 +9131,10 @@
             "[Separate Geometry] Selection -> Mesh [fill cap]",
             "[Set Position.001] Geometry -> Mesh [Extrude Mesh.002]",
             "[Set Shade Smooth] Mesh -> Geometry [Merge by Distance]",
+            "[Value.001] Value -> Value[0] [Math]",
+            "[Value.002] Value -> Value[1] [Math.002]",
+            "[Value.003] Value -> Value[0] [Math.002]",
+            "[Value] Value -> Value[1] [Math]",
             "[Vector Math.002] Vector -> Vector[0] [Vector Math.003]",
             "[Vector Math.003] Vector -> Normal [Capture Attribute]",
             "[Vector] Vector -> Offset [Extrude Mesh]",
@@ -9141,11 +9147,17 @@
         ],
         "pcb Z tolerance": [
             "[Combine XYZ] Vector -> Offset [Set Position]",
+            "[Field Min & Max] Max -> Value[1] [Math.001]",
             "[Group Input] Geometry -> Geometry [Set Position]",
+            "[Math.001] Value -> Z [Combine XYZ]",
+            "[Math] Value -> Value[0] [Math.001]",
             "[Named Attribute] Attribute -> Selection [Set Position]",
-            "[Separate Bundle.001] PCB z tolerance -> Z [Combine XYZ]",
+            "[Position] Position -> Vector [Separate XYZ]",
+            "[Separate XYZ] Z -> Value [Field Min & Max]",
             "[Set Position] Geometry -> Geometry [Group Output]",
-            "[selector] selected bundle -> Bundle [Separate Bundle.001]"
+            "[Value] Value -> Value[0] [Math]",
+            "[pcb outputs] PCB thickness -> Value[1] [Math]",
+            "[selector] selected bundle -> Bundle [pcb outputs]"
         ],
         "pcb cutout parameters": [
             "[Combine Bundle] Bundle -> Bundle [Group Output (PCB tolerances)]",
@@ -13365,7 +13377,7 @@
                             "overlap": -5.16,
                             "overlap slant": 2.9,
                             "overlap tolerance": 0.48,
-                            "stem radius": 3.0,
+                            "stem radius": 2.0,
                             "stem tolerance": -0.025,
                             "top bevel": 2.5,
                             "width": 20.0
@@ -13435,7 +13447,7 @@
                 "nodes": {
                     "pcb cutout parameters": {
                         "inputs": {
-                            "PCB below height": 1.76,
+                            "PCB below height": 3.84,
                             "PCB support edge": 1.4,
                             "PCB thickness": 2.08,
                             "PCB tolerance XY": 0.2
@@ -13810,7 +13822,7 @@
                             "screws hollow": false,
                             "stock bumpers": false,
                             "style": "dualsense",
-                            "subdivision level": "low ",
+                            "subdivision level": "low",
                             "tolerance": "default",
                             "top wire cutouts": false,
                             "variant": "GripX",
@@ -14539,7 +14551,7 @@
                 "nodes": {
                     "pcb cutout parameters": {
                         "inputs": {
-                            "PCB below height": 1.92,
+                            "PCB below height": 3.92,
                             "PCB support edge": 1.0,
                             "PCB thickness": 2.0,
                             "PCB tolerance XY": 0.3
@@ -14766,26 +14778,6 @@
             },
             "GripX shell middle plate parameters": {
                 "nodes": {
-                    "middle plate parameters": {
-                        "inputs": {
-                            "Z tolerance": 0.16,
-                            "fit Z tolerance": 0.0,
-                            "hook height": 0.5,
-                            "hook inset": 0.4,
-                            "hook to top": 0.48,
-                            "inner Z tolerance": 0.16,
-                            "inner xy tolerance": 0.4,
-                            "insert height": 1.6,
-                            "inset width": 2.4,
-                            "pcb pocket thickness": 1.28,
-                            "pcb pocket tolerance": 0.32,
-                            "plate inset width": 2.4,
-                            "rim slant height": 6.0,
-                            "rim slant outset": 6.0,
-                            "slant height": 0.92,
-                            "xy tolerance": 0.1
-                        }
-                    },
                     "middle plate parameters.001": {
                         "inputs": {
                             "Z tolerance": 0.16,
@@ -15586,7 +15578,7 @@
                             "screws hollow": false,
                             "stock bumpers": false,
                             "style": "dualsense",
-                            "subdivision level": "low ",
+                            "subdivision level": "low",
                             "tolerance": "default",
                             "top wire cutouts": false,
                             "variant": "GripX",
