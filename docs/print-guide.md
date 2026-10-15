@@ -1,10 +1,10 @@
 # Printing guide (draft)
 
-> **Draft.** This is the first written version, based on the development notes. It covers print settings that matter for fit. Cleaning and assembly steps, the bill of materials and a video guide are still to come. Settings below were tested on FDM printers with PLA unless stated otherwise.
+> **Draft.** This is the first written version, based on the development notes. It covers print settings that matter for fit. Cleaning and assembly are in the [assembly guide](assembly-guide.md) and the hardware in the [bill of materials](bom.md), both drafts; a video guide is still to come. Settings below were tested on FDM printers with PLA unless stated otherwise.
 
 ## What to print
 
-Exported files live in `orca_slicer/`, each as `.stl` and, where available, as an OrcaSlicer `.3mf`.
+Exported files live in `orca_slicer/`, each as `.stl` and, where available, as an OrcaSlicer `.3mf`. The [print list](../orca_slicer/README.md) says which files to print for each shape, how many of each, and which parts are not exported yet.
 
 | Folder | Contents |
 | --- | --- |
@@ -13,7 +13,7 @@ Exported files live in `orca_slicer/`, each as `.stl` and, where available, as a
 | `orca_slicer/GripX/xbox_style/`, `dualsense_style/` | Case parts, bumpers and triggers for the two classic shapes |
 | `orca_slicer/GripX/parts/` | Buttons and caps, sticks, D-pad stick, battery cover, cable holder, pins |
 
-Parts that depend on fit come in a tolerance set. The folders are named for the setting: `tight`, `default` and `loose`, for example `buttons/default/cap_tight` (default button tolerance, tight caps) and `triggers/loose/press_default`. Start with `default`. If a part is too tight or too loose, print the neighbouring variant of that part only; you do not need to reprint the case.
+Parts that depend on fit come in a tolerance set. The folders are named for the setting: `tight`, `default` and `loose`, for example `buttons/default/cap_tight` (default button tolerance, tight caps) and `triggers/loose/press_default`. Start with `default`. If a part is too tight or too loose, print the neighbouring variant of that part only; you do not need to reprint the case. The [print list](../orca_slicer/README.md#tolerances) has a table of which folder to try for each problem.
 
 ## Solid case
 
@@ -45,7 +45,8 @@ Every printer is a little different. The global parameters in `Grip.blend` have 
 
 ## Still missing
 
-- Cleaning and assembly steps with photos, and a video guide
-- Bill of materials (PCB, screws and nuts, battery, cable)
+- Photos and a video guide for cleaning and assembly. The written [assembly guide](assembly-guide.md) is a draft that has not been checked step by step on a build yet.
+- A checked bill of materials. The [draft](bom.md) still has screw lengths, the board revision and the filament amounts to confirm.
+- Some parts are not exported yet, among them the GripV middle plate and the Select and Home shafts (see [Known gaps](../orca_slicer/README.md#known-gaps)).
 - Recommended slicer profiles
 - A tolerance test print
