@@ -20,7 +20,7 @@ On GripX some neighbouring folders hold the same file for now (the `cap_*` folde
 ## 1. Clean the prints
 
 - Remove all supports and brims. The PCB slot ledge, the trigger openings in the case bottom and the button holes in the case top need to be clean and smooth.
-- The PCB slot supports should come off in one piece if you printed them with a solid interface ([printing guide](print-guide.md#pcb-slot)). Check that the 1 mm ledge around the slot is flat and complete.
+- The PCB slot supports should come off in one piece if you printed them with a solid interface ([printing guide](print-guide.md#pcb-slot)). Check that the ledge around the slot is flat and complete.
 - On the case top, look for leftover support above R1 and L1 (the printing guide recommends tree supports there).
 - Remove stringing, and any elephant's foot on parts that slide (button shafts, triggers, bumpers).
 
@@ -95,6 +95,8 @@ L1 and R1 sit in the openings at the top edge of the case. Each pivots on a roun
 
 Lower the board into the slot in the case bottom. It rests on a ledge around its edge. If you use the cable holder, the USB cable and the holder go into the USB opening now (probably, *unverified*).
 
+The scroll wheel is three pieces: wheel, core and holder. Put them together and fit them over the encoder on the board, probably at this point (*unverified*). The wheel should spin freely without wobbling; its side play has no folders (`scroll wheel tolerance`, [Scroll wheel](blender/customize/parts/scroll-wheel.md)). GripX has no exported scroll wheel yet.
+
 **Check:**
 
 - The board sits flat on the ledge all round, without forcing. If it does not go in, the slot is too small for your printer: raise `PCB tolerance XY` and print the case bottom again ([PCB and cable](blender/customize/parts/pcb-and-cable.md)). Do not press the board in hard.
@@ -124,7 +126,7 @@ Push the two printed pins into their holes in the case bottom, one on each side.
 
 ## 10. Close and screw
 
-1. **Nuts first.** Press an M2.5 nut into each of the four pockets in the case top. Take your time: the pockets are reinforced, but PLA can still twist or bend while a nut is pressed in ([printing guide](print-guide.md#solid-case)). The optional nut lock probably wedges a front nut in its slot (*unverified*).
+1. **Nuts first.** Press an M2.5 nut into each of the four nut pockets (probably all in the case top, *unverified*). Take your time: the pockets are reinforced, but PLA can still twist or bend while a nut is pressed in ([printing guide](print-guide.md#solid-case)). The optional nut lock probably wedges a front nut in its slot (*unverified*).
 2. Check that every button, trigger and bumper is still in place.
 3. Lower the case top onto the bottom so the pins go into their holes. Do not force it: if it does not close, something is out of place.
 4. Put the screws in from the bottom (probably, *unverified*): the shorter pair at the front, the longer pair at the back. Tighten until the halves meet, and stop there; PLA threads and pockets do not take much force.
