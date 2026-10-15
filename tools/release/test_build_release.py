@@ -31,6 +31,7 @@ SETS = {
     "tolerance_levels": ["tight", "default", "loose"],
     "default_tolerance": "default",
     "tolerance_placeholders": {"tolerance": "tolerance", "cap": "cap tolerance", "press": "press tolerance"},
+    "flat_folders": {"tolerance": "", "cap": "cap", "press": ""},
     "groups": {
         "case": {"title": "Case", "items": [
             {"name": "Bottom", "file": "{case}/case_bottom.stl", "qty": 1},
@@ -68,6 +69,21 @@ DEFAULT_FILES = [
     "parts/buttons/default/button.stl",
     "parts/buttons/default/cap_default/cross.stl",
     "parts/triggers/default/press_default/R2.stl",
+    "parts/sticks/circle/stick_10_deg.stl",
+    "parts/sticks/circle/stick_12_deg.stl",
+    "parts/sticks/square/stick_10_deg.stl",
+    "parts/sticks/square/stick_12_deg.stl",
+    "V_parts.3mf",
+]
+
+# DEFAULT_FILES as a plain build lays them out: without tolerance folders.
+FLAT_FILES = [
+    "case_standard/case_bottom.stl",
+    "case_standard/case_top_knob.stl",
+    "case_standard/case_top_plate.stl",
+    "parts/buttons/button.stl",
+    "parts/buttons/cap/cross.stl",
+    "parts/triggers/R2.stl",
     "parts/sticks/circle/stick_10_deg.stl",
     "parts/sticks/circle/stick_12_deg.stl",
     "parts/sticks/square/stick_10_deg.stl",
@@ -140,6 +156,23 @@ class PrintSetTests(Fixture):
         self.assertEqual(len([f for f in files if f.endswith("cross.stl")]), 9)
         self.assertNotIn("V_parts.3mf", files)  # projects only go with the default tolerance
 
+    def test_flat_layout_leaves_out_the_tolerance_folders(self):
+        shape = br.find_shape(self.sets, "V-standard")
+        paths = br.layout(self.sets, shape, "default", flat=True)
+        self.assertEqual(list(paths), DEFAULT_FILES)
+        self.assertEqual(list(paths.values()), FLAT_FILES)
+        self.assertEqual(br.layout(self.sets, shape, "tight", flat=True)["parts/buttons/tight/cap_tight/cross.stl"],
+                         "parts/buttons/cap/cross.stl")
+        self.assertEqual(br.layout(self.sets, shape, "default"), {rel: rel for rel in DEFAULT_FILES})
+
+    def test_flat_template_keeps_other_folders_and_the_file_name(self):
+        for template, flat in (
+                ("parts/buttons/{tolerance}/cap_{cap}/cross.stl", "parts/buttons/cap/cross.stl"),
+                ("{tolerance}/press_{press}/R2.stl", "R2.stl"),
+                ("parts/{top}_{tolerance}/a.stl", "parts/{top}_{tolerance}/a.stl"),
+                ("parts/a_{press}.stl", "parts/a_{press}.stl")):
+            self.assertEqual(br.flat_template(self.sets, template), flat)
+
     def test_shape_variables_are_filled_in(self):
         shape = br.find_shape(self.sets, "V-hollow")
         group, items = br.resolve(self.sets, shape)[0]
@@ -155,11 +188,13 @@ class PrintSetTests(Fixture):
         items.append({"name": "Odd", "file": "parts/{colour}/a.stl", "qty": 1})
         items.append({"name": "Spaced", "file": "parts/a b.stl", "qty": 1})
         items.append({"name": "Chosen", "files": ["a.stl"], "choose": {"x": ["1"]}, "qty": 1})
+        bad["flat_folders"] = {"colour": "", "cap": "a b"}
         with self.assertRaises(br.SetError) as cm:
             br.validate(bad)
         text = str(cm.exception)
         for words in ("unknown group 'nope'", "'Zero': qty", "'Both': needs exactly one",
-                      "unknown placeholder colour", "space in path", "choose only works with file"):
+                      "unknown placeholder colour", "space in path", "choose only works with file",
+                      "flat_folders: 'colour' is not a tolerance placeholder", "flat_folders: 'cap' must be"):
             self.assertIn(words, text)
 
     def test_invalid_sets_stop_the_command_line(self):
@@ -337,6 +372,21 @@ class PrintListTests(Fixture):
                 "[tolerances](https://example.invalid/Grip/blob/main/orca_slicer/README.md#tolerances)"):
             self.assertIn(line, text)
 
+    def test_flat_print_list(self):
+        shape = br.find_shape(self.sets, "V-standard")
+        text = br.print_list(self.sets, shape, "default", None, (), flat=True)
+        for line in (
+                "Every fit part here is the `default` one, so the paths leave out the tolerance folders that "
+                "`orca_slicer/V/` in the repository has. For example `parts/buttons/default/` there is "
+                "`parts/buttons/` here. If a part does not fit, reprint only that part from another tolerance "
+                "(`tight` or `loose`) in the repository",
+                "- 4 x Shaft: `parts/buttons/button.stl`",
+                "- 1 x Cross cap: `parts/buttons/cap/cross.stl`.",
+                "- 1 x R2: `parts/triggers/R2.stl`",
+                "## OrcaSlicer projects\n\n- `V_parts.3mf`"):
+            self.assertIn(line, text)
+        self.assertNotIn("default/", text.split("## Case")[1])
+
     def test_all_tolerances_print_list(self):
         shape = br.find_shape(self.sets, "V-standard")
         text = br.print_list(self.sets, shape, br.ALL)
@@ -357,8 +407,10 @@ class PrintListTests(Fixture):
         self.put("V/case_standard/case_top_plate.stl", b"plate")
         code, out = self.run_main("--print-list", "V-standard", "--tolerance", "tight")
         self.assertEqual(code, br.EXIT_OK)
-        self.assertIn("`parts/buttons/tight/button.stl`", out)
+        self.assertIn("`parts/buttons/button.stl`", out)
         self.assertIn("are the same file in this release", out)  # read from the pointers
+        code, out = self.run_main("--print-list", "V-standard", "--tolerance", "tight", "--full-paths")
+        self.assertIn("`parts/buttons/tight/button.stl`", out)
         code, out = self.run_main("--print-list", "W")
         self.assertEqual(code, br.EXIT_ERROR)
         self.assertIn("unknown shape 'W'", out)
@@ -403,22 +455,49 @@ class BuildTests(Fixture):
     def test_default_build(self):
         code, out = self.build()
         self.assertEqual(code, br.EXIT_OK, out)
-        self.assertEqual(self.folder_files("V-standard-default"),
-                         sorted(DEFAULT_FILES + ["LICENSE", "PRINT_LIST.md"]))
+        self.assertEqual(self.folder_files("V-standard"), sorted(FLAT_FILES + ["LICENSE", "PRINT_LIST.md"]))
         dist = os.path.join(self.tmp, "dist")
-        with zipfile.ZipFile(os.path.join(dist, "V-standard-default.zip")) as z:
+        with zipfile.ZipFile(os.path.join(dist, "V-standard.zip")) as z:
             self.assertEqual(sorted(z.namelist()),
-                             sorted("V-standard-default/" + f for f in DEFAULT_FILES + ["LICENSE", "PRINT_LIST.md"]))
-            self.assertEqual(z.read("V-standard-default/case_standard/case_bottom.stl"),
+                             sorted("V-standard/" + f for f in FLAT_FILES + ["LICENSE", "PRINT_LIST.md"]))
+            self.assertEqual(z.read("V-standard/case_standard/case_bottom.stl"),
                              b"solid V/case_standard/case_bottom.stl\nendsolid\n")
-            listing = z.read("V-standard-default/PRINT_LIST.md").decode()
+            self.assertEqual(z.read("V-standard/parts/buttons/cap/cross.stl"),
+                             b"solid V/parts/buttons/default/cap_default/cross.stl\nendsolid\n")
+            listing = z.read("V-standard/PRINT_LIST.md").decode()
         self.assertIn("Fit: `default`", listing)
-        self.assertIn("V_parts.3mf", self.folder_files("V-standard-default"))
-        self.assertNotIn("V_parts.3mf", self.folder_files("V-hollow-default"))
+        self.assertIn("`parts/buttons/cap/cross.stl`", listing)
+        self.assertIn("V_parts.3mf", self.folder_files("V-standard"))
+        self.assertNotIn("V_parts.3mf", self.folder_files("V-hollow"))
         with open(os.path.join(dist, "SHA256SUMS.txt")) as f:
             sums = f.read().splitlines()
-        self.assertEqual([line.split("  ")[1] for line in sums], ["V-hollow-default.zip", "V-standard-default.zip"])
+        self.assertEqual([line.split("  ")[1] for line in sums], ["V-hollow.zip", "V-standard.zip"])
         self.assertIn("not exported yet: Select shafts", out)
+
+    def test_full_paths_build(self):
+        code, out = self.build("--full-paths")
+        self.assertEqual(code, br.EXIT_OK, out)
+        self.assertEqual(self.folder_files("V-standard-default"),
+                         sorted(DEFAULT_FILES + ["LICENSE", "PRINT_LIST.md"]))
+        with open(os.path.join(self.tmp, "dist", "V-standard-default", "PRINT_LIST.md"), encoding="utf-8") as f:
+            self.assertIn("`parts/buttons/default/cap_default/cross.stl`", f.read())
+
+    def test_files_that_would_land_on_one_path(self):
+        self.sets["groups"]["buttons"]["items"].append(
+            {"name": "Old shaft", "file": "parts/buttons/button.stl", "qty": 1})
+        self.write_sets()
+        self.put("V/parts/buttons/button.stl")
+        code, out = self.build("--shape", "V-hollow")
+        self.assertEqual(code, br.EXIT_ERROR)
+        self.assertIn("V-hollow: parts/buttons/default/button.stl and parts/buttons/button.stl land on the "
+                      "same path parts/buttons/button.stl", out)
+        self.assertFalse(os.path.exists(os.path.join(self.tmp, "dist")))
+        code, out = self.build("--shape", "V-hollow", "--full-paths")
+        self.assertEqual(code, br.EXIT_OK, out)
+        code, text = self.check()
+        self.assertEqual(code, br.EXIT_ERROR)
+        self.assertIn("V/parts/buttons/default/button.stl and V/parts/buttons/button.stl land on the same path "
+                      "parts/buttons/button.stl in the V hollow release", text)
 
     def test_output_inside_the_repository_ignores_itself(self):
         code, _ = self.build("--shape", "V-hollow")
@@ -427,7 +506,7 @@ class BuildTests(Fixture):
             self.assertIn("*", f.read().splitlines())
 
     def test_build_is_reproducible(self):
-        zip_path = os.path.join(self.tmp, "dist", "V-hollow-default.zip")
+        zip_path = os.path.join(self.tmp, "dist", "V-hollow.zip")
         self.build("--shape", "V-hollow")
         with open(zip_path, "rb") as f:
             first = f.read()
@@ -439,10 +518,13 @@ class BuildTests(Fixture):
         code, out = self.build("--shape", "V-standard", "--tolerance", "tight", "--tag", "v0.1")
         self.assertEqual(code, br.EXIT_OK, out)
         files = self.folder_files("V-standard-v0.1-tight")
-        self.assertIn("parts/buttons/tight/cap_tight/cross.stl", files)
-        self.assertIn("parts/triggers/tight/press_tight/R2.stl", files)
-        self.assertFalse(any("default" in f for f in files))
+        self.assertIn("parts/buttons/cap/cross.stl", files)
+        self.assertIn("parts/triggers/R2.stl", files)
+        self.assertFalse(any("tight" in f or "default" in f for f in files))
         self.assertNotIn("V_parts.3mf", files)
+        with zipfile.ZipFile(os.path.join(self.tmp, "dist", "V-standard-v0.1-tight.zip")) as z:
+            self.assertEqual(z.read("V-standard-v0.1-tight/parts/triggers/R2.stl"),
+                             b"solid V/parts/triggers/tight/press_tight/R2.stl\nendsolid\n")
         self.assertTrue(os.path.isfile(os.path.join(self.tmp, "dist", "V-standard-v0.1-tight.zip")))
 
     def test_all_tolerances_build(self):
@@ -455,15 +537,15 @@ class BuildTests(Fixture):
 
     def test_rebuild_replaces_the_earlier_build(self):
         self.build("--shape", "V-hollow")
-        stale = os.path.join(self.tmp, "dist", "V-hollow-default", "old.stl")
+        stale = os.path.join(self.tmp, "dist", "V-hollow", "old.stl")
         self.write(stale, b"old")
         code, _ = self.build("--shape", "V-hollow", "--no-zip")
         self.assertEqual(code, br.EXIT_OK)
         self.assertFalse(os.path.exists(stale))
-        self.assertFalse(os.path.exists(os.path.join(self.tmp, "dist", "V-hollow-default.zip")))
+        self.assertFalse(os.path.exists(os.path.join(self.tmp, "dist", "V-hollow.zip")))
 
     def test_build_leaves_other_folders_alone(self):
-        foreign = os.path.join(self.tmp, "dist", "V-hollow-default", "mine.txt")
+        foreign = os.path.join(self.tmp, "dist", "V-hollow", "mine.txt")
         self.write(foreign, b"keep me")
         code, out = self.build("--shape", "V-hollow")
         self.assertEqual(code, br.EXIT_ERROR)
@@ -476,7 +558,7 @@ class BuildTests(Fixture):
         code, out = self.build("--shape", "V-hollow")
         self.assertEqual(code, br.EXIT_OK, out)
         self.assertIn("warning: Top: case_hollow/case_top_knob.stl = case_hollow/case_top_plate.stl", out)
-        with open(os.path.join(self.tmp, "dist", "V-hollow-default", "PRINT_LIST.md"), encoding="utf-8") as f:
+        with open(os.path.join(self.tmp, "dist", "V-hollow", "PRINT_LIST.md"), encoding="utf-8") as f:
             self.assertIn("are the same file in this release", f.read())
 
 

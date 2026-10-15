@@ -20,6 +20,11 @@
     "cap": "cap tolerance",
     "press": "press tolerance"
   },
+  "flat_folders": {
+    "tolerance": "",
+    "cap": "cap",
+    "press": ""
+  },
 
   "groups": {
     "case": {
@@ -56,7 +61,7 @@
 
     "caps": {
       "title": "Caps",
-      "note": "Take the caps from the same tolerance folder as the shafts they go on: each cap is made for that shaft.",
+      "note": "Each cap is made for the shaft of its tolerance: if you print the shafts at another tolerance, take the caps from that tolerance folder too.",
       "items": [
         {"name": "Triangle cap (top face button)", "file": "parts/buttons/{tolerance}/cap_{cap}/triangle.stl", "qty": 1},
         {"name": "Circle cap (right face button)", "file": "parts/buttons/{tolerance}/cap_{cap}/circle.stl", "qty": 1},
