@@ -4,7 +4,7 @@ Three extensions in [`extensions/`](../../../extensions/README.md) work with the
 
 ## `combi_export`: export presets and sweeps
 
-Source: [oleroma/combi_export](https://github.com/oleroma/combi_export). The presets are stored on the `GripV` and `GripX` scenes and mirrored in `blender/GripV_preset.json` and `blender/GripX_preset.json`. combi_export rewrites both every time the file is saved (*Save JSON with File*, the tick icon next to the JSON buttons in the Root row, on by default). Each also lists, under `exports`, every file its presets write, which the [release builder](../../../tools/release/README.md) checks the print sets against.
+Source: [oleroma/combi_export](https://github.com/oleroma/combi_export). The presets are stored on the `GripV` and `GripX` scenes and mirrored in `blender/GripV_preset.json` and `blender/GripX_preset.json`. combi_export rewrites both every time the file is saved (*Save JSON with File*, the tick icon next to the JSON buttons in the Root row, on by default). Each also lists, under `exports`, every file its presets write. The [release builder](../../../tools/release/README.md) makes the release zips from those lists, so a part is released only when a preset exports it.
 
 **Model.** A preset lists collections, and each collection lists objects with an export tick, an optional output name, a sub-folder and a file-name tag. Overrides can sit at four levels (global, preset, collection, object). An override names a node input (group › node › input) or a modifier input, and gives a value, a list or a sweep (every menu item, both boolean states, or a number range).
 

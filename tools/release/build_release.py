@@ -1,31 +1,34 @@
 #!/usr/bin/env python3
 """Build the release zips of Grip's printed parts, or check that they can be built.
 
-Each released shape (GripV standard, GripV hollow, GripX xbox, GripX dualsense)
-has a print set in print_sets.json: which files from orca_slicer/ to print and
-how many of each. From it this script builds one folder and one zip per shape
-with those files, a PRINT_LIST.md and the license.
+Everything comes from the files combi_export saves next to Grip.blend,
+blender/<scene>_preset.json: their `exports` list every file the presets of
+that scene write, below its export folder (orca_slicer/GripV/,
+orca_slicer/GripX/). Each top folder of an export folder other than parts/
+and tolerance folders is one release: GripV-standard from case_standard/,
+GripX-xbox from xbox_style/. A release holds that folder and parts/ at one
+tolerance, the OrcaSlicer projects named after it, a PRINT_LIST.md and the
+license. The quantities and notes in PRINT_LIST.md are the scene's print list
+in orca_slicer/README.md.
 
 Usage:
     python build_release.py --check
     python build_release.py [--shape ID ...] [--tolerance LEVEL | --all-tolerances] [--full-paths]
     python build_release.py --print-list ID
 
-A build with one tolerance leaves the tolerance folders out of the paths
-(parts/buttons/default/cap_default/ becomes parts/buttons/cap/, see
-flat_folders in print_sets.json); --full-paths keeps the paths of orca_slicer/.
+A build with one tolerance leaves the tolerance folders out of the paths:
+parts/buttons/default/cap_default/ becomes parts/buttons/cap/, and
+parts/bumpers/press_default/ becomes parts/bumpers/. --full-paths keeps the
+paths of orca_slicer/.
 
---check also compares the print sets with the files the combi_export presets
-export, as listed in the JSON files combi_export saves next to Grip.blend
-(presets in print_sets.json). It works on Git LFS pointer files too, so it
-runs on a clone without the models. Building needs the real files. Only the
-Python standard library is needed (Python 3.8+). See README.md next to this
-file.
+--check works on Git LFS pointer files too, so it runs on a clone without the
+models. Building needs the real files. Only the Python standard library is
+needed (Python 3.8+). See README.md next to this file.
 """
 
 import argparse
+import glob
 import hashlib
-import itertools
 import json
 import os
 import re
@@ -35,14 +38,39 @@ import sys
 import zipfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-DEFAULT_SETS = os.path.join(HERE, "print_sets.json")
 DEFAULT_REPO = os.path.dirname(os.path.dirname(HERE))
+
+# Where things are in the repository
+ROOT = "orca_slicer"            # the folder the presets export to
+PRESETS = "blender"             # combi_export saves <scene>_preset.json here, next to Grip.blend
+PRESET_SUFFIX = "_preset.json"
+SHARED = "parts"                # the export folder that every release of a scene takes
+PRINT_LISTS = ROOT + "/README.md"  # holds a "## Print list: ..." section per scene
+
+# The tolerance folders: tight/, default/, loose/, or a word before them (cap_default/, press_loose/)
+LEVELS = ("tight", "default", "loose")
+DEFAULT_LEVEL = "default"
+TOL_DIR = re.compile(r"^(?:([A-Za-z]+)_)?(%s)$" % "|".join(LEVELS))
+
+# Written into every release
+REPO_URL = "https://github.com/oleroma/Grip"
+BRANCH = "main"
+LICENSE = "LICENSE"
+LICENSE_NAME = "Creative Commons BY-NC-SA 4.0"
+CREDITS = "Oleroma, Milwud"
+NOTICE = ("Grip is an independent project, not affiliated with or endorsed by Microsoft or Sony. Xbox and "
+          "DualSense are trademarks of their owners; the names only describe the case shapes.")
+GUIDES = [
+    ("Print list and tolerances", PRINT_LISTS),
+    ("Printing guide", "docs/print-guide.md"),
+    ("Customize and export your own parts", "docs/blender/customize/README.md"),
+    ("Report how your print fit", REPO_URL + "/issues/new?template=fit-report.yml"),
+]
 
 ALL = "all-tolerances"
 LFS_PREFIX = b"version https://git-lfs.github.com/spec/"
 LFS_MAX = 1024  # pointer files are always smaller than this
 PART_EXTS = (".stl", ".3mf")
-PLACEHOLDER = re.compile(r"\{(\w+)\}")
 SAFE_NAME = re.compile(r"^[A-Za-z0-9._-]+$")
 WINDOWS_BAD = set('<>:"|?*\\')
 ZIP_DATE = (1980, 1, 1, 0, 0, 0)  # fixed, so the same files give the same zip
@@ -51,216 +79,173 @@ MARKER = "PRINT_LIST.md"  # a folder holding this was made by this script
 EXIT_OK, EXIT_ERROR = 0, 1
 
 
-class SetError(Exception):
-    """print_sets.json does not describe valid print sets."""
-
-
 class BuildError(Exception):
     pass
 
 
 # --------------------------------------------------------------------------
-# Print sets
+# The presets
 
 
-def load_sets(path):
-    with open(path, encoding="utf-8") as f:
-        sets = json.load(f)
-    validate(sets)
-    return sets
+class Scene:
+    """One scene's exports: folder is its export folder below ROOT (GripV),
+    files maps each exported file below it to the preset that writes it,
+    sources lists the preset files it was read from."""
+
+    def __init__(self, folder):
+        self.folder = folder
+        self.files = {}
+        self.sources = []
 
 
-def fill(template, values):
-    """Replace the {placeholders} that values knows, leave the others."""
-    return PLACEHOLDER.sub(lambda m: str(values.get(m.group(1), m.group(0))), template)
+def scene_folder(root_dir):
+    """The export folder below ROOT that a combi_export root folder points at:
+    GripV for D:\\Grip\\orca_slicer\\GripV\\ or //../orca_slicer/GripV/, whatever
+    the drive or folders above. None when ROOT is not in it, or is its end."""
+    parts = [p for p in re.split(r"[\\/]+", root_dir) if p not in ("", ".")]
+    lower = [p.lower() for p in parts]
+    if ROOT.lower() not in lower:
+        return None
+    rest = parts[len(lower) - lower[::-1].index(ROOT.lower()):]
+    return "/".join(rest) or None
 
 
-def expand(template, choices):
-    """Every path a template gives, with choices mapping placeholder -> values."""
-    names = list(dict.fromkeys(PLACEHOLDER.findall(template)))
+def load_scenes(repo):
+    """Read every blender/*_preset.json. Returns ([Scene], [(level, text)]),
+    level being "error" or "info". Two files with the same export folder are
+    one scene."""
+    scenes, notes = {}, []
+    paths = sorted(glob.glob(os.path.join(repo, PRESETS, "*" + PRESET_SUFFIX)))
+    if not paths:
+        notes.append(("error", "no %s/*%s: combi_export writes one per scene when Grip.blend is saved"
+                      % (PRESETS, PRESET_SUFFIX)))
+    for full in paths:
+        path = PRESETS + "/" + os.path.basename(full)
+        try:
+            with open(full, encoding="utf-8") as f:
+                data = json.load(f)
+        except (OSError, ValueError) as e:
+            notes.append(("error", "%s is not valid JSON: %s" % (path, e)))
+            continue
+        root_dir = data.get("root_dir") if isinstance(data, dict) else None
+        folder = scene_folder(root_dir) if isinstance(root_dir, str) else None
+        if folder is None:
+            notes.append(("error", "%s: its root folder %r is not a folder in %s/" % (path, root_dir, ROOT)))
+            continue
+        listing = data.get("exports")
+        presets = listing.get("presets") if isinstance(listing, dict) else None
+        if not isinstance(presets, list) or not all(
+                isinstance(p, dict) and isinstance(p.get("files"), list) for p in presets):
+            notes.append(("error", "%s has no list of the exported files: save Grip.blend with "
+                          "combi_export's \"Save JSON with File\" on to write it" % path))
+            continue
+        if listing.get("complete") is not True:
+            notes.append(("error", "%s lists only part of the exported files (combi_export stops at 5000)"
+                          % path))
+            continue
+        scene = scenes.setdefault(folder, Scene(folder))
+        scene.sources.append(path)
+        count = 0
+        for preset in presets:
+            for rel in preset["files"]:
+                if isinstance(rel, str) and rel:
+                    scene.files.setdefault(rel, str(preset.get("name", "?")))
+                    count += 1
+        notes.append(("info", "%s: %s write%s %s to %s/%s/." % (
+            path, plural(len(presets), "preset"), "s" if len(presets) == 1 else "", plural(count, "file"),
+            ROOT, folder)))
+    return [scenes[k] for k in sorted(scenes)], notes
+
+
+def plural(n, word):
+    return "%d %s%s" % (n, word, "" if n == 1 else "s")
+
+
+# --------------------------------------------------------------------------
+# Releases
+
+
+class Release:
+    """One zip: a scene's shape folder (case_standard) with its parts/ folder."""
+
+    def __init__(self, scene, shape, files, projects):
+        self.scene = scene
+        self.shape = shape  # None for a scene without a shape folder
+        self.files = files  # exported files below the scene folder, every tolerance
+        self.projects = projects
+        name = os.path.basename(scene.folder)
+        label = shape_label(shape) if shape else None
+        self.id = "-".join(p for p in (name, label) if p)
+        self.title = " ".join(p for p in (name, label) if p)
+
+
+def shape_label(shape):
+    """case_standard -> standard, xbox_style -> xbox."""
+    label = shape[len("case_"):] if shape.startswith("case_") and len(shape) > 5 else shape
+    return label[:-len("_style")] if label.endswith("_style") and len(label) > 6 else label
+
+
+def releases(scenes, tree):
+    """The releases of the scenes. tree is scan() of ROOT, for the projects:
+    <scene>_<shape folder>.3mf and <scene>_parts.3mf in the scene folder go with
+    a release."""
+    def top(rel):
+        """The shape folder a file is in, or None for files every shape takes:
+        parts/, tolerance folders and the scene folder itself."""
+        head = rel.split("/")[0] if "/" in rel else SHARED
+        return None if head == SHARED or TOL_DIR.match(head) else head
+
     out = []
-    for combo in itertools.product(*(choices[n] for n in names)):
-        values = dict(zip(names, combo))
-        out.append(PLACEHOLDER.sub(lambda m: values[m.group(1)], template))
+    have = set(tree)
+    for scene in scenes:
+        shapes = sorted(set(top(rel) for rel in scene.files) - {None})
+        name = os.path.basename(scene.folder)
+        for shape in shapes or [None]:
+            files = sorted(rel for rel in scene.files if top(rel) in (shape, None))
+            projects = [p for p in ("%s_%s.3mf" % (name, shape) if shape else None, "%s_%s.3mf" % (name, SHARED))
+                        if p and scene.folder + "/" + p in have]
+            out.append(Release(scene, shape, files, projects))
     return out
 
 
-def templates(item):
-    if "files" in item:
-        return list(item["files"])
-    if "file" in item:
-        return [item["file"]]
-    return []
+def find_release(rels, release_id):
+    for release in rels:
+        if release.id.lower() == release_id.lower():
+            return release
+    raise BuildError("unknown shape %r; known: %s" % (release_id, ", ".join(r.id for r in rels) or "none"))
 
 
-def validate(sets):
-    """Raise SetError listing every problem in the print sets."""
-    problems = []
-    for key in ("root", "repo_url", "license", "tolerance_levels", "default_tolerance",
-                "tolerance_placeholders", "groups", "shapes"):
-        if key not in sets:
-            problems.append("missing top-level key %r" % key)
-    if problems:
-        raise SetError("\n".join(problems))
-    levels = sets["tolerance_levels"]
-    if sets["default_tolerance"] not in levels:
-        problems.append("default_tolerance %r is not one of %s" % (sets["default_tolerance"], levels))
-    if ALL in levels:
-        problems.append("%r cannot be a tolerance level" % ALL)
-    tol_names = set(sets["tolerance_placeholders"])
-    for key, name in sets.get("flat_folders", {}).items():
-        if key not in tol_names:
-            problems.append("flat_folders: %r is not a tolerance placeholder" % key)
-        if not isinstance(name, str) or (name and not SAFE_NAME.match(name)):
-            problems.append("flat_folders: %r must be a folder name or \"\"" % key)
-    presets = sets.get("presets", [])
-    if not isinstance(presets, list) or not all(isinstance(p, str) and p for p in presets):
-        problems.append("presets must be a list of paths in the repository")
-    seen = set()
-    for shape in sets["shapes"]:
-        sid = shape.get("id", "?")
-        where = "shape %s" % sid
-        if sid in seen:
-            problems.append("%s: id used twice" % where)
-        seen.add(sid)
-        for key in ("id", "title", "folder", "groups"):
-            if key not in shape:
-                problems.append("%s: missing %r" % (where, key))
-        shape_vars = shape.get("vars", {})
-        for gid in shape.get("groups", []):
-            group = sets["groups"].get(gid)
-            if group is None:
-                problems.append("%s: unknown group %r" % (where, gid))
-                continue
-            for item in group.get("items", []):
-                problems += _item_problems(item, "%s, group %s" % (where, gid), shape_vars, tol_names)
-        for project in shape.get("projects", []):
-            if PLACEHOLDER.search(project) or " " in project:
-                problems.append("%s: project name %r has a placeholder or a space" % (where, project))
-    if problems:
-        raise SetError("\n".join(problems))
+def levels_of(rel):
+    """The tolerance levels in the folders of a path: ['default', 'default']."""
+    return [m.group(2) for m in (TOL_DIR.match(p) for p in rel.split("/")[:-1]) if m]
 
 
-def _item_problems(item, where, shape_vars, tol_names):
-    name = item.get("name")
-    where = "%s, item %r" % (where, name)
-    problems = []
-    if not name:
-        problems.append("%s: item without a name" % where)
-    qty = item.get("qty")
-    if not isinstance(qty, int) or isinstance(qty, bool) or qty < 1:
-        problems.append("%s: qty must be a whole number of at least 1" % where)
-    kinds = [k for k in ("file", "files", "missing") if k in item]
-    if len(kinds) != 1:
-        problems.append("%s: needs exactly one of file, files or missing" % where)
-    choose = item.get("choose", {})
-    if choose and "file" not in item:
-        problems.append("%s: choose only works with file" % where)
-    for t in templates(item):
-        t = fill(t, shape_vars)
-        if " " in t:
-            problems.append("%s: space in path %r" % (where, t))
-        unknown = set(PLACEHOLDER.findall(t)) - tol_names - set(choose)
-        if unknown:
-            problems.append("%s: unknown placeholder %s in %r" % (where, ", ".join(sorted(unknown)), t))
-        unused = set(choose) - set(PLACEHOLDER.findall(t))
-        if unused:
-            problems.append("%s: choose %s not used in %r" % (where, ", ".join(sorted(unused)), t))
-    for key, values in choose.items():
-        if not values or not all(isinstance(v, str) for v in values):
-            problems.append("%s: choose %r needs a list of strings" % (where, key))
-    return problems
-
-
-def find_shape(sets, shape_id):
-    for shape in sets["shapes"]:
-        if shape["id"].lower() == shape_id.lower():
-            return shape
-    raise BuildError("unknown shape %r; known: %s" % (shape_id, ", ".join(s["id"] for s in sets["shapes"])))
-
-
-def resolve(sets, shape):
-    """The groups of a shape with its folder variables filled in: [(group, items)]."""
-    shape_vars = shape.get("vars", {})
-    out = []
-    for gid in shape["groups"]:
-        group = sets["groups"][gid]
-        items = []
-        for item in group["items"]:
-            item = dict(item)
-            if "file" in item:
-                item["file"] = fill(item["file"], shape_vars)
-            if "files" in item:
-                item["files"] = [fill(t, shape_vars) for t in item["files"]]
-            items.append(item)
-        out.append((group, items))
-    return out
-
-
-def tolerance_combos(sets, item, mode):
-    """Each tolerance assignment an item needs in this mode: {placeholder: level}."""
-    used = [p for p in sets["tolerance_placeholders"]
-            if any("{%s}" % p in t for t in templates(item))]
-    levels = sets["tolerance_levels"] if mode == ALL else [mode]
-    for combo in itertools.product(levels, repeat=len(used)):
-        yield dict(zip(used, combo))
-
-
-def alternatives(item, tol):
-    """The files an item offers for one tolerance assignment, one per choice."""
-    if "files" in item:
-        return [fill(t, tol) for t in item["files"]]
-    if "file" in item:
-        return expand(fill(item["file"], tol), item.get("choose", {}))
-    return []
-
-
-def flat_template(sets, template):
-    """A path template without its tolerance folders: a folder named only by
-    tolerance placeholders (`{tolerance}`, `cap_{cap}`) becomes its name in
-    flat_folders, or goes when that is "". Other folders and the file name stay."""
-    names = sets.get("flat_folders", {})
-    tol = set(sets["tolerance_placeholders"])
-    parts = template.split("/")
-    out = []
-    for part in parts[:-1]:
-        found = PLACEHOLDER.findall(part)
-        if found and set(found) <= tol:
-            part = "_".join(n for n in (names.get(p, "") for p in dict.fromkeys(found)) if n)
-        if part:
-            out.append(part)
-    return "/".join(out + parts[-1:])
-
-
-def flat_item(sets, item):
-    item = dict(item)
-    if "file" in item:
-        item["file"] = flat_template(sets, item["file"])
-    if "files" in item:
-        item["files"] = [flat_template(sets, t) for t in item["files"]]
-    return item
-
-
-def layout(sets, shape, mode, flat=False):
-    """{file under the shape folder: its path in the release}, in list order.
-    flat leaves the tolerance folders out of the release paths; a build with
-    one tolerance needs them nowhere."""
+def layout(release, mode, flat=False):
+    """{file below the scene folder: its path in the release}, sorted. A build
+    with one tolerance takes the files whose tolerance folders all name it.
+    flat leaves those folders out: tight/ and press_tight/ go, and cap_tight/
+    becomes cap/ where its folder also holds files of its own, so the caps stay
+    apart from the shaft next to them. The projects go only into builds with
+    the default tolerance, which they were laid out with (probably)."""
+    files = [rel for rel in release.files if mode == ALL or all(l == mode for l in levels_of(rel))]
     out = {}
-    for _, items in resolve(sets, shape):
-        for item in items:
-            shown = flat_item(sets, item) if flat else item
-            for tol in tolerance_combos(sets, item, mode):
-                for src, dest in zip(alternatives(item, tol), alternatives(shown, tol)):
-                    out.setdefault(src, dest)
-    if mode == sets["default_tolerance"]:
-        for project in shape.get("projects", []):
+    if flat and mode != ALL:
+        with_files = set(rel.rpartition("/")[0] for rel in files)
+        for rel in files:
+            parts, kept = rel.split("/"), []
+            for i, part in enumerate(parts[:-1]):
+                m = TOL_DIR.match(part)
+                if not m:
+                    kept.append(part)
+                elif m.group(1) and "/".join(parts[:i]) in with_files:
+                    kept.append(m.group(1))
+            out[rel] = "/".join(kept + parts[-1:])
+    else:
+        out = {rel: rel for rel in files}
+    if mode == DEFAULT_LEVEL:
+        for project in release.projects:
             out.setdefault(project, project)
     return out
-
-
-def shape_files(sets, shape, mode):
-    """Every file a shape's release needs, relative to its folder, in list order."""
-    return list(layout(sets, shape, mode))
 
 
 def clashes(paths):
@@ -271,9 +256,9 @@ def clashes(paths):
     return [(paths[srcs[0]], srcs) for srcs in by_dest.values() if len(srcs) > 1]
 
 
-def check_mode(sets, mode):
-    if mode != ALL and mode not in sets["tolerance_levels"]:
-        raise BuildError("unknown tolerance %r; use one of %s" % (mode, ", ".join(sets["tolerance_levels"])))
+def check_mode(mode):
+    if mode != ALL and mode not in LEVELS:
+        raise BuildError("unknown tolerance %r; use one of %s" % (mode, ", ".join(LEVELS)))
 
 
 # --------------------------------------------------------------------------
@@ -376,95 +361,16 @@ def name_problems(rel_paths):
     return errors, warnings
 
 
-# --------------------------------------------------------------------------
-# combi_export presets
-
-
-def preset_folder(sets, root_dir):
-    """The shape folder a combi_export root folder points at: GripV for
-    D:\\Grip\\orca_slicer\\GripV\\ or //../orca_slicer/GripV/. None for any other."""
-    parts = [p.lower() for p in re.split(r"[\\/]+", root_dir) if p not in ("", ".")]
-    for folder in sorted(set(s["folder"] for s in sets["shapes"])):
-        want = [p.lower() for p in sets["root"].strip("/").split("/") + folder.split("/")]
-        if parts[-len(want):] == want:
-            return folder
-    return None
-
-
-def load_exports(repo, sets):
-    """The files the combi_export presets export, from the JSON files that
-    combi_export saves next to the .blend file (`presets` in the print sets).
-    Returns ({shape folder: set of paths below it}, [(level, text)]), level
-    being "error", "warning" or "info". A folder whose list is missing or
-    incomplete in any of its files has no entry, so nothing is compared."""
-    exports, notes, unknown = {}, [], set()
-    for path in sets.get("presets", []):
-        full = os.path.join(repo, *path.split("/"))
-        if not os.path.isfile(full):
-            notes.append(("warning", "missing %s (combi_export writes it when the .blend file is saved)" % path))
-            continue
-        try:
-            with open(full, encoding="utf-8") as f:
-                data = json.load(f)
-        except (OSError, ValueError) as e:
-            notes.append(("error", "%s is not valid JSON: %s" % (path, e)))
-            continue
-        root_dir = data.get("root_dir") if isinstance(data, dict) else None
-        folder = preset_folder(sets, root_dir) if isinstance(root_dir, str) else None
-        if folder is None:
-            notes.append(("warning", "%s: its root folder %r is not a shape folder in %s/, so it is not compared"
-                          % (path, root_dir, sets["root"])))
-            continue
-        listing = data.get("exports")
-        presets = listing.get("presets") if isinstance(listing, dict) else None
-        if not isinstance(presets, list) or not all(
-                isinstance(p, dict) and isinstance(p.get("files"), list) for p in presets):
-            notes.append(("warning", "%s has no list of the exported files: save the .blend file with "
-                          "combi_export's \"Save JSON with File\" on to write it" % path))
-            unknown.add(folder)
-            continue
-        if listing.get("complete") is not True:
-            notes.append(("warning", "%s lists only part of the exported files, so they are not compared" % path))
-            unknown.add(folder)
-            continue
-        files = set(f for p in presets for f in p["files"] if isinstance(f, str))
-        exports.setdefault(folder, set()).update(files)
-        notes.append(("info", "%s: %s export %s to %s/%s/." % (
-            path, plural(len(presets), "preset"), plural(len(files), "file"), sets["root"], folder)))
-    for folder in unknown:
-        exports.pop(folder, None)
-    return exports, notes
-
-
-def plural(n, word):
-    return "%d %s%s" % (n, word, "" if n == 1 else "s")
-
-
-def not_exported(exports, folder, rels):
-    """The .stl files of rels (below folder) that the presets do not export;
-    none when there is no list for folder. OrcaSlicer projects are not exports."""
-    if folder not in exports:
-        return []
-    return [rel for rel in rels if rel.lower().endswith(".stl") and rel not in exports[folder]]
-
-
-def tolerance_dir(sets):
-    levels = "|".join(re.escape(l) for l in sets["tolerance_levels"])
-    return re.compile(r"^(?:([A-Za-z]+)_)?(%s)$" % levels)
-
-
-def identical_siblings(sets, digests):
+def identical_siblings(digests):
     """Tolerance variants in sibling folders that hold the same file.
     digests maps relative path -> sha256.
     Returns sorted (folder pattern, which levels are equal, files, files in the pattern)."""
-    tol_dir = tolerance_dir(sets)
-    order = {l: i for i, l in enumerate(sets["tolerance_levels"])}
-    labels = sets["tolerance_placeholders"]
+    order = {l: i for i, l in enumerate(LEVELS)}
     groups = {}
     for rel, digest in digests.items():
         parts = rel.split("/")
         for i, part in enumerate(parts[:-1]):
-            m = tol_dir.match(part)
+            m = TOL_DIR.match(part)
             if m:
                 key = (tuple(parts[:i]), m.group(1) or "", tuple(parts[i + 1:]))
                 groups.setdefault(key, {})[m.group(2)] = digest
@@ -472,9 +378,8 @@ def identical_siblings(sets, digests):
     for (head, prefix, tail), levels in groups.items():
         if len(levels) < 2:
             continue
-        axis = "<%s>" % _axis_label(prefix, labels)
-        pattern = "/".join([_wild(p, tol_dir) for p in head] + [axis] +
-                           [_wild(p, tol_dir) for p in tail[:-1]]) + "/"
+        axis = "<%s_*>" % prefix if prefix else "<tolerance>"
+        pattern = "/".join([_wild(p) for p in head] + [axis] + [_wild(p) for p in tail[:-1]]) + "/"
         totals[pattern] = totals.get(pattern, 0) + 1
         same = {}
         for level, digest in levels.items():
@@ -488,57 +393,124 @@ def identical_siblings(sets, digests):
     return sorted((p, s, sorted(files), totals[p]) for (p, s), files in found.items())
 
 
-def _axis_label(prefix, labels):
-    """Folder prefix -> setting name: cap -> cap tolerance, press and the GripX
-    spelling pres -> press tolerance, no prefix -> tolerance."""
-    if not prefix:
-        return labels.get("tolerance", "tolerance")
-    for key, label in labels.items():
-        if key.startswith(prefix):
-            return label
-    return prefix + " tolerance"
-
-
-def _wild(part, tol_dir):
-    m = tol_dir.match(part)
+def _wild(part):
+    m = TOL_DIR.match(part)
     if not m:
         return part
     return (m.group(1) + "_*") if m.group(1) else "*"
 
 
-def identical_alternatives(sets, shape, digest_of):
-    """Files offered as a choice in one item that are the same file.
-    digest_of(rel path under the shape folder) -> sha256 or None.
-    Returns [(item name, [paths that are the same]), ...]."""
-    out = []
-    for _, items in resolve(sets, shape):
-        for item in items:
-            for tol in tolerance_combos(sets, item, ALL):
-                same = {}
-                for rel in alternatives(item, tol):
-                    digest = digest_of(rel)
-                    if digest:
-                        same.setdefault(digest, []).append(rel)
-                for paths in same.values():
-                    if len(paths) > 1:
-                        out.append((item["name"], paths))
-    return out
+# --------------------------------------------------------------------------
+# Print lists
 
 
-def same_in_release(sets, shape, paths, digest_of):
-    """identical_alternatives() among the files of one release, shown by their
-    release paths. paths is layout(), digest_of reads the source files."""
-    found = identical_alternatives(sets, shape, lambda rel: digest_of(rel) if rel in paths else None)
-    return [(name, [paths[rel] for rel in rels]) for name, rels in found]
+def link(path):
+    """A repository path or a full URL as a link that works outside the repository."""
+    return path if "://" in path else "%s/blob/%s/%s" % (REPO_URL, BRANCH, path)
+
+
+MD_LINK = re.compile(r"(\]\()([^)\s]+)(\))")
+
+
+def absolute_links(text, base):
+    """Markdown links of a file at `base` (a repository path) as full URLs, so
+    they still work in a zip: (#tolerances) and (../docs/print-guide.md)."""
+    folder = base.rpartition("/")[0]
+
+    def fix(m):
+        target = m.group(2)
+        if "://" in target or target.startswith("mailto:"):
+            return m.group(0)
+        if target.startswith("#"):
+            return m.group(1) + link(base) + target + m.group(3)
+        path, _, anchor = target.partition("#")
+        full = os.path.normpath(os.path.join(folder, path)).replace(os.sep, "/")
+        return m.group(1) + link(full) + ("#" + anchor if anchor else "") + m.group(3)
+    return MD_LINK.sub(fix, text)
+
+
+def print_section(repo, scene):
+    """The scene's section of orca_slicer/README.md: the "## Print list" heading
+    that names its folder (GripV), up to the next "## " heading, with its links
+    made absolute. None when there is no such section."""
+    try:
+        with open(os.path.join(repo, *PRINT_LISTS.split("/")), encoding="utf-8") as f:
+            lines = f.read().splitlines()
+    except OSError:
+        return None
+    name = re.compile(r"\b%s\b" % re.escape(os.path.basename(scene.folder)))
+    start = next((i for i, line in enumerate(lines)
+                  if line.startswith("## Print list") and name.search(line)), None)
+    if start is None:
+        return None
+    end = next((i for i in range(start + 1, len(lines)) if lines[i].startswith("## ")), len(lines))
+    body = "\n".join(lines[start + 1:end]).strip("\n")
+    return absolute_links(body, PRINT_LISTS)
+
+
+def file_lines(paths):
+    """The release paths grouped by folder: - `parts/buttons/`: `button.stl`"""
+    by_dir = {}
+    for path in sorted(paths):
+        folder, _, name = path.rpartition("/")
+        by_dir.setdefault(folder, []).append(name)
+    return ["- %s: %s" % ("`%s/`" % d if d else "top folder", ", ".join("`%s`" % n for n in names))
+            for d, names in sorted(by_dir.items())]
+
+
+def print_list(release, mode, paths, section=None, source=None, flat=False):
+    """The PRINT_LIST.md text of one release. paths is layout(), section is
+    print_section(), source says what it was built from."""
+    flat = flat and mode != ALL
+    folder = "`%s/%s/`" % (ROOT, release.scene.folder)
+    out = ["# %s: print list" % release.title, ""]
+    if mode == ALL:
+        out.append("Every tolerance variant is included. Start with `%s` everywhere." % DEFAULT_LEVEL)
+    else:
+        out.append("Fit: `%s`." % mode)
+    if source:
+        out.append("Built from %s." % source)
+    others = " or ".join("`%s`" % l for l in LEVELS if l != (DEFAULT_LEVEL if mode == ALL else mode))
+    tol_link = link(PRINT_LISTS) + "#tolerances"
+    if flat:
+        text = "Every fit part here is the `%s` one, so the paths leave out the tolerance folders " \
+               "that %s in the repository has." % (mode, folder)
+        moved = [(s.rpartition("/")[0], d.rpartition("/")[0]) for s, d in paths.items()]
+        moved = [(s, d) for s, d in moved if s != d and d]
+        if moved:
+            text += " For example `%s/` there is `%s/` here." % moved[0]
+        text += " If a part does not fit, reprint only that part from another tolerance (%s) " \
+                "in the repository; the case stays. See [tolerances](%s)." % (others, tol_link)
+    else:
+        text = "The paths are the same as in %s in the repository, so the folder names show the " \
+               "tolerance of each part. If a part does not fit, reprint only that part from the " \
+               "neighbouring tolerance (%s); the case stays. See [tolerances](%s)." % (folder, others, tol_link)
+    out += ["", text, "", "## What to print", ""]
+    if section:
+        out += ["From the print list in the repository, which shows the paths with their `%s` folders."
+                % DEFAULT_LEVEL, "", section]
+    else:
+        out.append("See the [print list](%s) for how many of each part to print." % link(PRINT_LISTS))
+    parts = [p for s, p in paths.items() if s not in release.projects]
+    out += ["", "## Files in this zip", ""] + file_lines(parts)
+    if any(s in release.projects for s in paths):
+        out += ["", "## OrcaSlicer projects", ""]
+        out += ["- `%s`" % p for p in release.projects]
+        out += ["", "The parts laid out on plates, probably with the `%s` files. If a part was exported "
+                    "again after a project was saved, the STL is the newer one." % DEFAULT_LEVEL]
+    out += ["", "## Guides", ""] + ["- [%s](%s)" % (title, link(path)) for title, path in GUIDES]
+    out += ["", "## License", "", "Licensed under %s, see `LICENSE`. Credits: %s." % (LICENSE_NAME, CREDITS),
+            "", NOTICE]
+    return "\n".join(out) + "\n"
 
 
 # --------------------------------------------------------------------------
 # --check
 
 
-def check(repo, sets, verbose=False):
-    """Check that the release can be built. Returns (exit code, report text)."""
-    root = os.path.join(repo, sets["root"])
+def check(repo, verbose=False):
+    """Check that the releases can be built. Returns (exit code, report text)."""
+    root = os.path.join(repo, ROOT)
     lines, errors, warnings = [], [], []
 
     def section(title):
@@ -556,38 +528,82 @@ def check(repo, sets, verbose=False):
     def info(text):
         lines.append("  " + text)
 
-    lines.append("Checking %s/ against the print sets" % sets["root"])
+    def result():
+        lines.append("")
+        lines.append("Result: %s, %s." % (plural(len(errors), "error"), plural(len(warnings), "warning")))
+        return (EXIT_ERROR if errors else EXIT_OK), "\n".join(lines)
+
+    lines.append("Checking %s/ against the combi_export presets" % ROOT)
     if not os.path.isdir(root):
         error("folder not found: %s" % root)
-        return EXIT_ERROR, "\n".join(lines + ["", "Result: 1 error."])
+        return result()
     tree = scan(root)
     parts = [rel for rel in tree if rel.lower().endswith(PART_EXTS)]
 
-    section("Print sets")
-    needed = {}  # path under root -> shape titles
-    for shape in sets["shapes"]:
-        for rel in shape_files(sets, shape, ALL) + shape.get("projects", []):
-            needed.setdefault(shape["folder"] + "/" + rel, []).append(shape["title"])
-    missing = missing_files(tree, sorted(needed))
+    section("Presets")
+    scenes, notes = load_scenes(repo)
+    for level, text in notes:
+        (error if level == "error" else info)(text)
+
+    section("Releases")
+    rels = releases(scenes, tree)
+    exported = {}  # path below ROOT -> (scene, preset)
+    for scene in scenes:
+        for rel, preset in scene.files.items():
+            exported[scene.folder + "/" + rel] = preset
+    for release in rels:
+        files = layout(release, DEFAULT_LEVEL, flat=True)
+        projects = len(release.projects)
+        info("%-20s %s at `%s`%s" % (release.id, plural(len(files) - projects, "file"), DEFAULT_LEVEL,
+                                     ", with " + ", ".join(release.projects) if projects else ""))
+        for dest, srcs in clashes(files):
+            error("%s land on the same path %s in the %s release without tolerance folders"
+                  % (" and ".join(release.scene.folder + "/" + s for s in srcs), dest, release.title))
+    for scene in scenes:
+        levels = set(l for rel in scene.files for l in levels_of(rel))
+        if levels and DEFAULT_LEVEL not in levels:
+            warn("%s/%s/ has tolerance folders but none named `%s`, so a plain build has no fit parts"
+                 % (ROOT, scene.folder, DEFAULT_LEVEL))
+    if not rels:
+        error("no releases: the presets export nothing")
+    if not os.path.isfile(os.path.join(repo, LICENSE)):
+        error("missing %s (copied into every release)" % LICENSE)
+    for title, path in GUIDES:
+        if "://" not in path and not os.path.isfile(os.path.join(repo, *path.split("/"))):
+            warn("missing %s (linked from every print list)" % path)
+    for scene in scenes:
+        if print_section(repo, scene) is None:
+            warn("%s has no \"## Print list\" section that names %s, so its print lists only list the files"
+                 % (PRINT_LISTS, os.path.basename(scene.folder)))
+
+    section("Exported files")
+    missing = missing_files(tree, sorted(exported))
     for rel, other in missing:
-        shapes = ", ".join(dict.fromkeys(needed[rel]))
         if other:
-            error("case differs: the print sets name %s, the file is %s (%s)" % (rel, other, shapes))
+            error("case differs: preset %r exports %s, the file is %s" % (exported[rel], rel, other))
         else:
-            error("missing %s (%s)" % (rel, shapes))
-    if not missing:
-        info("%d shapes need %d files at all tolerances: all found." % (len(sets["shapes"]), len(needed)))
-    for path in [sets["license"]] + [g["path"] for g in sets.get("guides", []) if "path" in g]:
-        if not os.path.isfile(os.path.join(repo, *path.split("/"))):
-            (error if path == sets["license"] else warn)("missing %s (linked from every print list)" % path)
-    for shape in sets["shapes"]:
-        folder = shape["folder"]
-        for dest, srcs in clashes(layout(sets, shape, sets["default_tolerance"], flat=True)):
-            error("%s land on the same path %s in the %s release without tolerance folders (see flat_folders)"
-                  % (" and ".join(folder + "/" + s for s in srcs), dest, shape["title"]))
+            error("missing %s: preset %r exports it, so export it again" % (rel, exported[rel]))
+    if exported and not missing:
+        info("all %d exported files are in %s/." % (len(exported), ROOT))
+
+    section("Files no preset exports")
+    folders = [scene.folder + "/" for scene in scenes]
+    projects = set(release.scene.folder + "/" + p for release in rels for p in release.projects)
+    stale = [rel for rel in parts if rel not in exported and rel not in projects
+             and any(rel.startswith(f) for f in folders)]
+    for rel in stale:
+        if rel.lower().endswith(".stl"):
+            warn("%s: in no release; delete it, or add it to a preset and export it" % rel)
+        else:
+            info("%s: an OrcaSlicer project that no release takes (name it <scene>_<folder>.3mf)" % rel)
+    others = [rel for rel in parts if not any(rel.startswith(f) for f in folders)]
+    for rel in others:
+        info("%s: outside the export folders" % rel)
+    if not stale and not others:
+        info("none.")
 
     section("File and folder names")
-    name_errors, name_warnings = name_problems(sorted(set(tree) | set(tracked(repo, sets["root"]) or [])))
+    name_errors, name_warnings = name_problems(sorted(set(tree) | set(tracked(repo, ROOT) or [])))
     for text in name_errors:
         error(text)
     for text in name_warnings:
@@ -601,7 +617,7 @@ def check(repo, sets, verbose=False):
         pointers += pointer
 
     section("Tolerance variants that are the same file")
-    found = identical_siblings(sets, digests)
+    found = identical_siblings({rel: d for rel, d in digests.items() if rel in exported})
     for pattern, summary, files, total in found:
         warn("%s: %s (%d of %d files)" % (pattern, summary, len(files), total))
         if verbose:
@@ -610,205 +626,11 @@ def check(repo, sets, verbose=False):
     if not found:
         info("every tolerance variant differs from its neighbours.")
 
-    section("Choices that are the same file")
-    seen = {}
-    for shape in sets["shapes"]:
-        folder = shape["folder"]
-        for name, paths in identical_alternatives(
-                sets, shape, lambda rel: digests.get(folder + "/" + rel)):
-            key = tuple(folder + "/" + p for p in paths)
-            seen.setdefault(key, [name, []])[1].append(shape["title"])
-    for key, (name, shapes) in sorted(seen.items()):
-        warn("%s (%s; %s)" % (" = ".join(key), name, ", ".join(dict.fromkeys(shapes))))
-    if not seen:
-        info("every choice offers different files.")
-
-    section("Not exported yet (listed in the print sets)")
-    gaps = {}
-    for shape in sets["shapes"]:
-        for group, items in resolve(sets, shape):
-            for item in items:
-                if "missing" in item:
-                    gaps.setdefault((group["title"], item["name"], item["qty"]), []).append(shape["title"])
-    for (title, name, qty), shapes in gaps.items():
-        warn("%d x %s (%s): %s" % (qty, name, title, ", ".join(shapes)))
-    if not gaps:
-        info("nothing.")
-
-    section("combi_export presets")
-    exports, notes = load_exports(repo, sets)
-    for level, text in notes:
-        {"error": error, "warning": warn, "info": info}[level](text)
-    on_disk = set(tree)
-    for folder in sorted(exports):
-        prefix = folder + "/"
-        named = sorted(rel[len(prefix):] for rel in needed if rel.startswith(prefix))
-        for rel in not_exported(exports, folder, named):
-            warn("%s%s: no preset exports it, so it may be older than the .blend file (%s)"
-                 % (prefix, rel, ", ".join(dict.fromkeys(needed[prefix + rel]))))
-        absent = sorted(prefix + rel for rel in exports[folder]
-                        if prefix + rel not in on_disk and prefix + rel not in needed)
-        if absent:
-            info("%s the presets export %s not in %s/%s, and no print set needs %s%s" % (
-                plural(len(absent), "file"), "is" if len(absent) == 1 else "are", sets["root"], prefix,
-                "it" if len(absent) == 1 else "them", ":" if verbose else " (-v lists %s)."
-                % ("it" if len(absent) == 1 else "them")))
-            if verbose:
-                for rel in absent:
-                    info("           %s" % rel)
-    if not sets.get("presets"):
-        info("no preset files in the print sets.")
-
-    section("Files no print set uses")
-    unused = [rel for rel in parts if rel not in needed]
-    for rel in unused:
-        folder = next((f for f in exports if rel.startswith(f + "/")), None)
-        stale = folder is not None and not_exported(exports, folder, [rel[len(folder) + 1:]])
-        info(rel + ("    (no preset exports it)" if stale else ""))
-    if not unused:
-        info("none.")
-
     section("Git LFS")
     info("%d pointer files, %d real files." % (pointers, len(parts) - pointers))
     if pointers:
         info("Pointer files are fine for --check; run git lfs pull before building.")
-
-    lines.append("")
-    lines.append("Result: %d error%s, %d warning%s." % (
-        len(errors), "" if len(errors) == 1 else "s", len(warnings), "" if len(warnings) == 1 else "s"))
-    return (EXIT_ERROR if errors else EXIT_OK), "\n".join(lines)
-
-
-# --------------------------------------------------------------------------
-# PRINT_LIST.md
-
-
-def link(sets, guide):
-    if "url" in guide:
-        return guide["url"]
-    return "%s/blob/%s/%s" % (sets["repo_url"], sets.get("branch", "main"), guide["path"])
-
-
-def show_path(sets, template, mode, flat=False):
-    """A path template as printed: tolerance levels filled in, choices as <name>."""
-    if flat:
-        template = flat_template(sets, template)
-    if mode == ALL:
-        labels = {k: "<%s>" % v for k, v in sets["tolerance_placeholders"].items()}
-    else:
-        labels = {k: mode for k in sets["tolerance_placeholders"]}
-    shown = fill(template, labels)
-    return PLACEHOLDER.sub(lambda m: "<%s>" % m.group(1), shown)
-
-
-def print_list(sets, shape, mode, source=None, same_files=(), flat=False):
-    """The PRINT_LIST.md text of one shape. source says what it was built from,
-    same_files is same_in_release(), flat says the paths have no tolerance folders."""
-    flat = flat and mode != ALL
-    folder = shape["folder"]
-    out = ["# %s: print list" % shape["title"], ""]
-    if shape.get("about"):
-        out += [shape["about"], ""]
-    names = ["`%s`" % v for v in sets["tolerance_placeholders"].values()]
-    names = " and ".join([", ".join(names[:-1]), names[-1]]) if len(names) > 1 else names[0]
-    if mode == ALL:
-        out.append("Every tolerance variant is included. Start with `%s` in every place "
-                   "a path says `<...tolerance>`." % sets["default_tolerance"])
-    else:
-        out.append("Fit: `%s` for %s." % (mode, names))
-    if source:
-        out.append("Built from %s." % source)
-    tol_link = link(sets, {"path": sets["root"] + "/README.md"}) + "#tolerances"
-    start = sets["default_tolerance"] if mode == ALL else mode
-    others = " or ".join("`%s`" % l for l in sets["tolerance_levels"] if l != start)
-    repo_folder = "`%s/%s/`" % (sets["root"], folder)
-    if flat:
-        text = "Every fit part here is the `%s` one, so the paths leave out the tolerance folders " \
-               "that %s in the repository has." % (mode, repo_folder)
-        dirs = [(s.rpartition("/")[0], d.rpartition("/")[0]) for s, d in layout(sets, shape, mode, True).items()]
-        moved = [(s, d) for s, d in dirs if s != d and d]
-        if moved:
-            text += " For example `%s/` there is `%s/` here." % moved[0]
-        text += " If a part does not fit, reprint only that part from another tolerance (%s) " \
-                "in the repository; the case stays. See [tolerances](%s)." % (others, tol_link)
-    else:
-        text = "The paths are the same as in %s in the repository, so the folder names show the " \
-               "tolerance of each part. If a part does not fit, reprint only that part from the " \
-               "neighbouring tolerance (%s); the case stays. See [tolerances](%s)." \
-               % (repo_folder, others, tol_link)
-    out += ["", text]
-
-    groups = resolve(sets, shape)
-    gaps = sum(1 for _, items in groups for item in items if "missing" in item)
-    notes = list(shape.get("notes", []))
-    for name, paths in same_files:
-        notes.append("%s: %s are the same file in this release, so one of them was probably exported "
-                     "with the wrong setting." % (name, " and ".join("`%s`" % p for p in paths)))
-    if gaps:
-        notes.insert(0, "Not complete yet: %d part%s %s not exported (marked **not exported yet** below)."
-                     % (gaps, "" if gaps == 1 else "s", "is" if gaps == 1 else "are"))
-    if notes:
-        out.append("")
-        out += ["> %s" % n if i == 0 else ">\n> %s" % n for i, n in enumerate(notes)]
-
-    for group, items in groups:
-        out += ["", "## " + group["title"], ""]
-        intro = (["Only %s." % group["when"]] if group.get("when") else []) + \
-            ([group["note"]] if group.get("note") else [])
-        if intro:
-            out += [" ".join(intro), ""]
-        for item in items:
-            out += _item_lines(sets, item, mode, flat)
-
-    projects = shape.get("projects", [])
-    if projects and mode == sets["default_tolerance"]:
-        out += ["", "## OrcaSlicer projects", ""]
-        for p in projects:
-            out.append("- `%s`" % p)
-        out += ["", "The parts laid out on plates, probably with the `%s` files. If a part was "
-                    "exported again after a project was saved, the STL is the newer one."
-                    % sets["default_tolerance"]]
-
-    if shape.get("hardware"):
-        out += ["", "## Not printed", "", shape["hardware"]]
-    if sets.get("guides"):
-        out += ["", "## Guides", ""]
-        out += ["- [%s](%s)" % (g["title"], link(sets, g)) for g in sets["guides"]]
-    out += ["", "## License", ""]
-    text = "Licensed under %s, see `LICENSE`." % sets.get("license_name", "the license in `LICENSE`")
-    if sets.get("credits"):
-        text += " Credits: %s." % sets["credits"]
-    out.append(text)
-    if sets.get("notice"):
-        out += ["", sets["notice"]]
-    return "\n".join(out) + "\n"
-
-
-def _item_lines(sets, item, mode, flat=False):
-    head = "- %d x %s" % (item["qty"], item["name"])
-    if item.get("optional"):
-        head += " (optional)"
-    tail = ["Only %s." % item["when"]] if item.get("when") else []
-    if "missing" in item:
-        tail.append(item["missing"])
-    if item.get("note"):
-        tail.append(item["note"])
-    if item.get("unconfirmed"):
-        tail.append("Not confirmed: %s" % item["unconfirmed"])
-    if "missing" in item:
-        return [head + ": **not exported yet.** " + " ".join(tail)]
-    if "files" in item:
-        lines = [head + ", one of:"]
-        lines += ["  - `%s`" % show_path(sets, t, mode, flat) for t in item["files"]]
-        if tail:
-            lines.append("  " + " ".join(tail))
-        return lines
-    line = head + ": `%s`" % show_path(sets, item["file"], mode, flat)
-    choose = item.get("choose", {})
-    if choose:
-        line += ", with " + "; ".join("%s one of %s" % (k, ", ".join("`%s`" % v for v in vals))
-                                     for k, vals in choose.items())
-    return [line + ("." if choose or tail else "") + (" " + " ".join(tail) if tail else "")]
+    return result()
 
 
 # --------------------------------------------------------------------------
@@ -832,11 +654,11 @@ def source_label(repo, root):
     return label
 
 
-def release_name(sets, shape, mode, tag=None, flat=False):
+def release_name(release, mode, tag=None, flat=False):
     """GripV-standard, GripV-standard-tight, GripV-standard-all-tolerances: the
     default tolerance gets no suffix in a flat build. --full-paths names it."""
-    shown = None if flat and mode == sets["default_tolerance"] else mode
-    return "-".join(p for p in (shape["id"], tag, shown) if p)
+    shown = None if flat and mode == DEFAULT_LEVEL else mode
+    return "-".join(p for p in (release.id, tag, shown) if p)
 
 
 def prepare_folder(path):
@@ -880,37 +702,37 @@ def update_sums(out_dir):
             f.write("%s  %s\n" % (sha256_file(os.path.join(out_dir, name)), name))
 
 
-def build(repo, sets, shapes, mode, out_dir, tag=None, make_zip=True, allow_pointers=False, log=print,
+def build(repo, chosen, mode, out_dir, tag=None, make_zip=True, allow_pointers=False, log=print,
           flat=True):
-    """Build a folder (and zip) per shape. Returns the exit code. flat leaves the
+    """Build a folder (and zip) per release. Returns the exit code. flat leaves the
     tolerance folders out of the paths, except with every tolerance."""
     flat = flat and mode != ALL
-    root = os.path.join(repo, sets["root"])
+    root = os.path.join(repo, ROOT)
     tree = scan(root) if os.path.isdir(root) else []
     plans, missing, pointers, clashing = [], set(), set(), []
-    for shape in shapes:
-        files = layout(sets, shape, mode, flat)
-        clashing += [(shape, dest, srcs) for dest, srcs in clashes(files)]
-        paths = [shape["folder"] + "/" + rel for rel in files]
+    for release in chosen:
+        files = layout(release, mode, flat)
+        clashing += [(release, dest, srcs) for dest, srcs in clashes(files)]
+        paths = [release.scene.folder + "/" + rel for rel in files]
         lost = set(rel for rel, _ in missing_files(tree, paths))
         missing |= lost
         for path in paths:
             if path not in lost and not allow_pointers and is_pointer(native(root, path)):
                 pointers.add(path)
-        plans.append((shape, files))
-    license_path = os.path.join(repo, *sets["license"].split("/"))
+        plans.append((release, files))
+    license_path = os.path.join(repo, LICENSE)
     if not os.path.isfile(license_path):
-        missing.add(sets["license"])
+        missing.add(LICENSE)
     for path in sorted(missing):
         log("ERROR  missing %s" % path)
-    for shape, dest, srcs in clashing:
-        log("ERROR  %s: %s land on the same path %s; build with --full-paths or see flat_folders"
-            % (shape["id"], " and ".join(srcs), dest))
+    for release, dest, srcs in clashing:
+        log("ERROR  %s: %s land on the same path %s; build with --full-paths"
+            % (release.id, " and ".join(srcs), dest))
     if pointers:
         shown = sorted(pointers)[:5]
+        one = len(pointers) == 1
         log("ERROR  %d file%s %s Git LFS pointer%s, not the model%s: %s%s" % (
-            len(pointers), "" if len(pointers) == 1 else "s", "is a" if len(pointers) == 1 else "are",
-            "" if len(pointers) == 1 else "s", "" if len(pointers) == 1 else "s",
+            len(pointers), "" if one else "s", "is a" if one else "are", "" if one else "s", "" if one else "s",
             ", ".join(shown), ", ..." if len(pointers) > len(shown) else ""))
         log("Run git lfs pull to download the models first.")
     if missing or pointers or clashing:
@@ -923,20 +745,19 @@ def build(repo, sets, shapes, mode, out_dir, tag=None, make_zip=True, allow_poin
             with open(os.path.join(out_dir, ".gitignore"), "w", encoding="utf-8") as f:
                 f.write("# Release builds, made by tools/release/build_release.py\n*\n")
     source = source_label(repo, root)
-    exports, _ = load_exports(repo, sets)
 
-    for shape, files in plans:
-        name = release_name(sets, shape, mode, tag, flat)
+    for release, files in plans:
+        name = release_name(release, mode, tag, flat)
         dest = os.path.join(out_dir, name)
         prepare_folder(dest)
-        src_root = native(root, shape["folder"])
+        src_root = native(root, release.scene.folder)
         for rel, to in files.items():
             target = native(dest, to)
             os.makedirs(os.path.dirname(target), exist_ok=True)
             shutil.copyfile(native(src_root, rel), target)
-        same = same_in_release(sets, shape, files, lambda rel: fingerprint(native(src_root, rel))[0])
+        section = print_section(repo, release.scene)
         with open(os.path.join(dest, MARKER), "w", encoding="utf-8", newline="\n") as f:
-            f.write(print_list(sets, shape, mode, source, same, flat))
+            f.write(print_list(release, mode, files, section, source, flat))
         shutil.copyfile(license_path, os.path.join(dest, "LICENSE"))
         size = sum(os.path.getsize(native(dest, to)) for to in files.values())
         line = "%-32s %4d files, %6.1f MB" % (name, len(files), size / 1e6)
@@ -944,15 +765,9 @@ def build(repo, sets, shapes, mode, out_dir, tag=None, make_zip=True, allow_poin
             write_zip(dest, dest + ".zip")
             line += " -> %s.zip" % name
         log(line)
-        gaps = [i["name"] for _, items in resolve(sets, shape) for i in items if "missing" in i]
-        if gaps:
-            log("    not exported yet: %s" % ", ".join(gaps))
-        for item_name, paths in same:
-            log("    warning: %s: %s are the same file" % (item_name, " = ".join(paths)))
-        stale = not_exported(exports, shape["folder"], list(files))
-        if stale:
-            log("    warning: no preset exports %s, so %s may be older than the .blend file"
-                % (", ".join(stale), "it" if len(stale) == 1 else "they"))
+        if section is None:
+            log("    warning: %s has no print list for %s, so PRINT_LIST.md only lists the files"
+                % (PRINT_LISTS, os.path.basename(release.scene.folder)))
     if make_zip:
         update_sums(out_dir)
     log("Output: %s" % out_dir)
@@ -969,9 +784,9 @@ def main(argv=None):
         epilog="See README.md next to this script.")
     p.add_argument("--check", action="store_true",
                    help="check files and names only; works on Git LFS pointer files")
-    p.add_argument("--list", action="store_true", help="list the shapes and exit")
-    p.add_argument("--print-list", metavar="SHAPE", help="print the PRINT_LIST.md of one shape and exit")
-    p.add_argument("--shape", action="append", metavar="ID", help="only this shape (repeatable); default: all")
+    p.add_argument("--list", action="store_true", help="list the releases and exit")
+    p.add_argument("--print-list", metavar="SHAPE", help="print the PRINT_LIST.md of one release and exit")
+    p.add_argument("--shape", action="append", metavar="ID", help="only this release (repeatable); default: all")
     which = p.add_mutually_exclusive_group()
     which.add_argument("--tolerance", metavar="LEVEL",
                        help="the tolerance of the included parts: tight, default or loose (default: default)")
@@ -983,46 +798,44 @@ def main(argv=None):
     p.add_argument("--tag", metavar="TEXT", help="added to folder and zip names, for example v0.1")
     p.add_argument("--no-zip", action="store_true", help="build the folders only")
     p.add_argument("--repo", metavar="DIR", default=DEFAULT_REPO, help="repository root (default: %(default)s)")
-    p.add_argument("--sets", metavar="FILE", default=DEFAULT_SETS, help="print sets file (default: %(default)s)")
     p.add_argument("-v", "--verbose", action="store_true", help="--check: list every identical file")
     p.add_argument("--allow-pointers", action="store_true",
                    help="build even from Git LFS pointer files (only to try the script; the zips hold no models)")
     args = p.parse_args(argv)
 
-    try:
-        sets = load_sets(args.sets)
-    except (OSError, ValueError) as e:
-        print("ERROR  cannot read %s: %s" % (args.sets, e), file=sys.stderr)
-        return EXIT_ERROR
-    except SetError as e:
-        print("ERROR  %s is not valid:\n%s" % (args.sets, e), file=sys.stderr)
-        return EXIT_ERROR
     repo = os.path.abspath(args.repo)
-    mode = ALL if args.all_tolerances else (args.tolerance or sets["default_tolerance"])
+    mode = ALL if args.all_tolerances else (args.tolerance or DEFAULT_LEVEL)
     flat = not args.full_paths and mode != ALL
 
     try:
-        check_mode(sets, mode)
-        if args.list:
-            for shape in sets["shapes"]:
-                print("%-18s %s" % (shape["id"], shape.get("about", "")))
-            return EXIT_OK
+        check_mode(mode)
         if args.check:
-            code, text = check(repo, sets, args.verbose)
+            code, text = check(repo, args.verbose)
             print(text)
             return code
-        if args.print_list:
-            shape = find_shape(sets, args.print_list)
-            root = native(os.path.join(repo, sets["root"]), shape["folder"])
-            same = same_in_release(
-                sets, shape, layout(sets, shape, mode, flat), lambda rel: fingerprint(native(root, rel))[0]
-                if os.path.isfile(native(root, rel)) else None)
-            sys.stdout.write(print_list(sets, shape, mode, None, same, flat))
+        scenes, notes = load_scenes(repo)
+        problems = [text for level, text in notes if level == "error"]
+        if problems:
+            for text in problems:
+                print("ERROR  %s" % text, file=sys.stderr)
+            return EXIT_ERROR
+        root = os.path.join(repo, ROOT)
+        rels = releases(scenes, scan(root) if os.path.isdir(root) else [])
+        if args.list:
+            for release in rels:
+                print("%-20s %s/%s/%s + %s/" % (release.id, ROOT, release.scene.folder,
+                                                release.shape or "", SHARED))
             return EXIT_OK
-        shapes = [find_shape(sets, s) for s in args.shape] if args.shape else sets["shapes"]
+        if args.print_list:
+            release = find_release(rels, args.print_list)
+            sys.stdout.write(print_list(release, mode, layout(release, mode, flat),
+                                        print_section(repo, release.scene), None, flat))
+            return EXIT_OK
+        chosen = [find_release(rels, s) for s in args.shape] if args.shape else rels
+        if not chosen:
+            raise BuildError("no releases: the presets export nothing")
         out_dir = os.path.abspath(args.out) if args.out else os.path.join(repo, "dist")
-        return build(repo, sets, shapes, mode, out_dir, args.tag, not args.no_zip, args.allow_pointers,
-                     flat=flat)
+        return build(repo, chosen, mode, out_dir, args.tag, not args.no_zip, args.allow_pointers, flat=flat)
     except BuildError as e:
         print("ERROR  %s" % e, file=sys.stderr)
         return EXIT_ERROR

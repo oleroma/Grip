@@ -1,6 +1,6 @@
 # Printed parts
 
-<!-- The print lists below match tools/release/print_sets.json. Change both together. -->
+<!-- tools/release/build_release.py copies each "## Print list" section below into the PRINT_LIST.md of the zips of the scene its heading names (GripV, GripX). -->
 
 This folder holds every printable part of Grip, exported from `blender/Grip.blend` as `.stl` files, plus a few OrcaSlicer projects (`.3mf`). This page tells you which files to print for each shape, how many of each, and which tolerance folder to start with.
 
@@ -176,4 +176,4 @@ To see the file problems at a glance, run `python tools/release/build_release.py
 
 ## Release zips
 
-For a release, each shape is packed into its own zip with only its files, a `PRINT_LIST.md` with the list above and the license. A zip holds the `default` tolerance only, so its paths leave out the tolerance folders: `parts/buttons/default/cap_default/` here is `parts/buttons/cap/` in the zip, and `parts/bumpers/press_default/` is `parts/bumpers/`. For another tolerance, take the part from this folder. See [tools/release](../tools/release/README.md) for how they are built.
+For a release, each shape is packed into its own zip with the files the `combi_export` presets export for it, its OrcaSlicer projects, a `PRINT_LIST.md` with its print list from this page, and the license. A file no preset exports is in no zip. A zip holds the `default` tolerance only, so its paths leave out the tolerance folders: `parts/buttons/default/cap_default/` here is `parts/buttons/cap/` in the zip, and `parts/bumpers/press_default/` is `parts/bumpers/`. For another tolerance, take the part from this folder. See [tools/release](../tools/release/README.md) for how they are built.

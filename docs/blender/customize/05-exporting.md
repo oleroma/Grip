@@ -31,7 +31,7 @@ Each preset lists collections and objects, and overrides at four levels (whole s
 
 ## Not exported by any preset
 
-`StickR` on GripV, the scroll wheel parts and `nut lock` on GripX (GripV writes them to `parts/scrollwheel/` and `parts/misc/`), `reinforcers` (GripX) and `case_middle_plate`. Of the caps, the four ABXY caps (one per symbol), one D-pad cap, one Select cap and the Home cap are exported; the four D-pad caps share one outline turned four ways. Add objects to a preset if you need them.
+`StickR` on GripV, the scroll wheel parts and `nut lock` on GripX (GripV writes them to `parts/scrollwheel/` and `parts/misc/`), `reinforcers` (GripX) and `case_middle_plate`. Of the caps, the four ABXY caps (one per symbol), one D-pad cap, one Select cap and the Home cap are exported; the four D-pad caps share one outline turned four ways. Add objects to a preset if you need them. The release zips only hold what the presets export.
 
 ## Known problems
 
