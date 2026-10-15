@@ -134,7 +134,7 @@ Paths are under `GripV/`, shown for the `default` tolerance. "Only with" means t
 | 1 | Battery cover | `parts/battery_cover/battery_cover.stl` | |
 | 1 | Cable holder | `parts/cable_holder/cable_holder.stl` | *probably* needed, see [Known gaps](#known-gaps) |
 | 2 | Alignment pin | `parts/pins/pin.stl` | standard only, one per side. The hollow shells line up on pins of the middle plate. |
-| 2 | Nut lock (optional) | `parts/misc/nut_lock.stl` | *probably* one per front screw: a small wedge that probably holds a front nut in its slot |
+| 2 | Nut lock (optional) | `parts/misc/nut_lock.stl` | a small wedge made from the front screw settings, probably to hold a front nut in its slot, so *probably* one per front screw |
 
 **Not printed:** four M2.5 DIN 912 socket-head screws with nuts (the [printing guide](../docs/print-guide.md) recommends them for the hollow version too, for now) and the electronics: board, joystick modules, battery and cable.
 
