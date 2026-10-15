@@ -345,6 +345,97 @@ class CheckTests(Fixture):
         self.assertEqual(code, br.EXIT_ERROR)
 
 
+class PresetTests(Fixture):
+    """The JSON files combi_export saves next to the .blend file list what the
+    presets export; --check and the build compare the print sets with them."""
+
+    def setUp(self):
+        super().setUp()
+        self.sets["presets"] = ["blender/V_preset.json"]
+        self.write_sets()
+        shapes = self.sets["shapes"]
+        self.exported = sorted(set(rel for shape in shapes for rel in br.shape_files(self.sets, shape, br.ALL)))
+        self.write_presets(self.exported)
+
+    def write_presets(self, files, root_dir="D:\\Grip\\orca_slicer\\V\\", complete=True, exports=True):
+        data = {"data_version": 4, "root_dir": root_dir, "global_nodegroups": [], "presets": []}
+        if exports:
+            data["exports"] = {"complete": complete, "presets": [
+                {"name": "Parts", "files": [f for f in files if f.startswith("parts/")]},
+                {"name": "Cases", "files": [f for f in files if not f.startswith("parts/")]}]}
+        self.write(os.path.join(self.tmp, "blender", "V_preset.json"), json.dumps(data, indent=4).encode())
+
+    def test_root_folder_names_the_shape_folder(self):
+        for root_dir, folder in (("D:\\Grip\\orca_slicer\\V\\", "V"), ("//../orca_slicer/V/", "V"),
+                                 ("/home/me/Grip/Orca_Slicer/v", "V"), ("D:\\Grip\\orca_slicer\\", None),
+                                 ("D:\\Grip\\other\\V\\", None), ("", None)):
+            self.assertEqual(br.preset_folder(self.sets, root_dir), folder, root_dir)
+
+    def test_presets_that_export_every_file_pass(self):
+        code, text = self.check()
+        self.assertEqual(code, br.EXIT_OK, text)
+        self.assertIn("blender/V_preset.json: 2 presets export 31 files to orca_slicer/V/.", text)
+        self.assertIn("Result: 0 errors, 1 warning.", text)  # the Select shafts, as without presets
+
+    def test_a_file_no_preset_exports_warns(self):
+        self.write_presets([f for f in self.exported if f != "parts/buttons/tight/button.stl"])
+        code, text = self.check()
+        self.assertEqual(code, br.EXIT_OK, text)
+        self.assertIn("warning  V/parts/buttons/tight/button.stl: no preset exports it, so it may be older than "
+                      "the .blend file (V standard, V hollow)", text)
+        self.assertIn("Result: 0 errors, 2 warnings.", text)
+
+    def test_exports_missing_from_disk_and_unused_files_are_listed(self):
+        self.write_presets(self.exported + ["parts/buttons/huge/button.stl", "parts/misc/nut_lock.stl"])
+        self.put("V/parts/misc/nut_lock.stl")
+        self.put("V/parts/misc/old.stl")
+        code, text = self.check()
+        self.assertEqual(code, br.EXIT_OK, text)
+        self.assertIn("1 file the presets export is not in orca_slicer/V/, and no print set needs it (-v lists it).", text)
+        unused = text.split("Files no print set uses")[1].split("Git LFS")[0]
+        self.assertIn("V/parts/misc/old.stl    (no preset exports it)", unused)
+        self.assertIn("V/parts/misc/nut_lock.stl\n", unused)
+        code, text = self.run_main("--check", "-v")
+        self.assertIn("           V/parts/buttons/huge/button.stl", text)
+
+    def test_files_without_a_list_are_not_compared(self):
+        empty = []
+        for kwargs, words in (({"exports": False}, "has no list of the exported files"),
+                              ({"complete": False}, "lists only part of the exported files"),
+                              ({"root_dir": "D:\\Grip\\exports\\"}, "is not a shape folder in orca_slicer/")):
+            with self.subTest(words=words):
+                self.write_presets(empty, **kwargs)
+                code, text = self.check()
+                self.assertEqual(code, br.EXIT_OK, text)
+                self.assertIn(words, text)
+                self.assertNotIn("no preset exports", text)
+                self.assertIn("Result: 0 errors, 2 warnings.", text)
+        os.remove(os.path.join(self.tmp, "blender", "V_preset.json"))
+        code, text = self.check()
+        self.assertIn("warning  missing blender/V_preset.json", text)
+        self.write(os.path.join(self.tmp, "blender", "V_preset.json"), b"{not json")
+        code, text = self.check()
+        self.assertEqual(code, br.EXIT_ERROR)
+        self.assertIn("ERROR    blender/V_preset.json is not valid JSON", text)
+
+    def test_presets_must_be_a_list_of_paths(self):
+        self.sets["presets"] = "blender/V_preset.json"
+        with self.assertRaises(br.SetError) as cm:
+            br.validate(self.sets)
+        self.assertIn("presets must be a list of paths", str(cm.exception))
+
+    def test_build_warns_about_files_no_preset_exports(self):
+        self.real = True
+        for shape in self.sets["shapes"]:
+            for rel in br.shape_files(self.sets, shape, br.ALL) + shape.get("projects", []):
+                self.put(shape["folder"] + "/" + rel)
+        self.write_presets([f for f in self.exported if f != "parts/buttons/default/button.stl"])
+        code, out = self.run_main("--out", os.path.join(self.tmp, "dist"), "--shape", "V-hollow")
+        self.assertEqual(code, br.EXIT_OK, out)
+        self.assertIn("warning: no preset exports parts/buttons/default/button.stl, so it may be older than the "
+                      ".blend file", out)
+
+
 class PrintListTests(Fixture):
 
     def test_default_print_list(self):

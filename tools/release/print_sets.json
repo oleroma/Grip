@@ -25,6 +25,7 @@
     "cap": "cap",
     "press": ""
   },
+  "presets": ["blender/GripV_preset.json", "blender/GripX_preset.json"],
 
   "groups": {
     "case": {

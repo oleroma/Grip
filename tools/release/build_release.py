@@ -15,9 +15,12 @@ A build with one tolerance leaves the tolerance folders out of the paths
 (parts/buttons/default/cap_default/ becomes parts/buttons/cap/, see
 flat_folders in print_sets.json); --full-paths keeps the paths of orca_slicer/.
 
---check works on Git LFS pointer files too, so it runs on a clone without the
-models. Building needs the real files. Only the Python standard library is
-needed (Python 3.8+). See README.md next to this file.
+--check also compares the print sets with the files the combi_export presets
+export, as listed in the JSON files combi_export saves next to Grip.blend
+(presets in print_sets.json). It works on Git LFS pointer files too, so it
+runs on a clone without the models. Building needs the real files. Only the
+Python standard library is needed (Python 3.8+). See README.md next to this
+file.
 """
 
 import argparse
@@ -110,6 +113,9 @@ def validate(sets):
             problems.append("flat_folders: %r is not a tolerance placeholder" % key)
         if not isinstance(name, str) or (name and not SAFE_NAME.match(name)):
             problems.append("flat_folders: %r must be a folder name or \"\"" % key)
+    presets = sets.get("presets", [])
+    if not isinstance(presets, list) or not all(isinstance(p, str) and p for p in presets):
+        problems.append("presets must be a list of paths in the repository")
     seen = set()
     for shape in sets["shapes"]:
         sid = shape.get("id", "?")
@@ -370,6 +376,78 @@ def name_problems(rel_paths):
     return errors, warnings
 
 
+# --------------------------------------------------------------------------
+# combi_export presets
+
+
+def preset_folder(sets, root_dir):
+    """The shape folder a combi_export root folder points at: GripV for
+    D:\\Grip\\orca_slicer\\GripV\\ or //../orca_slicer/GripV/. None for any other."""
+    parts = [p.lower() for p in re.split(r"[\\/]+", root_dir) if p not in ("", ".")]
+    for folder in sorted(set(s["folder"] for s in sets["shapes"])):
+        want = [p.lower() for p in sets["root"].strip("/").split("/") + folder.split("/")]
+        if parts[-len(want):] == want:
+            return folder
+    return None
+
+
+def load_exports(repo, sets):
+    """The files the combi_export presets export, from the JSON files that
+    combi_export saves next to the .blend file (`presets` in the print sets).
+    Returns ({shape folder: set of paths below it}, [(level, text)]), level
+    being "error", "warning" or "info". A folder whose list is missing or
+    incomplete in any of its files has no entry, so nothing is compared."""
+    exports, notes, unknown = {}, [], set()
+    for path in sets.get("presets", []):
+        full = os.path.join(repo, *path.split("/"))
+        if not os.path.isfile(full):
+            notes.append(("warning", "missing %s (combi_export writes it when the .blend file is saved)" % path))
+            continue
+        try:
+            with open(full, encoding="utf-8") as f:
+                data = json.load(f)
+        except (OSError, ValueError) as e:
+            notes.append(("error", "%s is not valid JSON: %s" % (path, e)))
+            continue
+        root_dir = data.get("root_dir") if isinstance(data, dict) else None
+        folder = preset_folder(sets, root_dir) if isinstance(root_dir, str) else None
+        if folder is None:
+            notes.append(("warning", "%s: its root folder %r is not a shape folder in %s/, so it is not compared"
+                          % (path, root_dir, sets["root"])))
+            continue
+        listing = data.get("exports")
+        presets = listing.get("presets") if isinstance(listing, dict) else None
+        if not isinstance(presets, list) or not all(
+                isinstance(p, dict) and isinstance(p.get("files"), list) for p in presets):
+            notes.append(("warning", "%s has no list of the exported files: save the .blend file with "
+                          "combi_export's \"Save JSON with File\" on to write it" % path))
+            unknown.add(folder)
+            continue
+        if listing.get("complete") is not True:
+            notes.append(("warning", "%s lists only part of the exported files, so they are not compared" % path))
+            unknown.add(folder)
+            continue
+        files = set(f for p in presets for f in p["files"] if isinstance(f, str))
+        exports.setdefault(folder, set()).update(files)
+        notes.append(("info", "%s: %s export %s to %s/%s/." % (
+            path, plural(len(presets), "preset"), plural(len(files), "file"), sets["root"], folder)))
+    for folder in unknown:
+        exports.pop(folder, None)
+    return exports, notes
+
+
+def plural(n, word):
+    return "%d %s%s" % (n, word, "" if n == 1 else "s")
+
+
+def not_exported(exports, folder, rels):
+    """The .stl files of rels (below folder) that the presets do not export;
+    none when there is no list for folder. OrcaSlicer projects are not exports."""
+    if folder not in exports:
+        return []
+    return [rel for rel in rels if rel.lower().endswith(".stl") and rel not in exports[folder]]
+
+
 def tolerance_dir(sets):
     levels = "|".join(re.escape(l) for l in sets["tolerance_levels"])
     return re.compile(r"^(?:([A-Za-z]+)_)?(%s)$" % levels)
@@ -557,10 +635,36 @@ def check(repo, sets, verbose=False):
     if not gaps:
         info("nothing.")
 
+    section("combi_export presets")
+    exports, notes = load_exports(repo, sets)
+    for level, text in notes:
+        {"error": error, "warning": warn, "info": info}[level](text)
+    on_disk = set(tree)
+    for folder in sorted(exports):
+        prefix = folder + "/"
+        named = sorted(rel[len(prefix):] for rel in needed if rel.startswith(prefix))
+        for rel in not_exported(exports, folder, named):
+            warn("%s%s: no preset exports it, so it may be older than the .blend file (%s)"
+                 % (prefix, rel, ", ".join(dict.fromkeys(needed[prefix + rel]))))
+        absent = sorted(prefix + rel for rel in exports[folder]
+                        if prefix + rel not in on_disk and prefix + rel not in needed)
+        if absent:
+            info("%s the presets export %s not in %s/%s, and no print set needs %s%s" % (
+                plural(len(absent), "file"), "is" if len(absent) == 1 else "are", sets["root"], prefix,
+                "it" if len(absent) == 1 else "them", ":" if verbose else " (-v lists %s)."
+                % ("it" if len(absent) == 1 else "them")))
+            if verbose:
+                for rel in absent:
+                    info("           %s" % rel)
+    if not sets.get("presets"):
+        info("no preset files in the print sets.")
+
     section("Files no print set uses")
     unused = [rel for rel in parts if rel not in needed]
     for rel in unused:
-        info(rel)
+        folder = next((f for f in exports if rel.startswith(f + "/")), None)
+        stale = folder is not None and not_exported(exports, folder, [rel[len(folder) + 1:]])
+        info(rel + ("    (no preset exports it)" if stale else ""))
     if not unused:
         info("none.")
 
@@ -819,6 +923,7 @@ def build(repo, sets, shapes, mode, out_dir, tag=None, make_zip=True, allow_poin
             with open(os.path.join(out_dir, ".gitignore"), "w", encoding="utf-8") as f:
                 f.write("# Release builds, made by tools/release/build_release.py\n*\n")
     source = source_label(repo, root)
+    exports, _ = load_exports(repo, sets)
 
     for shape, files in plans:
         name = release_name(sets, shape, mode, tag, flat)
@@ -844,6 +949,10 @@ def build(repo, sets, shapes, mode, out_dir, tag=None, make_zip=True, allow_poin
             log("    not exported yet: %s" % ", ".join(gaps))
         for item_name, paths in same:
             log("    warning: %s: %s are the same file" % (item_name, " = ".join(paths)))
+        stale = not_exported(exports, shape["folder"], list(files))
+        if stale:
+            log("    warning: no preset exports %s, so %s may be older than the .blend file"
+                % (", ".join(stale), "it" if len(stale) == 1 else "they"))
     if make_zip:
         update_sums(out_dir)
     log("Output: %s" % out_dir)

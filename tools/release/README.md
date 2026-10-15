@@ -2,7 +2,7 @@
 
 Packs the printed parts into one zip per shape for a release, and checks that everything a release needs is in `orca_slicer/`.
 
-Each released shape (GripV standard, GripV hollow, GripX xbox, GripX dualsense) has a **print set** in `print_sets.json`: the files to print and how many of each. That one file drives everything here: the zips, the `PRINT_LIST.md` inside each zip, and `--check`. The print lists in [`orca_slicer/README.md`](../../orca_slicer/README.md) are written by hand from the same sets, so change both together.
+Each released shape (GripV standard, GripV hollow, GripX xbox, GripX dualsense) has a **print set** in `print_sets.json`: the files to print and how many of each. That one file drives everything here: the zips, the `PRINT_LIST.md` inside each zip, and `--check`. `--check` and the build also compare it with what the `combi_export` presets export, from the JSON files combi_export saves next to `Grip.blend` (see [The presets](#the-combi_export-presets)). The print lists in [`orca_slicer/README.md`](../../orca_slicer/README.md) are written by hand from the same sets, so change both together.
 
 ## Use
 
@@ -68,7 +68,8 @@ The exit code is 0 when all is well and 1 when a file is missing, a name is wron
 | Tolerance variants that are the same file | files in sibling tolerance folders (`tight`/`default`/`loose`, `cap_*`, `press_*`, `pres_*`) with the same content | warning, summarised per folder pattern, for example `GripX/parts/buttons/*/<cap tolerance>/: cap_tight = cap_default = cap_loose` |
 | Choices that are the same file | the alternatives of one item (case tops, knob or plate, sticks) that are identical, so one was probably exported with the wrong setting | warning |
 | Not exported yet | the parts the print sets mark as `missing` | warning |
-| Files no print set uses | `.stl` and `.3mf` files under `orca_slicer/` that no print set names | information |
+| combi_export presets | the `.stl` files the print sets name that no preset exports any more (they may be older than `Grip.blend`), and the exported files that are not in `orca_slicer/` and no print set needs (`-v` lists them) | a file no preset exports is a warning, and so is a preset JSON that is missing or has no complete list of its exports; a JSON that is not valid is an **error** |
+| Files no print set uses | `.stl` and `.3mf` files under `orca_slicer/` that no print set names, marked `(no preset exports it)` when the presets do not write them either | information |
 | Git LFS | how many files are pointers and how many are real | information |
 
 Two files count as the same when their sha256 matches. For a pointer file that is the `oid` it records, which is the sha256 of the real file, so pointers and real files can be compared with each other.
@@ -79,6 +80,7 @@ Two files count as the same when their sha256 matches. For a pointer file that i
 - Files keep their path below the shape's folder (`orca_slicer/GripV/` for GripV), but without the tolerance folders, because a build holds one tolerance: a folder named only by a tolerance (`default/`, `press_default/`) is left out, and `cap_default/` becomes `cap/` so the caps stay apart from the shafts. `flat_folders` in the print sets says which name each kind of tolerance folder gets. The `default` tolerance is not added to the folder and zip names either; `tight` and `loose` are (`GripV-standard-tight.zip`).
 - With `--full-paths` or `--all-tolerances` the paths are the same as in `orca_slicer/`, so the tolerance of each part shows in its path.
 - If two files would land on the same path without the tolerance folders, the build stops before writing anything, and `--check` reports it as an error.
+- If the presets no longer export a file of the release, the build still packs it and prints a warning, because the file may be older than `Grip.blend`.
 - A file used by several items (the GripV `button.stl` serves ABXY and the D-pad) is copied once.
 - The OrcaSlicer projects of a shape go only into `default` builds, because they were laid out with those files (probably).
 - `PRINT_LIST.md` is written from the print set: every item with its quantity and file, the parts not exported yet, the quantities not confirmed, links to the guides on GitHub, the license and the credits. If two alternatives in the build are the same file, it says so at the top.
@@ -97,6 +99,7 @@ Two files count as the same when their sha256 matches. For a pointer file that i
 | `guides` | links for the end of each print list: a `path` in the repository or a full `url` |
 | `tolerance_levels`, `default_tolerance` | the tolerance levels and the one a plain build uses |
 | `tolerance_placeholders` | the placeholders in paths that stand for a tolerance level (`{tolerance}`, `{cap}`, `{press}`), with the setting name a print list shows for them |
+| `presets` | the JSON files `combi_export` saves next to `Grip.blend` (`blender/GripV_preset.json`, `blender/GripX_preset.json`), see [The presets](#the-combi_export-presets) |
 | `flat_folders` | for each tolerance placeholder, the folder name a build without `--full-paths` gives the folders named by it: `"cap": "cap"` turns `cap_default/` into `cap/`, and `""` leaves the folder out. A placeholder not listed is left out too. |
 
 **A shape** has an `id` (used in folder names and on the command line), a `title`, the `folder` under `root` its paths start from, the `groups` it prints, and optionally `about`, `vars`, `projects`, `notes` and `hardware`. `vars` fills in placeholders that differ per shape, such as `{case}` (`case_standard`, `case_hollow`, `xbox_style`, `dualsense_style`).
@@ -128,10 +131,21 @@ is `parts/buttons/default/cap_default/cross.stl` in a `default` build and nine f
 
 ### When you export a new part
 
-1. Export it into `orca_slicer/` with the `combi_export` presets.
+1. Export it into `orca_slicer/` with the `combi_export` presets, save `Grip.blend` and commit the preset JSON files with it.
 2. Add an item for it to a group, or a new group to the shapes that need it. If the part was listed as `missing`, replace `missing` with `file`.
-3. Run `--check`. The part should no longer appear under "Files no print set uses" or "Not exported yet".
+3. Run `--check`. The part should no longer appear under "Files no print set uses", "Not exported yet" or "combi_export presets".
 4. Update the print list in `orca_slicer/README.md`.
+
+### The combi_export presets
+
+When `Grip.blend` is saved, `combi_export` writes the presets of each scene to `<scene>_preset.json` next to it (its *Save JSON with File* tick, on by default). Besides the presets, the file lists under `exports` every file each preset writes, below the preset's root folder, named as the add-on names them:
+
+```json
+"root_dir": "D:\\Grip\\orca_slicer\\GripV\\",
+"exports": {"complete": true, "presets": [{"name": "Buttons", "files": ["parts/buttons/default/button.stl", "..."]}]}
+```
+
+The builder matches a file to a shape folder by the end of its `root_dir` (`orca_slicer/GripV`, whatever the drive or folder above it), so the absolute paths of one computer work on any clone. It then compares the `.stl` files the print sets name with the list, and in a build it warns about any file of the release that no preset exports. A file without `exports`, or with `"complete": false` (combi_export stops listing after 5000 files), is not compared. OrcaSlicer projects are not exports and are never compared.
 
 ## Tests
 

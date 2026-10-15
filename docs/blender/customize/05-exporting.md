@@ -27,7 +27,7 @@ Folder and file names come from the preset. A tolerance gets a folder (`tight/`,
 
 ## Changing a preset
 
-Each preset lists collections and objects, and overrides at four levels (whole scene, preset, collection, object). An override sets a node input or modifier input while that preset exports. It can be a fixed value, a list (one file per value) or a sweep (every menu item, both boolean states, or a number range). To export a part you added, add its collection to a preset. To add a tolerance sweep, add an override on the matching global menu. The presets are also saved as `blender/GripV_preset.json` and `blender/GripX_preset.json`.
+Each preset lists collections and objects, and overrides at four levels (whole scene, preset, collection, object). An override sets a node input or modifier input while that preset exports. It can be a fixed value, a list (one file per value) or a sweep (every menu item, both boolean states, or a number range). To export a part you added, add its collection to a preset. To add a tolerance sweep, add an override on the matching global menu. The presets are also saved as `blender/GripV_preset.json` and `blender/GripX_preset.json`: combi_export rewrites them every time you save the file, with the list of files each preset exports.
 
 ## Not exported by any preset
 
