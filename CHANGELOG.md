@@ -32,6 +32,6 @@ Releases will be listed here, newest first, with what changed for people who pri
 - Models, the Blender file and large images are stored with Git LFS. Clone the repository; "Download ZIP" gives pointer files.
 - The full CC BY-NC-SA 4.0 licence text is in [LICENSE](LICENSE); the extensions are GPL.
 - Issue forms for fit reports and problems.
-- [orca_reload](tools/orca_reload/README.md) updates the parts in OrcaSlicer projects from the STL files in one run.
+- orca_reload (now in the [Orca 3MF add-on](https://github.com/oleroma/orca_3mf)) updates the parts in OrcaSlicer projects from the STL files in one run.
 - [tracking_diff](tools/tracking_diff/README.md) lists the changes in `tracking.json` in readable form.
 - [release](tools/release/README.md) checks `orca_slicer/` and packs one zip per shape for a release.
