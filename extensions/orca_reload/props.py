@@ -23,7 +23,7 @@ class OrcaPart(bpy.types.PropertyGroup):
     up: bpy.props.FloatVectorProperty(
         name="Up", size=3, subtype='XYZ', default=(0.0, 0.0, 1.0),
         description="The direction of the part (in Blender, as exported) that points up on the build plate. "
-                    "0, 0, -1 prints it upside down; 0, -1, 0 lays its front face on the plate")
+                    "0, 0, -1 prints it upside down; 0, 1, 0 lays its front face on the plate")
     angle: bpy.props.FloatProperty(
         name="Turn", subtype='ANGLE', default=0.0, soft_min=-math.pi, soft_max=math.pi,
         description="Turn around the up axis once the part stands on the plate")
@@ -35,7 +35,7 @@ class OrcaPart(bpy.types.PropertyGroup):
                     "only, or the edges marked as seam of a mesh with faces. Draw it on the part's surface")
 
     def label(self):
-        return self.name or os.path.splitext(os.path.basename(self.path.replace("\\", "/")))[0] or "part"
+        return self.name or os.path.basename(self.path.replace("\\", "/")) or "part"
 
 
 class OrcaPlate(bpy.types.PropertyGroup):
@@ -77,7 +77,7 @@ class OrcaSettings(bpy.types.PropertyGroup):
         description="Folder the parts' STL paths start from. Empty: Combi Export's root")
     project_root: bpy.props.StringProperty(
         name="3MF root", subtype='DIR_PATH', default="//../orca_slicer/",
-        description="Folder the projects' 3MF files are saved in")
+        description="Folder the projects' 3MF files are saved in. Empty: the .blend file's folder")
     projects: bpy.props.CollectionProperty(type=OrcaProject)
     project_index: bpy.props.IntProperty()
     seam_width: bpy.props.FloatProperty(
@@ -148,9 +148,14 @@ def part_path(scene, project, plate, part):
     return _join(plate_folder(scene, project, plate), path)
 
 
+def project_root(scene):
+    """The 3MF root; empty is the .blend file's folder."""
+    return _abs(scene.orca_reload.project_root or "//")
+
+
 def project_path(scene, project):
     name = project.name if project.name.lower().endswith(".3mf") else project.name + ".3mf"
-    return _join(_join(_abs(scene.orca_reload.project_root), project.folder), name)
+    return _join(_join(project_root(scene), project.folder), name)
 
 
 def relative_to(path, base):

@@ -15,7 +15,7 @@ Blender extensions used by Grip. All of them need Blender 5.2 or newer.
 
 ## Use in Blender
 
-Edit › Preferences › Get Extensions › Repositories (the drop-down at the top right) › **+** › Add Local Repository, then point it at this folder. All three extensions appear in the list; enable the ones you want. A `git pull` updates them, because Blender reads them straight from this folder (restart Blender afterwards).
+Edit › Preferences › Get Extensions › Repositories (the drop-down at the top right) › **+** › Add Local Repository, then point it at this folder. All four extensions appear in the list; enable the ones you want. A `git pull` updates them, because Blender reads them straight from this folder (restart Blender afterwards).
 
 ## License
 

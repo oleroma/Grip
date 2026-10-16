@@ -63,7 +63,7 @@ class OrientationTest(unittest.TestCase):
     def test_turn_is_around_the_vertical(self):
         r = layout.orientation((0, 0, 1), math.radians(90))
         self.assertTrue(close(layout.apply(r, (1, 0, 0)), (0, 1, 0)))
-        # Lying on its front (up = -Y): the part's top (+Z) faces the back of the bed (+Y)
+        # Up = -Y lays the part on its back (+Y) face: its top (+Z) faces the back of the bed (+Y)
         r = layout.orientation((0, -1, 0), 0.0)
         self.assertTrue(close(layout.apply(r, (0, 0, 1)), (0, 1, 0)))
         # Upside down keeps X

@@ -20,7 +20,7 @@ The **+** of the Parts list opens a file browser: pick one or more STLs, each be
 
 ## Placing the parts
 
-- **Up**: the part's direction, in Blender as exported, that points up on the plate. `0, 0, 1` prints it as it stands in Blender, `0, 0, -1` upside down, `0, -1, 0` on its front face.
+- **Up**: the part's direction, in Blender as exported, that points up on the plate. `0, 0, 1` prints it as it stands in Blender, `0, 0, -1` upside down, `0, 1, 0` on its front face (Blender's front is −Y).
 - **Turn**: then turns it around that axis.
 - **Copies**: how many of it go on the plate.
 
@@ -50,7 +50,7 @@ An **existing** project is written over, and keeps:
 - each plate's settings, by position (for example its bed type)
 - the painting of a part whose shape did not change (supports, colours, and its seams when it has no Seam line)
 
-Each part's place on the plate is set again by the nesting. Modifiers, negative parts and objects made of several STLs are not built.
+Each part's place on the plate is set again by the nesting. Objects made of several STLs are not built, and what Build does not keep yet is listed under Not done yet.
 
 ## Import
 
@@ -75,7 +75,13 @@ Orca stores each part's mesh centred on itself, and the part's place and rotatio
 - Seam blockers (places the seam must avoid).
 - Keeping parts where they were placed by hand in Orca: Build always nests.
 - Nesting by outline: parts are nested by their bounding box, so L-shaped parts leave space unused.
-- Curves made by Geometry Nodes: a curve object's modifiers are ignored. A mesh object with Geometry Nodes works.
+- Curves made by Geometry Nodes: a curve object's modifiers are ignored. A mesh object with Geometry Nodes works when its nodes output mesh edges (add Curve to Mesh).
+- NURBS curves follow their control points, not the smooth curve.
+- Mirrored parts: Import brings a part mirrored in Orca back unmirrored, and scale set in Orca is dropped.
+- Modifiers, negative parts and support blockers added in Orca are removed by Build, and so are variable layer heights, height range modifiers and brim ears.
+- Parts with the same name (the tight and loose versions of a part) take Orca's part settings in file order, not by shape.
+- Plate settings (bed type) and custom G-code stay with the plate's position: unticking or moving a plate moves them to another plate.
+- Bed exclude areas, round beds and the printer's height are not checked.
 
 ## Tests
 

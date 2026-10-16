@@ -173,9 +173,9 @@ class ORCA_OT_browse_part(bpy.types.Operator):
         part = props.active_part(plate)
         if part is None or not self.filepath:
             return {'CANCELLED'}
-        old_label = part.label()
+        old_file = os.path.basename(part.path.replace("\\", "/"))
         part.path = props.relative_to(os.path.normpath(self.filepath), props.plate_folder(context.scene, project, plate))
-        if not part.name or part.name == old_label:
+        if not part.name or part.name in {old_file, os.path.splitext(old_file)[0]}:
             part.name = os.path.basename(self.filepath)
         return {'FINISHED'}
 
@@ -190,7 +190,7 @@ class ORCA_OT_import_project(bpy.types.Operator):
     filter_glob: bpy.props.StringProperty(default="*.3mf", options={'HIDDEN'})
 
     def invoke(self, context, event):
-        root = os.path.normpath(bpy.path.abspath(context.scene.orca_reload.project_root or "//"))
+        root = props.project_root(context.scene)
         self.filepath = root + os.sep if os.path.isdir(root) else ""
         context.window_manager.fileselect_add(self)
         return {'RUNNING_MODAL'}
@@ -210,7 +210,7 @@ class ORCA_OT_import_project(bpy.types.Operator):
         project = settings.projects.add()
         settings.project_index = len(settings.projects) - 1
         project.name = os.path.splitext(os.path.basename(path))[0]
-        root = os.path.normpath(bpy.path.abspath(settings.project_root or "//"))
+        root = props.project_root(scene)
         project.folder = props.relative_to(os.path.dirname(path), root)
         if project.folder == ".":
             project.folder = ""
