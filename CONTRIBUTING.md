@@ -26,7 +26,7 @@ For anything else that is wrong (a broken export, a part that does not assemble,
 ## Scripts and tools
 
 - `scripts/` holds Python scripts that run inside Blender on `Grip.blend` (Text Editor › Open › Run Script), for example `rename.py`, which names group nodes after their group, and `apply_tooltips.py`, which writes the tooltips.
-- `tools/` holds stand-alone Python tools that work on the repository files without Blender: [orca_reload](tools/orca_reload/README.md), [tracking_diff](tools/tracking_diff/README.md) and [release](tools/release/README.md). They use the standard library only, so Blender's own Python can run them. Each has a README and tests: `python -m unittest discover tools/<tool>`.
+- `tools/` holds stand-alone Python tools that work on the repository files without Blender: [tracking_diff](tools/tracking_diff/README.md) and [release](tools/release/README.md). They use the standard library only, so Blender's own Python can run them. Each has a README and tests: `python -m unittest discover tools/<tool>`.
 
 ## Licence
 
