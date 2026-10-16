@@ -17,6 +17,7 @@ import zipfile
 from contextlib import redirect_stdout, redirect_stderr
 
 import orca_reload
+import seams  # the extension's seam painter, on the path through orca_reload
 
 HEADER = ('<?xml version="1.0" encoding="UTF-8"?>\n<model unit="millimeter" xml:lang="en-US" '
           'xmlns="http://schemas.microsoft.com/3dmanufacturing/core/2015/02" '
@@ -193,7 +194,7 @@ def sha(path):
         return hashlib.sha256(f.read()).hexdigest()
 
 
-class ReloadTest(unittest.TestCase):
+class ProjectCase(unittest.TestCase):
     def setUp(self):
         self.dir = tempfile.mkdtemp()
         self.addCleanup(shutil.rmtree, self.dir)
@@ -217,7 +218,8 @@ class ReloadTest(unittest.TestCase):
         make_project(self.path("proj.3mf"), [obj])
         return self.path("proj.3mf"), stl
 
-    # ------------------------------------------------------------ behaviour
+
+class ReloadTest(ProjectCase):
 
     def test_unchanged_stl_writes_nothing(self):
         proj, _ = self.project(box((10, 20, 5), center=(30, -40, 2.5)))
@@ -382,6 +384,92 @@ class ReloadTest(unittest.TestCase):
                                        [(0, 1, 2), (3, 2, 4)]))
         mesh, _ = orca_reload.read_stl(self.path("z.stl"))
         self.assertEqual(mesh.vertex_count, 4)
+
+
+class SeamReloadTest(ProjectCase):
+    """The seams hook of reload_project, with the painter the Blender extension uses."""
+
+    BOX = box((10, 10, 10), center=(30, -40, 5))  # top face at z = 10
+    LINE = [((26, -40, 10), (34, -40, 10))]
+
+    def reload(self, proj, out=None, lines=None, replace=False):
+        painter = seams.SeamPainter([seams.SeamLine("seam", lines or self.LINE)], width=0.6, snap=1.0)
+
+        def paint(part, path, mesh):
+            result = painter.paint(mesh.verts, mesh.tris, label=path)
+            return None if result is None else (result.strings, result.note())
+
+        out = out or self.path("proj_reloaded.3mf")
+        finder = orca_reload.SourceFinder([])
+        return orca_reload.process(proj, finder, out, seams=paint, replace=replace)
+
+    def triangles(self, zip_path):
+        text = zipfile.ZipFile(zip_path).read("3D/Objects/button_2.model").decode()
+        return re.findall(r"<triangle ([^>]*)/>", text)
+
+    def test_seams_on_an_unchanged_part_keep_the_mesh_and_other_painting(self):
+        proj, _ = self.project(self.BOX, paint=True)
+        before = zipfile.ZipFile(proj).read("3D/Objects/button_2.model").decode()
+        lines, code = self.reload(proj)
+        self.assertEqual(code, 0)
+        self.assertIn("seams", lines[1])
+        self.assertIn("seam on 2 triangles from seam 100%", lines[1] + lines[2])
+        tris = self.triangles(self.path("proj_reloaded.3mf"))
+        self.assertEqual(len(tris), 12)
+        self.assertTrue(all('paint_supports="4"' in t for t in tris))
+        self.assertEqual(sum('paint_seam="' in t for t in tris), 2)
+        after = zipfile.ZipFile(self.path("proj_reloaded.3mf")).read("3D/Objects/button_2.model").decode()
+        self.assertEqual(re.findall(r"<vertex [^>]*>", after), re.findall(r"<vertex [^>]*>", before))
+        # Same seams again: nothing to write.
+        lines, _ = self.reload(self.path("proj_reloaded.3mf"), out=self.path("again.3mf"))
+        self.assertIn("1 unchanged", "\n".join(lines))
+        self.assertFalse(os.path.exists(self.path("again.3mf")))
+
+    def test_seams_are_painted_again_after_a_shape_change(self):
+        proj, stl = self.project(self.BOX, paint=True)
+        write_stl(stl, box((10, 10, 12), center=(30, -40, 6)))  # 2 mm taller: top at z = 12
+        lines, code = self.reload(proj, lines=[((26, -40, 12), (34, -40, 12))])
+        self.assertIn("updated", lines[1])
+        self.assertIn("other painting removed", "\n".join(lines))
+        tris = self.triangles(self.path("proj_reloaded.3mf"))
+        painted = [t for t in tris if "paint_seam" in t]
+        self.assertEqual(len(painted), 2)
+        self.assertFalse(any("paint_supports" in t for t in tris))
+        # The painted triangles are the top face of the new STL.
+        new, _ = orca_reload.read_stl(stl)
+        for t in painted:
+            v = [int(x) for x in re.findall(r'v\d="(\d+)"', t)]
+            self.assertTrue(all(abs(new.verts[3 * i + 2] - 12) < 1e-6 for i in v))
+
+    def test_seam_strings_decode_to_a_strip_on_the_line(self):
+        proj, stl = self.project(self.BOX)
+        self.reload(proj)
+        mesh, _ = orca_reload.read_stl(stl)
+        enforced = 0
+        for i, t in enumerate(self.triangles(self.path("proj_reloaded.3mf"))):
+            m = re.search(r'paint_seam="([0-9A-F]+)"', t)
+            if not m:
+                continue
+            corners = [tuple(mesh.verts[3 * mesh.tris[3 * i + k] + j] for j in range(3)) for k in range(3)]
+            for state, tri in seams.leaves(seams.decode(m.group(1)), *corners):
+                if state == seams.ENFORCER:
+                    enforced += 1
+                    cen = [sum(p[k] for p in tri) / 3 for k in range(3)]
+                    self.assertLess(abs(cen[1] + 40), 0.6)
+        self.assertGreater(enforced, 0)
+
+    def test_line_elsewhere_leaves_the_part_alone(self):
+        proj, _ = self.project(self.BOX, paint=True)
+        lines, _ = self.reload(proj, lines=[((100, 0, 0), (110, 0, 0))])
+        self.assertIn("1 unchanged", "\n".join(lines))
+
+    def test_replace_writes_over_the_original(self):
+        proj, _ = self.project(self.BOX)
+        lines, code = self.reload(proj, out=proj, replace=True)
+        self.assertEqual(code, 0)
+        self.assertIn("proj.3mf -> " + proj, lines[0])
+        self.assertEqual(sum("paint_seam" in t for t in self.triangles(proj)), 2)
+        self.assertEqual(sorted(os.listdir(self.dir)), ["parts", "proj.3mf"])  # no copy, no temporary file left
 
 
 if __name__ == "__main__":

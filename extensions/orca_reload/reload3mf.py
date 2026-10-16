@@ -3,11 +3,14 @@
 
 Gives the same result as Orca's "Reload from disk" on every part, for any
 number of project files, without opening Orca. Orientation, plate placement
-and per-object settings are kept. The original project is never overwritten:
-the result is written to a new file (PROJECT_reloaded.3mf by default).
+and per-object settings are kept. The command line never overwrites the
+original project: the result is written to a new file (PROJECT_reloaded.3mf
+by default).
 
-Usage:
-    python orca_reload.py PROJECT.3mf [MORE.3mf | FOLDER ...] [options]
+The Orca Reload Blender extension (this folder) runs the same code and also
+paints seam lines from Blender onto the parts, see seams.py. The command line
+is tools/orca_reload/orca_reload.py:
+    python tools/orca_reload/orca_reload.py PROJECT.3mf [MORE.3mf | FOLDER ...] [options]
 
 Only the Python standard library is needed (Python 3.8+), so Blender's
 bundled Python works too. See README.md next to this file.
@@ -38,6 +41,10 @@ SINKING_Z = -0.001
 SAME_TOL = 1e-4
 
 EXIT_OK, EXIT_ERROR, EXIT_INCOMPLETE = 0, 1, 2
+
+# Part statuses that change the project: a new mesh, or the same mesh with new seam painting.
+CHANGED = ("updated", "seams")
+SEAM_ATTR = "paint_seam"
 
 
 class ReloadError(Exception):
@@ -195,7 +202,9 @@ def find_mesh(text, object_id):
 
 
 def parse_mesh(mesh_text):
-    """Parse a 3MF <mesh> element. Returns (Mesh, has_triangle_attributes)."""
+    """Parse a 3MF <mesh> element. Returns (Mesh, extras): extras maps the index of
+    each triangle that has attributes besides v1, v2, v3 (painting: paint_color,
+    paint_seam, paint_supports, ...) to those attributes, as written in the file."""
     v_start = mesh_text.find("<vertices")
     v_end = mesh_text.find("</vertices>")
     t_start = mesh_text.find("<triangles")
@@ -216,30 +225,45 @@ def parse_mesh(mesh_text):
             values += (attrs["x"], attrs["y"], attrs["z"])
     verts = array("d", map(float, values))
 
-    has_attrs = False
+    extras = {}
     values = _QUOTED.findall(ttext)
     if len(values) != 3 * n_tris:
-        has_attrs = True  # painting (supports, seams, colours) or other per-triangle data
+        # Painting (supports, seams, colours) or other per-triangle data.
         values = []
-        for tag in re.findall(r"<triangle\b([^>]*)>", ttext):
+        for i, tag in enumerate(re.findall(r"<triangle\b([^>]*)>", ttext)):
             attrs = dict(_ATTR.findall(tag))
-            values += (attrs["v1"], attrs["v2"], attrs["v3"])
+            values += (attrs.pop("v1"), attrs.pop("v2"), attrs.pop("v3"))
+            if attrs:
+                extras[i] = attrs
     tris = array("I", map(int, values))
-    return Mesh(verts, tris), has_attrs
+    return Mesh(verts, tris), extras
 
 
-def mesh_xml(mesh, indent):
-    """<mesh> element text in Orca's layout; indent is the <mesh> line's indent."""
+def mesh_xml(mesh, indent, extras=None):
+    """<mesh> element text in Orca's layout; indent is the <mesh> line's indent.
+    extras: attributes to add to triangles, by triangle index (see parse_mesh)."""
     i1, i2 = indent + " ", indent + "  "
     vfmt = i2 + '<vertex x="%.9g" y="%.9g" z="%.9g"/>\n'
     tfmt = i2 + '<triangle v1="%d" v2="%d" v3="%d"/>\n'
     it_v = iter(mesh.verts)
     it_t = iter(mesh.tris)
+    if extras:
+        tlines = []
+        for i, tri in enumerate(zip(it_t, it_t, it_t)):
+            attrs = extras.get(i)
+            if attrs:
+                tlines.append(i2 + '<triangle v1="%d" v2="%d" v3="%d"' % tri
+                              + "".join(' %s="%s"' % kv for kv in attrs.items()) + "/>\n")
+            else:
+                tlines.append(tfmt % tri)
+        triangles = "".join(tlines)
+    else:
+        triangles = "".join(map(tfmt.__mod__, zip(it_t, it_t, it_t)))
     return "".join((
         "<mesh>\n", i1, "<vertices>\n",
         "".join(map(vfmt.__mod__, zip(it_v, it_v, it_v))),
         i1, "</vertices>\n", i1, "<triangles>\n",
-        "".join(map(tfmt.__mod__, zip(it_t, it_t, it_t))),
+        triangles,
         i1, "</triangles>\n", indent, "</mesh>",
     ))
 
@@ -369,7 +393,8 @@ class Part:
         self.old_mesh = None
         self.new_mesh = None
         self.new_offset = None
-        self.painted = False
+        self.extras = {}  # per-triangle attributes of the stored mesh (painting)
+        self.new_extras = None
 
     @property
     def is_model_part(self):
@@ -475,12 +500,20 @@ class Project:
         if part.old_mesh is None:
             text = self.text(part.model_path)
             start, end = find_mesh(text, part.sub_id)
-            part.old_mesh, part.painted = parse_mesh(text[start:end])
+            part.old_mesh, part.extras = parse_mesh(text[start:end])
         return part.old_mesh
 
+    def close(self):
+        self.zip.close()
 
-def reload_project(project, finder, anchor="center", drop=True, stl_cache=None):
-    """Work out the new mesh of every reloadable part. Edits are kept in memory."""
+
+def reload_project(project, finder, anchor="center", drop=True, stl_cache=None, seams=None):
+    """Work out the new mesh of every reloadable part. Edits are kept in memory.
+
+    seams: optional function (part, stl_path, stl_mesh) -> None, or (paint_seam
+    strings by triangle index of stl_mesh, note for the report). None leaves the
+    part's painting as the plain reload does: kept while the shape is unchanged,
+    removed when it changed. A result replaces the part's seam painting."""
     stl_cache = {} if stl_cache is None else stl_cache
     project_dir = os.path.dirname(os.path.abspath(project.path))
     for part in project.parts():
@@ -530,15 +563,38 @@ def reload_project(project, finder, anchor="center", drop=True, stl_cache=None):
         else:
             # Orca's own behaviour: the new mesh takes the old one's bounding-box centre.
             shift = tuple(o - s for o, s in zip(old_c, stl_c))
+        seam = seams(part, path, stl) if seams else None
         if same_shape(old, stl, (0.0, 0.0, 0.0), shift):
-            part.status = "unchanged"
+            if seam is None:
+                part.status = "unchanged"
+                continue
+            # Same shape means the same triangles in the same order (same_shape),
+            # so keep the stored mesh and its other painting and swap the seams.
+            strings, note = seam
+            old_seams = {i: a[SEAM_ATTR] for i, a in part.extras.items() if SEAM_ATTR in a}
+            if old_seams == strings:
+                part.status = "unchanged"
+                continue
+            extras = {i: {k: v for k, v in a.items() if k != SEAM_ATTR} for i, a in part.extras.items()}
+            for i, value in strings.items():
+                extras.setdefault(i, {})[SEAM_ATTR] = value
+            part.new_mesh = old
+            part.new_extras = {i: a for i, a in extras.items() if a}
+            part.status = "seams"
+            part.detail += " (" + "; ".join([note] + notes) + ")"
             continue
         part.new_mesh = stl.translated(shift)
         part.new_offset = stl_c
         part.status = "updated"
         if dropped:
             notes.append("%d degenerate triangles dropped" % dropped)
-        if part.painted:
+        if seam is not None:
+            strings, note = seam
+            part.new_extras = {i: {SEAM_ATTR: value} for i, value in strings.items()}
+            notes.append(note)
+            if any(k != SEAM_ATTR for a in part.extras.values() for k in a):
+                notes.append("other painting removed, geometry changed")
+        elif part.extras:
             notes.append("painting removed, geometry changed")
         if notes:
             part.detail += " (" + "; ".join(notes) + ")"
@@ -577,14 +633,15 @@ def _drop_to_bed(project):
 
 
 def _apply_edits(project):
-    # New meshes, in the sub-model files.
+    # New meshes and painting, in the sub-model files.
     for part in project.parts():
-        if part.status != "updated":
+        if part.status not in CHANGED:
             continue
         text = project.text(part.model_path)
         start, end = find_mesh(text, part.sub_id)
         indent = text[text.rfind("\n", 0, start) + 1:start]
-        project.edited[part.model_path] = text[:start] + mesh_xml(part.new_mesh, indent) + text[end:]
+        project.edited[part.model_path] = (text[:start] + mesh_xml(part.new_mesh, indent, part.new_extras)
+                                           + text[end:])
 
     # Build item heights, in the root model.
     shifted = {i for obj in project.objects.values() if obj.z_shift for i in obj.items}
@@ -630,9 +687,11 @@ def _block(text, tag, block_id, start, end):
     return m.start(), close + len(tag) + 3
 
 
-def write_project(project, out_path):
-    """Copy the project to out_path with the edited entries swapped in."""
-    if os.path.exists(out_path) and os.path.samefile(out_path, project.path):
+def write_project(project, out_path, replace=False):
+    """Copy the project to out_path with the edited entries swapped in.
+    Writing over the original needs replace=True; the project is closed then."""
+    same = os.path.exists(out_path) and os.path.samefile(out_path, project.path)
+    if same and not replace:
         raise ReloadError("refusing to overwrite the original project")
     out_dir = os.path.dirname(os.path.abspath(out_path))
     fd, tmp = tempfile.mkstemp(suffix=".3mf", dir=out_dir)
@@ -650,6 +709,8 @@ def write_project(project, out_path):
                 copy.create_system = info.create_system
                 out.writestr(copy, data)
         _check_output(tmp, project)
+        if same:
+            project.close()  # Windows cannot replace a file that is still open
         os.replace(tmp, out_path)
     finally:
         if os.path.exists(tmp):
@@ -665,7 +726,7 @@ def _check_output(path, project):
         for name in project.edited:
             xml.parsers.expat.ParserCreate().Parse(z.read(name), True)
         for part in project.parts():
-            if part.status == "updated":
+            if part.status in CHANGED:
                 text = z.read(part.model_path).decode("utf-8")
                 start, end = find_mesh(text, part.sub_id)
                 if (text.count("<vertex ", start, end) != part.new_mesh.vertex_count
@@ -681,7 +742,8 @@ def _fmt_size(size):
     return "x".join("%.2f" % s for s in size)
 
 
-def report(project, out_path, written):
+def report_lines(project, out_path, written):
+    """The report of one project, as lines of text."""
     lines = []
     counts = {}
     for obj in project.objects.values():
@@ -692,7 +754,9 @@ def report(project, out_path, written):
                 continue
             label = part.name if part.name == obj.name else "%s / %s" % (obj.name, part.name)
             line = "  %-9s %-34s plate %-6s" % (part.status, label, plates)
-            if part.status == "updated":
+            if part.status == "seams":
+                line += " shape unchanged\n            from %s" % part.detail
+            elif part.status == "updated":
                 old, new = part.old_mesh, part.new_mesh
                 line += " %d -> %d triangles, size %s -> %s mm" % (
                     old.triangle_count, new.triangle_count, _fmt_size(old.size()), _fmt_size(new.size()))
@@ -702,20 +766,39 @@ def report(project, out_path, written):
             else:
                 line += " " + part.detail
             lines.append(line)
-    summary = ", ".join("%d %s" % (counts[k], k) for k in
-                        ("updated", "unchanged", "missing", "skipped", "error") if counts.get(k))
+    names = {"seams": "with new seams"}
+    summary = ", ".join("%d %s" % (counts[k], names.get(k, k)) for k in
+                        ("updated", "seams", "unchanged", "missing", "skipped", "error") if counts.get(k))
     head = os.path.basename(project.path)
     if written:
         head += " -> " + out_path
-    elif counts.get("updated"):
+    elif counts.get("updated") or counts.get("seams"):
         head += " (dry run, nothing written)"
     else:
         head += " (no changes, nothing written)"
-    print(head)
-    for line in lines:
+    return [head] + lines + ["  " + (summary or "no parts"), ""]
+
+
+def report(project, out_path, written):
+    for line in report_lines(project, out_path, written):
         print(line)
-    print("  " + (summary or "no parts"))
-    print()
+
+
+def process(path, finder, out_path, anchor="center", drop=True, stl_cache=None, seams=None,
+            dry_run=False, replace=False):
+    """Reload one project and write the result to out_path unless nothing changed.
+    Returns (report lines, exit status). Raises on a project that cannot be read."""
+    project = Project(path)
+    try:
+        reload_project(project, finder, anchor=anchor, drop=drop, stl_cache=stl_cache, seams=seams)
+        changed = any(p.status in CHANGED for p in project.parts())
+        if changed and not dry_run:
+            write_project(project, out_path, replace=replace)
+        lines = report_lines(project, out_path, changed and not dry_run)
+        incomplete = any(p.status in ("missing", "error") for p in project.parts())
+        return lines, EXIT_INCOMPLETE if incomplete else EXIT_OK
+    finally:
+        project.close()
 
 
 def collect_projects(inputs, suffix):
@@ -731,11 +814,13 @@ def collect_projects(inputs, suffix):
     return found
 
 
-def output_path(project_path, args):
-    if args.output:
+def output_path(project_path, args=None, suffix=DEFAULT_SUFFIX):
+    if args is not None and args.output:
         return args.output
-    base = os.path.splitext(os.path.basename(project_path))[0] + args.suffix + ".3mf"
-    return os.path.join(args.out_dir or os.path.dirname(os.path.abspath(project_path)), base)
+    suffix = args.suffix if args is not None else suffix
+    base = os.path.splitext(os.path.basename(project_path))[0] + suffix + ".3mf"
+    out_dir = args.out_dir if args is not None else None
+    return os.path.join(out_dir or os.path.dirname(os.path.abspath(project_path)), base)
 
 
 def main(argv=None):
@@ -772,16 +857,10 @@ def main(argv=None):
     status = EXIT_OK
     for path in projects:
         try:
-            project = Project(path)
-            reload_project(project, finder, anchor=args.anchor, drop=not args.no_drop,
-                           stl_cache=stl_cache)
-            out = output_path(path, args)
-            changed = any(p.status == "updated" for p in project.parts())
-            if changed and not args.dry_run:
-                write_project(project, out)
-            report(project, out, changed and not args.dry_run)
-            if any(p.status in ("missing", "error") for p in project.parts()):
-                status = max(status, EXIT_INCOMPLETE)
+            lines, code = process(path, finder, output_path(path, args), anchor=args.anchor,
+                                  drop=not args.no_drop, stl_cache=stl_cache, dry_run=args.dry_run)
+            print("\n".join(lines))
+            status = max(status, code)
         except (ReloadError, OSError, zipfile.BadZipFile, ET.ParseError) as e:
             print("%s: %s\n" % (path, e), file=sys.stderr)
             status = EXIT_ERROR

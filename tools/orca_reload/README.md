@@ -18,6 +18,8 @@ The original project is never overwritten. The result is written next to it as `
 
 > Inside Orca, right-clicking a plate and choosing **Reload All** reloads every part of the open project. This tool is for doing many projects at once, or without opening Orca.
 
+The same reload is a button in Blender: the [Orca Reload extension](../../extensions/orca_reload/README.md), which also paints seams marked in Blender onto the parts, so they survive the reload. The code lives there (`extensions/orca_reload/reload3mf.py`); this command runs it without Blender.
+
 ## Use
 
 You need Python 3.8 or newer, with no extra packages. If Python is not installed on Windows, Blender's own Python works:
@@ -74,7 +76,7 @@ A part whose STL is missing, or matches several files, is listed and left as it 
 - It only reloads parts loaded from STL files. Parts from OBJ, STEP or 3MF files, Orca's built-in shapes and text are skipped.
 - It skips objects that were cut in Orca, because reloading would put the uncut STL back.
 - It skips parts that Orca converted from inches or meters.
-- It removes painted supports, seams or colours from a part whose shape changed, and notes this in the report.
+- It removes painted supports, seams or colours from a part whose shape changed, and notes this in the report. The Blender extension paints seams back on.
 - It leaves the plate thumbnails showing the old shapes until the project is saved in Orca.
 
 It was built and tested against OrcaSlicer 2.4 project files. Bambu Studio uses the same project format, so it should work there too, but that is untested.
