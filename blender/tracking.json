@@ -13708,7 +13708,7 @@
                             "subdivision level": "low",
                             "tolerance": "default",
                             "top wire cutouts": false,
-                            "variant": "GripX",
+                            "variant": "GripV",
                             "voxel resolution": "low"
                         }
                     }
@@ -15464,7 +15464,7 @@
                             "subdivision level": "low",
                             "tolerance": "default",
                             "top wire cutouts": false,
-                            "variant": "GripX",
+                            "variant": "GripV",
                             "voxel resolution": "low"
                         }
                     }

@@ -764,7 +764,7 @@
                     "export": true,
                     "use_tag": false,
                     "tag": "",
-                    "sub_path": "pins",
+                    "sub_path": "misc",
                     "objects": [
                         {
                             "name": "pin",
@@ -780,7 +780,7 @@
                 {
                     "collection_name": "scrollwheel",
                     "export": true,
-                    "use_tag": true,
+                    "use_tag": false,
                     "tag": "",
                     "sub_path": "scrollwheel",
                     "objects": [
@@ -1320,7 +1320,7 @@
                     "parts/dpad_stick/rocker_ball.stl",
                     "parts/dpad_stick/rocker_support.stl",
                     "parts/dpad_stick/stick.stl",
-                    "parts/pins/pin.stl",
+                    "parts/misc/pin.stl",
                     "parts/scrollwheel/scrollwheel.stl",
                     "parts/scrollwheel/scrollwheel_core.stl",
                     "parts/scrollwheel/scrollwheel_holder.stl"
