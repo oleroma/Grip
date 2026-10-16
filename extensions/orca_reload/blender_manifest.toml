@@ -1,9 +1,9 @@
 schema_version = "1.0.0"
 
 id = "orca_reload"
-version = "0.1.0"
+version = "0.2.0"
 name = "Orca Reload"
-tagline = "Reload STLs into OrcaSlicer projects and paint seams from curves"
+tagline = "Build OrcaSlicer projects from STLs, with plates, nesting and seams"
 maintainer = "Oleroma"
 type = "add-on"
 website = "https://github.com/oleroma/Grip"
@@ -13,4 +13,4 @@ blender_version_min = "5.2.0"
 license = ["SPDX:GPL-3.0-or-later"]
 
 [permissions]
-files = "Read STL files and update OrcaSlicer 3MF projects"
+files = "Read STL files and write OrcaSlicer 3MF projects"

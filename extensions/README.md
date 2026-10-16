@@ -7,7 +7,7 @@ Blender extensions used by Grip. All of them need Blender 5.2 or newer.
 | `combi_export/` | exports the STL files with the export presets | https://github.com/oleroma/combi_export |
 | `blender_tracking/` | writes `blender/tracking.json` on every save | https://github.com/oleroma/blender-tracking |
 | `grip_controls/` | the **Grip** tab in the 3D Viewport sidebar: the most used settings of Grip.blend in one place, and the variant sync. See its [README](grip_controls/README.md). | this repository |
-| `orca_reload/` | the **Orca** tab: reloads the STLs into the Orca projects and paints the seams marked with curves or edges. See its [README](orca_reload/README.md). Prototype. | this repository |
+| `orca_reload/` | the **Orca** tab: builds the Orca projects (plates, parts, nesting) from the exported STLs and paints the seams drawn as curves or edges. See its [README](orca_reload/README.md). Prototype. | this repository |
 
 **`combi_export/` and `blender_tracking/` are synced, do not edit them here.** Each of those folders is overwritten automatically by a GitHub Action in its source repo whenever that repo's main branch changes. Change them in their own repositories.
 

@@ -1,22 +1,18 @@
 """Seam lines from Blender objects, in world space (the STL files' coordinates).
 
-A curve or mesh object becomes a seam guide with its "Orca seam" tick:
+A part's seam is a curve or mesh object picked in the part's Seam field:
 - curve: its splines (Bezier at the curve's resolution; poly and NURBS by their points). Modifiers are ignored.
 - mesh: the evaluated mesh, so Geometry Nodes output works. A mesh with faces gives the edges marked as seam
   (Edge > Mark Seam) or the edges of a boolean edge attribute named "orca_seam"; a mesh of only edges gives all.
 """
 import contextlib
 
-import bpy
+import bpy  # noqa: F401  (the add-on runs in Blender)
 from mathutils.geometry import interpolate_bezier
 
 from .seams import SeamLine
 
 EDGE_ATTRIBUTE = "orca_seam"
-
-
-def seam_objects(scene):
-    return [obj for obj in scene.objects if obj.type in {'CURVE', 'MESH'} and obj.orca_seam]
 
 
 def curve_polylines(obj):
@@ -86,19 +82,17 @@ def mesh_segments(obj, context):
     return [(tuple(co[a]), tuple(co[b])) for a, b in edges], None
 
 
-def collect(context):
-    """(SeamLine list, problem lines) for the scene's seam objects."""
-    lines, problems = [], []
-    for obj in seam_objects(context.scene):
-        if obj.type == 'CURVE':
-            segs = [(tuple(a), tuple(b)) for line in curve_polylines(obj) for a, b in zip(line, line[1:])]
-            problem = None if segs else "has no spline with two points"
-        else:
-            segs, problem = mesh_segments(obj, context)
-            if not segs and not problem:
-                problem = "has no edges"
-        if problem:
-            problems.append("%s %s" % (obj.name, problem))
-            continue
-        lines.append(SeamLine(obj.name, segs, obj.orca_seam_only))
-    return lines, problems
+def seam_line(obj, context):
+    """(SeamLine, None) of a seam object, or (None, problem text)."""
+    if obj.type == 'CURVE':
+        segs = [(tuple(a), tuple(b)) for line in curve_polylines(obj) for a, b in zip(line, line[1:])]
+        problem = None if segs else "has no spline with two points"
+    elif obj.type == 'MESH':
+        segs, problem = mesh_segments(obj, context)
+        if not segs and not problem:
+            problem = "has no edges"
+    else:
+        return None, "is not a curve or a mesh"
+    if problem:
+        return None, problem
+    return SeamLine(obj.name, segs), None
