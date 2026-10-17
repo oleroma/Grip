@@ -98,10 +98,10 @@ The second line does every `.3mf` under that folder. Options: `-o FILE`, `--out-
 ## Tests
 
 ```
-python -I orca_3mf/tests/test_build.py
-python -I orca_3mf/tests/test_seams.py
-blender -b -P orca_3mf/tests/test_blender.py
-python -I orca_3mf/tests/test_reload.py
+python -I tests/test_build.py
+python -I tests/test_seams.py
+blender -b -P tests/test_blender.py
+python -I tests/test_reload.py
 ```
 
 `test_blender.py` needs a Python with the `bpy` module (Blender 5.2 or newer); the others need only Python. None of them open Grip.blend.
