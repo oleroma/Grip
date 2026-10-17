@@ -1998,6 +1998,7 @@
             "[Group Input] Index -> Index [Index Switch]",
             "[Index Switch] Output -> Bundle [Group Output]",
             "[Join Bundle.001] Bundle -> 1 [Index Switch]",
+            "[Join Bundle.001] Bundle -> Bundle [screw outputs.001]",
             "[Join Bundle] Bundle -> 0 [Index Switch]",
             "[Join Bundle] Bundle -> Bundle [screw outputs]",
             "[screw parameters (FRONT)] Bundle -> Bundle [Join Bundle]",
@@ -9743,6 +9744,8 @@
         ],
         "screw": [
             "[Boolean Math.001] Boolean -> Selection [Delete Geometry]",
+            "[Boolean Math.002] Boolean -> Boolean[1] [Boolean Math.003]",
+            "[Boolean Math.003] Boolean -> Selection [Extrude Mesh.010]",
             "[Boolean Math] Boolean -> Boolean [Boolean Math.001]",
             "[Boolean Math] Boolean -> Selection [Extrude Mesh.006]",
             "[Bounding Box] Min -> Vector [Separate XYZ.006]",
@@ -9752,8 +9755,10 @@
             "[Combine XYZ.006] Vector -> Vector[0] [Vector Math.001]",
             "[Combine XYZ.007] Vector -> Vector[0] [Vector Math.003]",
             "[Combine XYZ.009] Vector -> Rotation [Transform Geometry.008]",
+            "[Combine XYZ.010] Vector -> Rotation [Transform Geometry.010]",
             "[Combine XYZ.012] Vector -> Input [Reroute.003]",
             "[Combine XYZ.013] Vector -> Offset [Set Position.013]",
+            "[Combine XYZ] Vector -> Offset [Set Position.003]",
             "[Compare.001] Result -> Boolean[0] [Boolean Math]",
             "[Compare.002] Result -> Selection [Set Position.002]",
             "[Delete Geometry] Geometry -> Geometry [Set Position.002]",
@@ -9769,7 +9774,10 @@
             "[Extrude Mesh.005] Mesh -> Geometry [Join Geometry]",
             "[Extrude Mesh.006] Mesh -> Mesh [Mesh Boolean.001]",
             "[Extrude Mesh.007] Mesh -> Geometry [Join Geometry.001]",
+            "[Extrude Mesh.007] Side -> Boolean[0] [Boolean Math.003]",
             "[Extrude Mesh.008] Mesh -> Geometry [Join Geometry.001]",
+            "[Extrude Mesh.010] Mesh -> Geometry [Set Position.003]",
+            "[Extrude Mesh.010] Top -> Selection [Mesh Bevel]",
             "[Extrude Mesh] Mesh -> Geometry [Join Geometry.002]",
             "[Extrude Mesh] Top -> Selection [Extrude Mesh.001]",
             "[Field Min & Max.001] Min -> Y [Combine XYZ.001]",
@@ -9812,6 +9820,10 @@
             "[Group Input.032] rotation -> Z [Combine XYZ.008]",
             "[Group Input.033] rotation -> Z [Combine XYZ.009]",
             "[Group Input.034] reinforcer top offset -> Z [offset position.001]",
+            "[Group Input.035] position -> Offset [Set Position.017]",
+            "[Group Input.036] rotation -> Z [Combine XYZ.010]",
+            "[Group Input.037] nut lock height -> Value[1] [Math.021]",
+            "[Group Input.037] nut pocket length -> Value [invert.001]",
             "[Group Input] sdf -> Switch [Switch]",
             "[Join Geometry.001] Geometry -> Geometry [Merge by Distance.002]",
             "[Join Geometry.002] Geometry -> Geometry [Merge by Distance]",
@@ -9833,14 +9845,18 @@
             "[Math.016] Value -> Value[0] [Math.017]",
             "[Math.017] Value -> Offset Scale [Extrude Mesh.006]",
             "[Math.017] Value -> Offset Scale [Extrude Mesh.007]",
+            "[Math.018] Value -> Offset Scale [Extrude Mesh.010]",
             "[Math.019] Value -> Value[1] [Math.020]",
+            "[Math.021] Value -> X [Combine XYZ]",
             "[Math] Value -> Z [offset position]",
             "[Merge by Distance.001] Geometry -> Mesh [Mesh Boolean.002]",
-            "[Merge by Distance.002] Geometry -> Geometry [Set Position]",
+            "[Merge by Distance.002] Geometry -> Geometry [Set Position.006]",
             "[Merge by Distance.004] Geometry -> Input [Reroute.005]",
             "[Merge by Distance] Geometry -> Mesh [Extrude Mesh.001]",
+            "[Mesh Bevel] Mesh -> Geometry [Transform Geometry.010]",
             "[Mesh Boolean.001] Mesh -> False [Switch.001]",
             "[Mesh Boolean.002] Mesh -> Geometry [Set Position.013]",
+            "[Mesh Boolean] Mesh -> Geometry [Transform Geometry.008]",
             "[Mesh Circle.001] Mesh -> Geometry [Join Geometry]",
             "[Mesh Circle.001] Mesh -> Mesh [Flip Faces.001]",
             "[Mesh Circle] Mesh -> Input [Reroute]",
@@ -9876,22 +9892,31 @@
             "[Separate XYZ.008] Y -> Value [Field Min & Max.001]",
             "[Separate XYZ] Z -> Value[0] [Math.015]",
             "[Set Mesh Normal] Mesh -> Geometry [Merge by Distance.004]",
-            "[Set Position.001] Geometry -> nut secure [Group Output]",
+            "[Set Position.001] Geometry -> Mesh [Mesh Boolean]",
             "[Set Position.002] Geometry -> Mesh [Set Mesh Normal]",
+            "[Set Position.003] Geometry -> Geometry [Set Position.001]",
+            "[Set Position.003] Geometry -> Geometry [Set Position]",
             "[Set Position.004] Geometry -> Mesh [Extrude Mesh.003]",
             "[Set Position.005] Geometry -> Geometry [Transform Geometry.004]",
-            "[Set Position.013] Geometry -> Geometry [Viewer]",
+            "[Set Position.006] Geometry -> Mesh [Extrude Mesh.010]",
             "[Set Position.013] Geometry -> Geometry [offset position.001]",
             "[Set Position.014] Geometry -> Geometry [Delete Geometry]",
             "[Set Position.014] Geometry -> Mesh [Extrude Mesh.006]",
             "[Set Position.015] Geometry -> main [Group Output]",
             "[Set Position.016] Geometry -> True [Switch]",
-            "[Set Position] Geometry -> Geometry [Set Position.001]",
+            "[Set Position.017] Geometry -> nut secure [Group Output]",
+            "[Set Position] Geometry -> Mesh [Mesh Bevel]",
             "[Switch.001] Output -> Input [Reroute.006]",
-            "[Switch] Output -> Geometry [Transform Geometry.008]",
+            "[Switch] Output -> Mesh [Mesh Boolean]",
             "[Transform Geometry.004] Geometry -> Mesh [Mesh Boolean.001]",
             "[Transform Geometry.004] Geometry -> True [Switch.001]",
             "[Transform Geometry.008] Geometry -> Geometry [Set Position.015]",
+            "[Transform Geometry.010] Geometry -> Geometry [Set Position.017]",
+            "[Value.001] Value -> End Left Offset [Mesh Bevel]",
+            "[Value.001] Value -> End Right Offset [Mesh Bevel]",
+            "[Value.001] Value -> Start Left Offset [Mesh Bevel]",
+            "[Value.001] Value -> Start Right Offset [Mesh Bevel]",
+            "[Value.001] Value -> Value[0] [Math.018]",
             "[Value.002] Value -> Value[1] [Math.015]",
             "[Value.003] Value -> Value[1] [Math.019]",
             "[Vector Math.001] Vector -> Vector[0] [Vector Math]",
@@ -9899,10 +9924,11 @@
             "[Vector Math.003] Vector -> Vector[0] [Vector Math.002]",
             "[Vector Math.004] Vector -> Vector[0] [Vector Math.005]",
             "[Vector Math.005] Vector -> Vector[0] [Vector Math.006]",
-            "[Vector Math.006] Vector -> Offset [Set Position]",
+            "[Vector Math.006] Vector -> Offset [Set Position.006]",
             "[Vector Math] Vector -> Offset [Set Position.004]",
             "[Vector Rotate] Vector -> Position [Set Position.013]",
             "[basemesh variant] variant  -> Geometry [Bounding Box]",
+            "[invert.001] Value -> Value[0] [Math.021]",
             "[invert] Value -> Value[0] [Math.008]",
             "[nut pocket.001] Mesh -> Geometry [offset position]",
             "[nut pocket] Mesh -> Input [Reroute.004]",
@@ -9911,6 +9937,10 @@
             "[offset position] Geometry -> Mesh [Mesh Boolean.002]",
             "[select at.001] Result -> Selection [Set Position.016]",
             "[select at.002] Result -> Selection [offset position.001]",
+            "[select at.003] Result -> Selection [Set Position.003]",
+            "[select at.004] Result -> Boolean[0] [Boolean Math.002]",
+            "[select at.005] Result -> Boolean[1] [Boolean Math.002]",
+            "[select at.006] Result -> Selection [Set Position]",
             "[select at] Result -> Selection [Set Position.001]"
         ],
         "screw cutouts": [
@@ -9922,6 +9952,7 @@
         "screw outputs": [
             "[Group Input] Bundle -> Bundle [Separate Bundle]",
             "[Separate Bundle] nut height -> nut height [Group Output]",
+            "[Separate Bundle] nut lock height -> nut lock height [Group Output]",
             "[Separate Bundle] nut pocket length -> nut pocket length [Group Output]",
             "[Separate Bundle] nut slot depth tolerance offset -> nut slot depth tolerance offset [Group Output]",
             "[Separate Bundle] nut slot hideout depth -> nut slot hideout depth [Group Output]",
@@ -9941,6 +9972,7 @@
         "screw parameters": [
             "[Combine Bundle] Bundle -> Bundle [Group Output (screw parameters)]",
             "[Group Input] nut height -> nut height [Combine Bundle]",
+            "[Group Input] nut lock height -> nut lock height [Combine Bundle]",
             "[Group Input] nut pocket length -> nut pocket length [Combine Bundle]",
             "[Group Input] nut slot depth tolerance offset -> nut slot depth tolerance offset [Combine Bundle]",
             "[Group Input] nut slot hideout depth -> nut slot hideout depth [Combine Bundle]",
@@ -10024,6 +10056,7 @@
             "[screw outputs.001] screwdriver guide slant height -> screwdriver guide slant height [screw.001]",
             "[screw outputs.001] screwdriver hole diameter -> screwdriver hole diameter [screw.001]",
             "[screw outputs] nut height -> nut height [screw]",
+            "[screw outputs] nut lock height -> nut lock height [screw]",
             "[screw outputs] nut pocket length -> nut pocket length [screw]",
             "[screw outputs] nut slot depth tolerance offset -> nut slot depth tolerance offset [screw]",
             "[screw outputs] nut slot hideout depth -> nut slot hideout depth [screw]",
@@ -10043,6 +10076,7 @@
             "[screw.001] reinforcer -> Geometry [Join Geometry.002]",
             "[screw] main -> Geometry [Join Geometry]",
             "[screw] nut secure -> True [Switch.001]",
+            "[screw] nut secure -> nut secure [Viewer]",
             "[screw] reinforcer -> Geometry [Join Geometry.002]",
             "[selector.001] selected bundle -> Bundle [screw outputs.001]",
             "[selector] selected bundle -> Bundle [screw outputs]"
@@ -10454,6 +10488,7 @@
         ],
         "smd cutouts": [
             "[Collection Info] Instances -> Geometry [Realize Instances.002]",
+            "[Collection Info] Instances -> Instances [Viewer]",
             "[Realize Instances.002] Geometry -> Geometry [Group Output]"
         ],
         "solidify": [
@@ -13372,6 +13407,7 @@
                     "screw parameters (FRONT)": {
                         "inputs": {
                             "nut height": 2.0,
+                            "nut lock height": 3.0,
                             "nut pocket length": 7.0,
                             "nut slot depth tolerance offset": 0.1,
                             "nut slot hideout depth": 1.8,
@@ -13390,6 +13426,7 @@
                     "screw parameters.001 (BACK)": {
                         "inputs": {
                             "nut height": 2.0,
+                            "nut lock height": 3.0,
                             "nut pocket length": 7.0,
                             "nut slot depth tolerance offset": 0.1,
                             "nut slot hideout depth": 3.2,
@@ -13422,7 +13459,7 @@
                                 -62.8109,
                                 46.6
                             ],
-                            "rotation": 1.5708
+                            "rotation": 2.7053
                         }
                     }
                 }
@@ -13701,7 +13738,7 @@
                             "cable holder": true,
                             "cap tolerance": "default",
                             "fill type": "Gyroid",
-                            "hollow top": false,
+                            "hollow top": true,
                             "horizontal buttons": true,
                             "marks": false,
                             "pillars": false,
@@ -13714,7 +13751,7 @@
                             "subdivision level": "low",
                             "tolerance": "default",
                             "top wire cutouts": false,
-                            "variant": "GripV",
+                            "variant": "GripX",
                             "voxel resolution": "low"
                         }
                     }
@@ -14476,6 +14513,7 @@
                     "screw parameters (FRONT)": {
                         "inputs": {
                             "nut height": 2.0,
+                            "nut lock height": 3.0,
                             "nut pocket length": 8.7,
                             "nut slot depth tolerance offset": 0.1,
                             "nut slot hideout depth": 1.5,
@@ -14494,6 +14532,7 @@
                     "screw parameters.001 (BACK)": {
                         "inputs": {
                             "nut height": 2.0,
+                            "nut lock height": 3.0,
                             "nut pocket length": 8.7,
                             "nut slot depth tolerance offset": 0.1,
                             "nut slot hideout depth": 1.51,
@@ -14512,6 +14551,7 @@
                     "screw parameters.002 (BACK)": {
                         "inputs": {
                             "nut height": 2.0,
+                            "nut lock height": 3.0,
                             "nut pocket length": 8.7,
                             "nut slot depth tolerance offset": 0.1,
                             "nut slot hideout depth": 1.51,
@@ -15457,7 +15497,7 @@
                             "cable holder": true,
                             "cap tolerance": "default",
                             "fill type": "Gyroid",
-                            "hollow top": false,
+                            "hollow top": true,
                             "horizontal buttons": true,
                             "marks": false,
                             "pillars": false,
@@ -15470,7 +15510,7 @@
                             "subdivision level": "low",
                             "tolerance": "default",
                             "top wire cutouts": false,
-                            "variant": "GripV",
+                            "variant": "GripX",
                             "voxel resolution": "low"
                         }
                     }

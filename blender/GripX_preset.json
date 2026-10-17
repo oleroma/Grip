@@ -467,27 +467,9 @@
                     "nodegroups": []
                 },
                 {
-                    "collection_name": "pins",
-                    "export": true,
-                    "use_tag": false,
-                    "tag": "",
-                    "sub_path": "pins",
-                    "objects": [
-                        {
-                            "name": "pin",
-                            "name_override": "",
-                            "export": true,
-                            "tag": "",
-                            "sub_path": "",
-                            "nodegroups": []
-                        }
-                    ],
-                    "nodegroups": []
-                },
-                {
                     "collection_name": "scrollwheel",
                     "export": true,
-                    "use_tag": true,
+                    "use_tag": false,
                     "tag": "",
                     "sub_path": "scrollwheel",
                     "objects": [
@@ -509,6 +491,42 @@
                         },
                         {
                             "name": "scrollwheel holder",
+                            "name_override": "",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        }
+                    ],
+                    "nodegroups": []
+                },
+                {
+                    "collection_name": "pins",
+                    "export": true,
+                    "use_tag": false,
+                    "tag": "",
+                    "sub_path": "pins",
+                    "objects": [
+                        {
+                            "name": "pin",
+                            "name_override": "",
+                            "export": true,
+                            "tag": "",
+                            "sub_path": "",
+                            "nodegroups": []
+                        }
+                    ],
+                    "nodegroups": []
+                },
+                {
+                    "collection_name": "nut lock",
+                    "export": true,
+                    "use_tag": false,
+                    "tag": "",
+                    "sub_path": "pins",
+                    "objects": [
+                        {
+                            "name": "nut_lock",
                             "name_override": "",
                             "export": true,
                             "tag": "",
@@ -1230,6 +1248,7 @@
                     "parts/dpad_stick/rocker_ball.stl",
                     "parts/dpad_stick/rocker_support.stl",
                     "parts/dpad_stick/stick.stl",
+                    "parts/pins/nut_lock.stl",
                     "parts/pins/pin.stl",
                     "parts/scrollwheel/scrollwheel.stl",
                     "parts/scrollwheel/scrollwheel_core.stl",
