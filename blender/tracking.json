@@ -1475,6 +1475,12 @@
             "[cos(2*n)*sin*cos.002] Value -> Value[1] [Math.018]",
             "[cos(2*n)*sin*cos] Value -> Value[0] [Math.017]"
         ],
+        "Geometry Nodes": [
+            "[Curve to Mesh] Mesh -> Geometry [Group Output]",
+            "[Group Input] Geometry -> Mesh [Mesh to Curve]",
+            "[Mesh to Curve] Curve -> Curve [Set Spline Type]",
+            "[Set Spline Type] Curve -> Curve [Curve to Mesh]"
+        ],
         "GripR1 FischerKoch CY hollow parameters": [
             "[fill parameters.001] Bundle -> Bundle [Group Output]"
         ],
@@ -13708,7 +13714,7 @@
                             "subdivision level": "low",
                             "tolerance": "default",
                             "top wire cutouts": false,
-                            "variant": "GripV",
+                            "variant": "GripX",
                             "voxel resolution": "low"
                         }
                     }
@@ -15464,7 +15470,7 @@
                             "subdivision level": "low",
                             "tolerance": "default",
                             "top wire cutouts": false,
-                            "variant": "GripV",
+                            "variant": "GripX",
                             "voxel resolution": "low"
                         }
                     }

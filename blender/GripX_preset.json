@@ -1,6 +1,6 @@
 {
     "data_version": 4,
-    "root_dir": "D:\\Grip\\orca_slicer\\GripX\\",
+    "root_dir": "//../orca_slicer/GripX",
     "global_nodegroups": [
         {
             "group": "global",
