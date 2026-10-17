@@ -16,12 +16,12 @@ sys.dont_write_bytecode = True
 HERE = os.path.dirname(os.path.abspath(__file__))
 EXT_DIR = os.path.dirname(HERE)
 sys.path.insert(0, EXT_DIR)
-sys.path.insert(0, os.path.join(os.path.dirname(EXT_DIR), "tools", "orca_reload"))
+sys.path.insert(0, HERE)
 
 import build3mf  # noqa: E402
 import layout  # noqa: E402
 import reload3mf  # noqa: E402
-import test_orca_reload as fixtures  # noqa: E402
+import test_reload as fixtures  # noqa: E402
 
 A1_AREA = ["0x0", "256x0", "256x256", "0x256"]
 

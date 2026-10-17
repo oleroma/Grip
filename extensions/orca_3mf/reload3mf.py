@@ -8,9 +8,8 @@ original project: the result is written to a new file (PROJECT_reloaded.3mf
 by default).
 
 The Orca Reload Blender extension (this folder) runs the same code and also
-paints seam lines from Blender onto the parts, see seams.py. The command line
-is tools/orca_reload/orca_reload.py:
-    python tools/orca_reload/orca_reload.py PROJECT.3mf [MORE.3mf | FOLDER ...] [options]
+paints seam lines from Blender onto the parts, see seams.py. From the command line:
+    python orca_3mf/reload3mf.py PROJECT.3mf [MORE.3mf | FOLDER ...] [options]
 
 Only the Python standard library is needed (Python 3.8+), so Blender's
 bundled Python works too. See README.md next to this file.

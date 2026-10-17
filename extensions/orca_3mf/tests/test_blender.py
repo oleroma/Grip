@@ -29,9 +29,8 @@ sys.dont_write_bytecode = True
 import bpy  # noqa: E402
 import addon_utils  # noqa: E402  (comes with bpy)
 
-sys.path.insert(0, os.path.join(ROOT, "tools", "orca_reload"))
 sys.path.insert(0, HERE)
-import test_orca_reload as fixtures  # noqa: E402
+import test_reload as fixtures  # noqa: E402
 from test_build import make_template  # noqa: E402
 
 REPO_MODULE = "orca_test"

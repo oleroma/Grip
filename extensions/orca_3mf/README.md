@@ -66,7 +66,7 @@ Each part's place on the plate is set again by the nesting. Objects made of seve
 | --- | --- |
 | `build3mf.py` | Writes projects from projects › plates › parts, and reads an existing project's layout for Import. No Blender needed. |
 | `layout.py` | Up axis and turn to a rotation, footprints, nesting, and Orca's plate grid. No Blender needed. |
-| `reload3mf.py` | Reads Orca projects and reloads STLs into them; the command line tool [tools/orca_reload](../tools/orca_reload/README.md) runs it. No Blender needed. |
+| `reload3mf.py` | Reads Orca projects and reloads STLs into them. Also runs on its own from the command line, see below. No Blender needed. |
 | `seams.py` | Seam lines to Orca's seam painting: each triangle near the line is split until the painted strip follows it. No Blender needed. |
 | `blender_seams.py` | Reads a seam line from a curve or mesh. |
 | `props.py` | What the .blend saves, and how the paths are joined. |
@@ -84,13 +84,24 @@ Orca stores each part's mesh centred on itself, and the part's place and rotatio
 - Scale set in Orca is dropped on Import.
 - Bed exclude areas are only warned about, not honoured when nesting; round and non-rectangular beds nest on their bounding box.
 
+## Command line reload
+
+`reload3mf.py` also reloads every STL part of Orca projects from disk without Blender or Orca, like Orca's **Reload from disk** on every part. It needs only Python 3.8 or newer (Blender's own Python works). The original is never overwritten; the result is written as `NAME_reloaded.3mf`.
+
+```
+python orca_3mf\reload3mf.py D:\Grip\orca_slicer\GripV\GripV_parts.3mf
+python orca_3mf\reload3mf.py D:\Grip\orca_slicer
+```
+
+The second line does every `.3mf` under that folder. Options: `-o FILE`, `--out-dir DIR`, `--suffix TEXT`, `--search DIR` (where to look for moved STLs), `--anchor center|origin`, `--no-drop`, `--dry-run`; `--help` explains each. Exit code 0 means all parts were found, 2 some were missing, 1 a project failed.
+
 ## Tests
 
 ```
 python -I orca_3mf/tests/test_build.py
 python -I orca_3mf/tests/test_seams.py
 blender -b -P orca_3mf/tests/test_blender.py
-python -m unittest discover tools/orca_reload
+python -I orca_3mf/tests/test_reload.py
 ```
 
 `test_blender.py` needs a Python with the `bpy` module (Blender 5.2 or newer); the others need only Python. None of them open Grip.blend.
