@@ -2331,30 +2331,35 @@
             "[advanced stick parameters.003] Bundle -> Bundle [Join Bundle.019]",
             "[advanced stick parameters.004] Bundle -> Bundle [Join Bundle.020]",
             "[advanced stick parameters.005] Bundle -> Bundle [Join Bundle.021]",
+            "[advanced stick parameters.006] Bundle -> Bundle [Join Bundle.022]",
             "[advanced stick parameters] Bundle -> Bundle [Join Bundle.013]",
             "[basic stick parameters.001] Bundle -> Bundle [Join Bundle.017]",
             "[basic stick parameters.002] Bundle -> Bundle [Join Bundle.018]",
             "[basic stick parameters.003] Bundle -> Bundle [Join Bundle.019]",
             "[basic stick parameters.004] Bundle -> Bundle [Join Bundle.020]",
             "[basic stick parameters.005] Bundle -> Bundle [Join Bundle.021]",
+            "[basic stick parameters.006] Bundle -> Bundle [Join Bundle.022]",
             "[basic stick parameters] Bundle -> Bundle [Join Bundle.013]",
             "[grid texture parameters.001] Bundle -> Bundle [Join Bundle.017]",
             "[grid texture parameters.002] Bundle -> Bundle [Join Bundle.018]",
             "[grid texture parameters.003] Bundle -> Bundle [Join Bundle.019]",
             "[grid texture parameters.004] Bundle -> Bundle [Join Bundle.020]",
             "[grid texture parameters.005] Bundle -> Bundle [Join Bundle.021]",
+            "[grid texture parameters.006] Bundle -> Bundle [Join Bundle.022]",
             "[grid texture parameters] Bundle -> Bundle [Join Bundle.013]",
             "[icosahedron texture parameters.001] Bundle -> Bundle [Join Bundle.017]",
             "[icosahedron texture parameters.002] Bundle -> Bundle [Join Bundle.018]",
             "[icosahedron texture parameters.003] Bundle -> Bundle [Join Bundle.019]",
             "[icosahedron texture parameters.004] Bundle -> Bundle [Join Bundle.020]",
             "[icosahedron texture parameters.005] Bundle -> Bundle [Join Bundle.021]",
+            "[icosahedron texture parameters.006] Bundle -> Bundle [Join Bundle.022]",
             "[icosahedron texture parameters] Bundle -> Bundle [Join Bundle.013]",
             "[shield parameters.001] Bundle -> Bundle [Join Bundle.017]",
             "[shield parameters.002] Bundle -> Bundle [Join Bundle.018]",
             "[shield parameters.003] Bundle -> Bundle [Join Bundle.019]",
             "[shield parameters.004] Bundle -> Bundle [Join Bundle.020]",
             "[shield parameters.005] Bundle -> Bundle [Join Bundle.021]",
+            "[shield parameters.006] Bundle -> Bundle [Join Bundle.022]",
             "[shield parameters] Bundle -> Bundle [Join Bundle.013]",
             "[stick menu] Menu -> Menu [Menu Switch]",
             "[stick top parameters.001] Bundle -> Bundle [Join Bundle.017]",
@@ -2362,6 +2367,7 @@
             "[stick top parameters.003] Bundle -> Bundle [Join Bundle.019]",
             "[stick top parameters.004] Bundle -> Bundle [Join Bundle.020]",
             "[stick top parameters.005] Bundle -> Bundle [Join Bundle.021]",
+            "[stick top parameters.006] Bundle -> Bundle [Join Bundle.022]",
             "[stick top parameters] Bundle -> Bundle [Join Bundle.013]",
             "[sticks xy correction] Value -> stick XY correction [advanced stick parameters]"
         ],
@@ -14827,6 +14833,22 @@
                             "swap stick rotation": false
                         }
                     },
+                    "advanced stick parameters.006": {
+                        "inputs": {
+                            "X correction": 0.05,
+                            "Y correction": 0.8,
+                            "case cutout thickness": 2.0,
+                            "contact angle": 14.0,
+                            "hole bevel": 0.0,
+                            "hole radius": 8.3,
+                            "shaft X correction": 0.0,
+                            "shaft Y correction": 0.0,
+                            "stick XY correction": false,
+                            "stick hole subdivision": 8,
+                            "stick subdivision": 128,
+                            "swap stick rotation": false
+                        }
+                    },
                     "basic stick parameters": {
                         "inputs": {
                             "action": false,
@@ -14935,6 +14957,24 @@
                             "topmost offset": 3.9
                         }
                     },
+                    "basic stick parameters.006": {
+                        "inputs": {
+                            "action": false,
+                            "action rotation": -0.4119,
+                            "base height": 9.3,
+                            "base size": 4.2,
+                            "contact bottom offset": 3.9,
+                            "contact top offset": -3.2,
+                            "middle bevel": 1.2,
+                            "range degrees": 18.1,
+                            "shaft Z offset": -0.5,
+                            "shaft tolerance": 0.2,
+                            "stick height": 3.2,
+                            "stick top radius": 2.98,
+                            "top bevel": 0.3,
+                            "topmost offset": 4.9
+                        }
+                    },
                     "grid texture parameters": {
                         "inputs": {
                             "bottom xy correction": 0.0,
@@ -15007,6 +15047,18 @@
                             "z offset": 0.0
                         }
                     },
+                    "grid texture parameters.006": {
+                        "inputs": {
+                            "bottom xy correction": 0.0,
+                            "bottom z correction": 0.1,
+                            "grid curvature offset": 10.6,
+                            "scale": 1.0,
+                            "texture height": 0.5,
+                            "texture sharpness": 0.4,
+                            "texture subdivisions": 5,
+                            "z offset": 0.0
+                        }
+                    },
                     "icosahedron texture parameters": {
                         "inputs": {
                             "icosahedron curvature offset": -11.3,
@@ -15048,6 +15100,14 @@
                         }
                     },
                     "icosahedron texture parameters.005": {
+                        "inputs": {
+                            "icosahedron curvature offset": -10.2,
+                            "icosahedron subdivisions": 3,
+                            "texture height": 0.4,
+                            "texture sharpness": 0.4
+                        }
+                    },
+                    "icosahedron texture parameters.006": {
                         "inputs": {
                             "icosahedron curvature offset": -10.2,
                             "icosahedron subdivisions": 3,
@@ -15115,6 +15175,16 @@
                             "shield radius offset": 1.34
                         }
                     },
+                    "shield parameters.006": {
+                        "inputs": {
+                            "FDM Z correction": 1.6,
+                            "FDM shield thickness": 0.5,
+                            "shield": true,
+                            "shield cutoff height": 6.0,
+                            "shield height": 12.39,
+                            "shield radius offset": 0.0
+                        }
+                    },
                     "stick top parameters": {
                         "inputs": {
                             "extrude texture": true,
@@ -15171,6 +15241,17 @@
                         }
                     },
                     "stick top parameters.005": {
+                        "inputs": {
+                            "extrude texture": false,
+                            "square morph": 0.25,
+                            "square top subd": 4,
+                            "swap top rotation": false,
+                            "texture type": "icosahedron",
+                            "top curvature": "flat",
+                            "top shape": "circle"
+                        }
+                    },
+                    "stick top parameters.006": {
                         "inputs": {
                             "extrude texture": false,
                             "square morph": 0.25,
