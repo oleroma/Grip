@@ -3,8 +3,6 @@
 import collections
 import os
 import time
-import threading
-import queue
 import tempfile
 import shutil
 import traceback
@@ -19,7 +17,7 @@ from .stl import collect_instance_arrays, export_object_stl
 from .data import ensure_preset_uids, find_job, find_preset, get_job, log_to_console
 from .validation import is_preset_setup_valid
 from .headless import WORKER_SCRIPT, write_job_file
-from .standby import ensure_standby, start_process, take_standby, worker_args
+from .standby import TEMP_PREFIX, WorkerOutput, ensure_standby, start_process, take_standby, worker_args
 
 # Temp folders of a crashed export are removed at startup once they are this old; a younger one may belong to an
 # export running in another Blender instance.
@@ -61,7 +59,7 @@ class EXPORT_OT_batch_stl_multi(bpy.types.Operator):
     echo = False  # print the log lines too (a scripted export, see execute)
     direct_budget = DIRECT_SLICE  # seconds of direct writing per poll; None writes everything queued at once (see execute)
     # Run state, set by _start; these are what an operator that did not start a worker or queue anything has.
-    process = instance_arrays = None
+    process = output = worker_dir = instance_arrays = None
     direct_queue = ()
     direct_total = direct_done = 0
     worker_done = False
@@ -93,7 +91,7 @@ class EXPORT_OT_batch_stl_multi(bpy.types.Operator):
         """Check the preset, start the worker for the objects with overrides and queue the others for direct writing.
         Only the work that has to happen at the click is done here (the checks, the snapshot the worker opens, its
         start); _poll does the rest. Returns {'RUNNING_MODAL'} while the worker runs or objects are queued."""
-        self._timer = self.process = self.instance_arrays = None
+        self._timer = self.process = self.output = self.worker_dir = self.instance_arrays = None
         self.direct_queue, self.direct_total, self.direct_done, self.worker_done = collections.deque(), 0, 0, True
         self.total_operations, self.current_op = 1, 0
         self.export_start_time = time.perf_counter()
@@ -175,7 +173,7 @@ class EXPORT_OT_batch_stl_multi(bpy.types.Operator):
         """Save the snapshot the worker opens, write its job file and start it. False (reported) when it did not start."""
         job.export_status = "Spawning Worker... (0.0s)"
         t_spawn_start = time.perf_counter()
-        self.temp_dir = tempfile.mkdtemp(prefix="fast_batch_stl_")
+        self.temp_dir = tempfile.mkdtemp(prefix=TEMP_PREFIX)
         self.temp_blend = os.path.join(self.temp_dir, "batch_stl_export_temp.blend")
         self.job_json = os.path.join(self.temp_dir, "job.json")
 
@@ -185,26 +183,22 @@ class EXPORT_OT_batch_stl_multi(bpy.types.Operator):
 
         # The standby worker (when the preference keeps one ready) opens the snapshot as soon as it gets the job, so
         # Blender's boot is not part of the export. Otherwise a worker starts with WORKER_SCRIPT, which loads this package
-        # from its folder and runs the job.
+        # from its folder and runs the job. Either way the worker writes its output to a file that _poll reads.
         autoexec = context.preferences.filepaths.use_scripts_auto_execute
         standby = take_standby(autoexec)
         if standby is not None and standby.send(self.temp_blend, self.job_json):
-            self.process, self.q, self.t = standby.process, standby.q, standby.t
+            self.process, self.output, self.worker_dir = standby.process, standby.output, standby.folder
             self._log(job, f"=== INITIATING HEADLESS EXPORT '{preset.name}' [standby worker, {time.perf_counter() - t_spawn_start:.4f}s] ===")
         else:
             if standby is not None: standby.stop()
+            self.output = WorkerOutput(os.path.join(self.temp_dir, "worker.log"))
             try:
-                self.process = start_process(worker_args(autoexec, "-b", self.temp_blend, "-P", WORKER_SCRIPT, "--", "--batch-stl-headless", self.job_json))
+                self.process = start_process(worker_args(autoexec, "-b", self.temp_blend, "-P", WORKER_SCRIPT, "--", "--batch-stl-headless", self.job_json), self.output.path)
             except Exception as e:
                 self.report({'ERROR'}, f"Failed to spawn headless Blender: {e}")
                 self.cleanup(context)
                 return False
             self._log(job, f"=== INITIATING HEADLESS EXPORT '{preset.name}' [{time.perf_counter() - t_spawn_start:.4f}s Boot] ===")
-            self.q = queue.Queue()
-            def enqueue_output(out, q):
-                for line in iter(out.readline, ''): q.put(line)
-                out.close()
-            self.t = threading.Thread(target=enqueue_output, args=(self.process.stdout, self.q)); self.t.daemon = True; self.t.start()
         self.worker_done = False
         return True
 
@@ -238,10 +232,8 @@ class EXPORT_OT_batch_stl_multi(bpy.types.Operator):
         return find_job(getattr(self, "scene_uid", 0), getattr(self, "preset_uid", ""))
 
     def _drain_output(self, job):
-        """Process queued worker output. Returns True once the worker reported BATCH_STL_DONE."""
-        while True:
-            try: line = self.q.get_nowait().rstrip('\r\n')
-            except queue.Empty: return False
+        """Process the lines the worker printed since the last poll. Returns True once it reported BATCH_STL_DONE."""
+        for line in self.output.read_lines(stop="BATCH_STL_DONE"):
             if line.startswith("BATCH_STL_TOTAL:"):
                 try: self.total_operations = int(line.split(":")[1])
                 except Exception: pass
@@ -254,6 +246,7 @@ class EXPORT_OT_batch_stl_multi(bpy.types.Operator):
                 return True
             elif line:
                 self._log(job, line)
+        return False
 
     def modal(self, context, event):
         result = self._poll(context, read_output=event.type == 'TIMER')
@@ -279,8 +272,8 @@ class EXPORT_OT_batch_stl_multi(bpy.types.Operator):
                 if not self.worker_done:
                     self.worker_done = self._drain_output(job)
                     if not self.worker_done and self.process.poll() is not None:
-                        # The worker prints BATCH_STL_DONE right before exiting; let the reader thread flush before judging.
-                        self.t.join(timeout=2.0)
+                        # The worker prints BATCH_STL_DONE right before exiting: read what it wrote after the first read
+                        # (all of its output is in the file once it exited) before judging.
                         self.worker_done = self._drain_output(job)
                         if not self.worker_done:
                             exit_code = self.process.returncode
@@ -332,10 +325,9 @@ class EXPORT_OT_batch_stl_multi(bpy.types.Operator):
                     self.process.kill()
                     self.process.wait(timeout=1.0)
             except Exception: pass
-        if getattr(self, 't', None) and self.t.is_alive():
-            self.t.join(timeout=0.5)
-        if hasattr(self, 'temp_dir') and os.path.exists(self.temp_dir):
-            shutil.rmtree(self.temp_dir, ignore_errors=True)
+        # The export's own folder, and the standby worker's (its output file) when it ran the export
+        for folder in (getattr(self, 'temp_dir', None), getattr(self, 'worker_dir', None)):
+            if folder and os.path.exists(folder): shutil.rmtree(folder, ignore_errors=True)
         # The next export's worker: started once this one is done, so it does not compete with it
         ensure_standby()
 
@@ -346,7 +338,7 @@ def remove_stale_temp_dirs():
         tmp = tempfile.gettempdir()
         for f in os.listdir(tmp):
             path = os.path.join(tmp, f)
-            if f.startswith("fast_batch_stl_") and time.time() - os.path.getmtime(path) > STALE_TEMP_AGE:
+            if f.startswith(TEMP_PREFIX) and time.time() - os.path.getmtime(path) > STALE_TEMP_AGE:
                 shutil.rmtree(path, ignore_errors=True)
     except Exception: pass
 

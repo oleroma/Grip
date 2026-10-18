@@ -4,8 +4,8 @@
     blender --factory-startup --python-exit-code 1 -b <copy.blend> -P headless_main.py -- --batch-stl-headless <job.json>
 
 Blender runs this file as a plain script, outside the package (so it cannot use relative imports), and --factory-startup
-leaves the add-on disabled. The script therefore imports the package from its own folder, registers it and runs the job
-(headless.run_headless_export).
+leaves the add-on disabled. The script therefore imports the package the way Blender imports extensions (load_package),
+registers it and runs the job (headless.run_headless_export).
 
 The standby worker (standby.py) starts with no file and `--standby` in place of the job file:
 
@@ -16,23 +16,30 @@ It prints BATCH_STL_READY once the package is registered, then reads one line fr
 started it is gone) ends it.
 """
 import importlib
-import importlib.util
 import os
 import sys
 
+import bpy
 
-def load_package(name="combi_export"):
-    """Import the package this file belongs to as `name`, so its modules import each other as usual."""
+# Module name of the extension repository the worker adds for the package's folder when no repository holds it
+WORKER_REPO = "combi_export_worker"
+
+
+def load_package():
+    """Import the package this file belongs to as Blender imports an extension: bl_ext.<repository>.<folder>, through
+    the extension repository whose directory holds its folder. With --factory-startup Blender knows its default
+    repositories only (an install from the Extensions platform or from disk); for any other folder (a local repository,
+    or the repository checkout in the tests) the worker adds one. --factory-startup never saves the preferences, so the
+    added repository lives as long as the worker."""
     folder = os.path.dirname(os.path.abspath(__file__))
-    spec = importlib.util.spec_from_file_location(name, os.path.join(folder, "__init__.py"), submodule_search_locations=[folder])
-    package = importlib.util.module_from_spec(spec)
-    sys.modules[name] = package
-    spec.loader.exec_module(package)
-    return package
+    parent = os.path.dirname(folder)
+    repos = bpy.context.preferences.extensions.repos
+    repo = next((r for r in repos if r.enabled and os.path.normcase(os.path.abspath(r.directory)) == os.path.normcase(parent)), None)
+    if repo is None: repo = repos.new(name="Combi Export Worker", module=WORKER_REPO, custom_directory=parent)
+    return importlib.import_module(f"bl_ext.{repo.module}.{os.path.basename(folder)}")
 
 
 if __name__ == "__main__":
-    import bpy
     package = load_package()
     if not hasattr(bpy.types.Scene, "batch_stl_root_dir"): package.register()
     headless = importlib.import_module(f"{package.__name__}.headless")

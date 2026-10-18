@@ -136,24 +136,27 @@ def batch_stl_undo_handler(*args):
 
 @persistent
 def batch_stl_depsgraph_handler(scene, depsgraph):
+    """Runs after every depsgraph update, so it decides from the update's ID types first (cheap) and reads the add-on's
+    data only for the updates that can change what the panels show."""
     # Menu items and node groups the merge predictions read can change in the node editor
     if depsgraph.id_type_updated('NODETREE'): bump_revision()
     if _ui_cache.get("is_dirty", False): return
-    if not any(c.collection_name for p in scene.batch_stl_presets for c in p.collections): return
 
     # Objects linked to / unlinked from collections change the object lists, counts and tree.
-    if depsgraph.id_type_updated('COLLECTION'):
-        mark_dirty()
-        return
+    collections_changed = depsgraph.id_type_updated('COLLECTION')
 
     # Renamed objects. Only a scene update or an object update that re-evaluates nothing (a rename) can change them:
-    # every step of a transform drag, and every geometry or material edit, only re-evaluates objects, so they skip the
-    # walk over the mapped objects.
-    if not depsgraph.id_type_updated('SCENE') and not (depsgraph.id_type_updated('OBJECT') and any(
-            isinstance(u.id, bpy.types.Object) and not (u.is_updated_transform or u.is_updated_geometry or u.is_updated_shading)
-            for u in depsgraph.updates)):
-        return
-    if mapped_objects_state(scene) != _ui_cache.get("objects_state"): mark_dirty()
+    # every step of a transform drag, and every geometry or material edit, only re-evaluates objects, and selecting,
+    # making active or hiding with the eye only updates the scene itself, so they skip the walk over the mapped objects.
+    if not collections_changed:
+        scene_changed = depsgraph.id_type_updated('SCENE') and not all(isinstance(u.id, bpy.types.Scene) for u in depsgraph.updates)
+        if not scene_changed and not (depsgraph.id_type_updated('OBJECT') and any(
+                isinstance(u.id, bpy.types.Object) and not (u.is_updated_transform or u.is_updated_geometry or u.is_updated_shading)
+                for u in depsgraph.updates)):
+            return
+
+    if not any(c.collection_name for p in scene.batch_stl_presets for c in p.collections): return
+    if collections_changed or mapped_objects_state(scene) != _ui_cache.get("objects_state"): mark_dirty()
 
 # --- Directory tree preview -------------------------------------------------------------------------------------------
 def build_tree_dict(context, is_global=False):

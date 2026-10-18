@@ -12,16 +12,17 @@ _MODULES = ("common", "nodes", "naming", "fields", "engine", "scope", "targets",
             "standby", "ui_cache", "props", "operators", "export_operator", "ui")
 
 if "bpy" in locals():
-    # Reload Scripts runs this file again but keeps the modules it imported: reload them too, dependencies first, so
-    # the classes registered below come from the edited code.
+    # Reload Scripts runs this file again in the namespace of its first run, where the modules imported below are still
+    # bound: reload them too, dependencies first, so the classes registered below come from the edited code.
     import importlib
     for _name in _MODULES:
-        if f"{__name__}.{_name}" in sys.modules: importlib.reload(sys.modules[f"{__name__}.{_name}"])
+        if _name in locals(): importlib.reload(locals()[_name])
 
 import bpy
 from bpy.app.handlers import persistent
 
-from . import export_operator, operators, props, standby, ui
+from . import (common, nodes, naming, fields, engine, scope, targets, stl, data, validation, headless, standby, ui_cache,
+               props, operators, export_operator, ui)
 from .common import OVERRIDES_OPEN_PROPS, mark_dirty
 from .data import SAVED_JSON_SUFFIX, batch_stl_import_handler, batch_stl_save_handler, batch_stl_saved_handler, prepare_scenes
 from .export_operator import remove_stale_temp_dirs

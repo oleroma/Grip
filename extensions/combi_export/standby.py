@@ -4,10 +4,10 @@ which saves Blender's boot (2-3 s) at the click (ARCHITECTURE.md, Standby Worker
 import atexit
 import json
 import os
-import queue
+import shutil
 import subprocess
 import sys
-import threading
+import tempfile
 
 import bpy
 
@@ -15,6 +15,9 @@ from .headless import WORKER_SCRIPT
 
 # The worker prints this once it is ready for a job; what it printed before (Blender's banner) is not part of any export
 READY_LINE = "BATCH_STL_READY"
+
+# Prefix of the temp folders of exports and standby workers (remove_stale_temp_dirs removes old ones)
+TEMP_PREFIX = "fast_batch_stl_"
 
 _standby = None  # the StandbyWorker waiting for a job, if any
 
@@ -24,29 +27,52 @@ def worker_args(autoexec, *args):
     of 0. `args` go after the blend file and script options."""
     return [bpy.app.binary_path, "--factory-startup", "--python-exit-code", "1", *(["--enable-autoexec"] if autoexec else []), *args]
 
-def start_process(args):
-    """Start a worker with its input and output (stdout and stderr) piped."""
+class WorkerOutput:
+    """What a worker prints (stdout and stderr), which start_process sends to the file `path`. The export's modal timer
+    reads it a poll at a time (read_lines), so nothing has to wait on the worker's output."""
+    def __init__(self, path):
+        self.path, self.pos = path, 0
+
+    def read_lines(self, stop=None):
+        """The lines the worker completed since the last read, up to the first one that starts with `stop` (the lines
+        after it stay for the next read). A line still being written is left for the next read too."""
+        try:
+            with open(self.path, "rb") as f:
+                f.seek(self.pos)
+                data = f.read()
+        except OSError: return []
+        lines = []
+        for raw in data.split(b"\n")[:-1]:
+            self.pos += len(raw) + 1
+            text = raw.decode("utf-8", errors="replace")
+            lines.extend(text.removesuffix("\r").split("\r"))
+            if stop and text.startswith(stop): break
+        return lines
+
+def start_process(args, output_path):
+    """Start a worker with its input piped and its output (stdout and stderr) written to `output_path`."""
     # blender.exe is a console program: without this flag Windows opens a console window for the worker.
     flags = subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0
-    process = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
-                               encoding="utf-8", errors="replace", env=dict(os.environ, PYTHONUNBUFFERED="1"), creationflags=flags)
-    return process
+    with open(output_path, "wb") as output:
+        return subprocess.Popen(args, stdin=subprocess.PIPE, stdout=output, stderr=subprocess.STDOUT, text=True,
+                                encoding="utf-8", errors="replace", env=dict(os.environ, PYTHONUNBUFFERED="1"), creationflags=flags)
 
 class StandbyWorker:
-    """A worker started without a job. Its lines go to `q` once it printed READY_LINE (`ready`); `t` reads them."""
+    """A worker started without a job. It writes its output to a file in its own temp folder (`folder`); `output` reads
+    the lines after READY_LINE (is_ready)."""
     def __init__(self, autoexec):
-        self.autoexec = autoexec
-        self.ready = threading.Event()
-        self.q = queue.Queue()
-        self.process = start_process(worker_args(autoexec, "-b", "-P", WORKER_SCRIPT, "--", "--batch-stl-headless", "--standby"))
-        self.t = threading.Thread(target=self._read, daemon=True)
-        self.t.start()
+        self.autoexec, self.ready = autoexec, False
+        self.folder = tempfile.mkdtemp(prefix=TEMP_PREFIX)
+        self.output = WorkerOutput(os.path.join(self.folder, "worker.log"))
+        try: self.process = start_process(worker_args(autoexec, "-b", "-P", WORKER_SCRIPT, "--", "--batch-stl-headless", "--standby"), self.output.path)
+        except Exception:
+            shutil.rmtree(self.folder, ignore_errors=True)
+            raise
 
-    def _read(self):
-        for line in iter(self.process.stdout.readline, ''):
-            if self.ready.is_set(): self.q.put(line)
-            elif line.startswith(READY_LINE): self.ready.set()
-        self.process.stdout.close()
+    def is_ready(self):
+        """Whether the worker printed READY_LINE; what it printed before (Blender's banner) is read past and dropped."""
+        if not self.ready: self.ready = any(line.startswith(READY_LINE) for line in self.output.read_lines(stop=READY_LINE))
+        return self.ready
 
     def alive(self): return self.process.poll() is None
 
@@ -65,6 +91,7 @@ class StandbyWorker:
                 self.process.kill()
                 self.process.wait(timeout=1.0)
         except Exception: pass
+        shutil.rmtree(self.folder, ignore_errors=True)
 
 def get_preferences():
     """The add-on's preferences; None when the package is not enabled as an add-on (e.g. loaded by the tests)."""
@@ -88,13 +115,14 @@ def ensure_standby():
 
 def take_standby(autoexec):
     """The standby worker for an export, once it is ready and was started with the `autoexec` setting the export needs;
-    None otherwise (the export starts its own worker). The caller owns what it returns; a standby that does not fit is
-    stopped (a new one starts when the export ends)."""
+    None otherwise (the export starts its own worker). The caller owns what it returns (and its folder); a standby that
+    does not fit is stopped (a new one starts when the export ends). One whose output file is gone (another Blender
+    removed its folder as stale) does not fit: its export could not be followed."""
     global _standby
     worker, _standby = _standby, None
     if worker is None: return None
-    if worker.alive() and worker.autoexec == autoexec:
-        if worker.ready.is_set(): return worker
+    if worker.alive() and worker.autoexec == autoexec and os.path.exists(worker.output.path):
+        if worker.is_ready(): return worker
         _standby = worker  # still booting: keep it for the next export
         return None
     worker.stop()
