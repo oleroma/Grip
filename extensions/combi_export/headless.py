@@ -9,6 +9,7 @@ import bpy
 
 from .nodes import (cached_menu_items, clean_node_name, get_modifier_input, get_modifier_socket_identifier,
     set_modifier_input)
+from .naming import export_dir
 from .engine import MockOverride, count_and_keep_combinations, generate_named_combinations, get_input_value
 from .targets import export_file_parts, group_by_signature, is_direct, iter_export_objects, live_collection_names
 from .stl import collect_instance_arrays, export_object_stl
@@ -219,18 +220,20 @@ def revert_overrides(global_states, mod_states, target_objects, skip=frozenset()
 # The script the worker process starts with: it loads this package and calls run_headless_export
 WORKER_SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "headless_main.py")
 
-def write_job_file(path, scene, view_layer, preset, root_dir, skip_direct):
+def write_job_file(path, scene, view_layer, preset, root_dir, base_dir, skip_direct):
     """The job manifest run_headless_export reads: the preset (by uid) of `scene` to export, evaluated in `view_layer`
-    (one of the scene's), to `root_dir`. skip_direct: the objects without overrides were already written."""
+    (one of the scene's), to `root_dir` (absolute). `base_dir` is the folder `//` sub-folders start at, the .blend file's:
+    the worker opens a copy saved elsewhere. skip_direct: the objects without overrides were already written."""
     with open(path, 'w', encoding="utf-8") as f:
         json.dump({"scene": scene.name, "view_layer": view_layer.name, "preset_uid": preset.uid, "root_dir": root_dir,
-                   "start_time": time.time(), "skip_direct": skip_direct}, f)
+                   "base_dir": base_dir, "start_time": time.time(), "skip_direct": skip_direct}, f)
 
 def run_headless_export(job_file_path):
     try:
         with open(job_file_path, 'r', encoding="utf-8") as f: job_data = json.load(f)
         scene_name, view_layer_name, preset_uid = job_data["scene"], job_data["view_layer"], job_data["preset_uid"]
         root_dir, start_time_unix, skip_direct = job_data["root_dir"], job_data["start_time"], job_data["skip_direct"]
+        base_dir = job_data["base_dir"]
     except Exception as e:
         print(f"ERROR: Failed to load job manifest: {e}", flush=True)
         sys.exit(1)
@@ -318,7 +321,7 @@ def run_headless_export(job_file_path):
 
                 for c, obj_prop, bl_obj in batch_items:
                     full_dir_parts, filename = export_file_parts(preset, c, obj_prop, bl_obj, tags_by_level, paths_by_level)
-                    out_dir = os.path.normpath(os.path.join(root_dir, *full_dir_parts)) if full_dir_parts else root_dir
+                    out_dir = export_dir(root_dir, full_dir_parts, base_dir)
                     filepath = os.path.join(out_dir, filename)
 
                     result_text = export_object_stl(filepath, bl_obj, depsgraph, instance_arrays.get(bl_obj.name_full, ()))

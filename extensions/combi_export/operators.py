@@ -6,34 +6,71 @@ import json
 import bpy
 from bpy_extras.io_utils import ExportHelper, ImportHelper
 
-from .common import inside_operator, mark_dirty, overrides_open_prop, raw_edits, _held_keys, _ui_cache
+from .common import blend_dir, inside_operator, mark_dirty, overrides_open_prop, raw_edits, root_dir, _held_keys, _ui_cache
 from .nodes import clean_node_name, get_menu_switch_items, get_supported_inputs, get_target_node_names
 from .fields import add_value, name_permutations, same_fields, value_fields
 from .engine import MockInput, MockOverride, parse_sweep_values
 from .data import (copy_collection_to_dict, copy_ng_to_dict, copy_preset_to_dict, copy_setup_to_dict,
     ensure_preset_uids, get_active_collection, get_active_object, get_active_preset, get_job,
     paste_collection_from_dict, paste_ng_from_dict, paste_preset_from_dict, remove_job, upgrade_nodegroup_dicts)
+from .paths import nearest_existing_dir, picked_setting, resolve_path
 from .ui_cache import (expand_last_dirs, is_dir_collapsed, iter_tree_dirs, load_toggled_dirs, save_toggled_dirs,
     set_dir_collapsed)
 
 _clipboard = {"preset": None, "collection": None, "nodegroup": None}
 
 
+# ExportHelper / ImportHelper declare `filepath` without blend-relative support: Blender 5.2 warns when a script passes
+# a '//' path. These declare it and read it like the other path settings (paths.resolve_path).
+JSON_FILE_DESCRIPTION = ("JSON file. A relative path (presets.json, ../presets.json, or Blender's //presets.json) starts "
+                         "at the .blend file's folder")
+
+def json_file_path(op):
+    return resolve_path(op.filepath, blend_dir())
+
 class BATCH_STL_OT_export_presets_json(bpy.types.Operator, ExportHelper):
     bl_idname = "batch_stl.export_presets_json"
     bl_label = "Export JSON"
     bl_description = "Export all presets, the global overrides and the root folder to a JSON file"
     filename_ext = ".json"
+    filepath: bpy.props.StringProperty(name="File Path", description=JSON_FILE_DESCRIPTION, maxlen=1024, subtype='FILE_PATH',
+                                       options={'PATH_SUPPORTS_BLEND_RELATIVE'})
     filter_glob: bpy.props.StringProperty(default="*.json", options={'HIDDEN'})
     def execute(self, context):
         try:
-            with open(self.filepath, 'w', encoding="utf-8") as f:
+            path = json_file_path(self)
+            with open(path, 'w', encoding="utf-8") as f:
                 json.dump(copy_setup_to_dict(context.scene), f, indent=4)
-            self.report({'INFO'}, f"Presets exported to {os.path.basename(self.filepath)}")
+            self.report({'INFO'}, f"Presets exported to {os.path.basename(path)}")
             return {'FINISHED'}
         except Exception as e:
             self.report({'ERROR'}, f"Failed to export presets: {e}")
             return {'CANCELLED'}
+
+class BATCH_STL_OT_pick_root_dir(bpy.types.Operator):
+    """The Root field's folder button. Blender's own (a DIR_PATH field) cannot read the paths paths.py accepts
+    ('../stl', '..\\stl' on Linux) and opens its file browser at the drive's top: this one opens at the folder the
+    Root field names (or the closest one above it that exists) and stores the pick like Blender does."""
+    bl_idname = "batch_stl.pick_root_dir"
+    bl_label = "Accept"
+    bl_description = "Pick the root folder in the file browser. It opens at the current root folder"
+    bl_options = {'REGISTER', 'UNDO'}
+    directory: bpy.props.StringProperty(subtype='DIR_PATH', options={'HIDDEN', 'SKIP_SAVE', 'PATH_SUPPORTS_BLEND_RELATIVE'})
+    filter_folder: bpy.props.BoolProperty(default=True, options={'HIDDEN', 'SKIP_SAVE'})
+
+    def invoke(self, context, event):
+        base = blend_dir()
+        start = nearest_existing_dir(root_dir(context.scene)) or base
+        self.directory = os.path.join(start, "")
+        context.window_manager.fileselect_add(self)
+        return {'RUNNING_MODAL'}
+
+    def execute(self, context):
+        if not self.directory: return {'CANCELLED'}
+        folder = resolve_path(self.directory, blend_dir())
+        relative = bool(bpy.data.filepath) and context.preferences.filepaths.use_relative_paths
+        context.scene.batch_stl_root_dir = picked_setting(folder, blend_dir(), relative)
+        return {'FINISHED'}
 
 class BATCH_STL_OT_import_presets_json(bpy.types.Operator, ImportHelper):
     bl_idname = "batch_stl.import_presets_json"
@@ -41,6 +78,8 @@ class BATCH_STL_OT_import_presets_json(bpy.types.Operator, ImportHelper):
     bl_description = "Add the presets of a JSON file, and take its global overrides and root folder"
     bl_options = {'REGISTER', 'UNDO'}
     filename_ext = ".json"
+    filepath: bpy.props.StringProperty(name="File Path", description=JSON_FILE_DESCRIPTION, maxlen=1024, subtype='FILE_PATH',
+                                       options={'SKIP_PRESET', 'HIDDEN', 'PATH_SUPPORTS_BLEND_RELATIVE'})
     filter_glob: bpy.props.StringProperty(default="*.json", options={'HIDDEN'})
     # The scene has one of each, so taking the file's replaces the scene's. Files from before they were exported have
     # neither and leave the scene's alone.
@@ -55,7 +94,7 @@ class BATCH_STL_OT_import_presets_json(bpy.types.Operator, ImportHelper):
         presets, global_ngs = scene.batch_stl_presets, scene.batch_stl_global_nodegroups
         before, old_root, old_global = len(presets), scene.batch_stl_root_dir, None
         try:
-            with open(self.filepath, 'r', encoding="utf-8") as f:
+            with open(json_file_path(self), 'r', encoding="utf-8") as f:
                 data = json.load(f)
             if isinstance(data, list): data = {"presets": data}  # a file of an earlier version: the presets only
             if not isinstance(data, dict) or not isinstance(data.get("presets"), list):
@@ -74,7 +113,7 @@ class BATCH_STL_OT_import_presets_json(bpy.types.Operator, ImportHelper):
                 scene.batch_stl_root_dir = data["root_dir"]
                 taken.append("root folder")
             ensure_preset_uids(scene)
-            self.report({'INFO'}, f"Presets imported from {os.path.basename(self.filepath)}" + (f", with its {' and '.join(taken)}" if taken else ""))
+            self.report({'INFO'}, f"Presets imported from {os.path.basename(json_file_path(self))}" + (f", with its {' and '.join(taken)}" if taken else ""))
         except Exception as e:
             while len(presets) > before: presets.remove(len(presets) - 1)
             if old_global is not None:
@@ -563,7 +602,7 @@ class BATCH_STL_OT_read_modifiers(bpy.types.Operator):
         _held_keys["ctrl"] = event.ctrl
         return {'CANCELLED'}
 
-classes = (BATCH_STL_OT_export_presets_json, BATCH_STL_OT_import_presets_json, BATCH_STL_OT_clear_console,
+classes = (BATCH_STL_OT_export_presets_json, BATCH_STL_OT_import_presets_json, BATCH_STL_OT_pick_root_dir, BATCH_STL_OT_clear_console,
            BATCH_STL_OT_preset_actions, BATCH_STL_OT_collection_actions, BATCH_STL_OT_table_action,
            BATCH_STL_OT_toggle_dir_tree, BATCH_STL_OT_tree_expansion, BATCH_STL_OT_merge_info, BATCH_STL_OT_collection_note,
            BATCH_STL_OT_read_modifiers)

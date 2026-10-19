@@ -9,7 +9,8 @@ import traceback
 
 import bpy
 
-from .common import redraw_sidebars
+from .common import blend_dir, redraw_sidebars, root_dir
+from .naming import export_dir
 from .nodes import cached_menu_items
 from .targets import (export_file_parts, find_export_clashes, is_direct, iter_export_objects, live_collection_names,
     sync_collection_objects)
@@ -115,15 +116,12 @@ class EXPORT_OT_batch_stl_multi(bpy.types.Operator):
         if not scene.batch_stl_root_dir:
             self.report({'ERROR'}, "Missing Root Directory")
             return {"CANCELLED"}
-        if scene.batch_stl_root_dir.startswith("//") and not bpy.data.is_saved:
-            self.report({'ERROR'}, "Please save the .blend file before exporting to a relative path (//)")
-            return {"CANCELLED"}
         if not is_preset_setup_valid(scene, preset):
             self.report({'ERROR'}, "Improper setup: One or more override fields are missing or invalid.")
             return {"CANCELLED"}
 
         for c in preset.collections: sync_collection_objects(c)
-        preset_root = os.path.normpath(bpy.path.abspath(scene.batch_stl_root_dir))
+        preset_root = root_dir(scene)
         with cached_menu_items():
             clashes = find_export_clashes(scene, preset, preset_root)
             targets = list(iter_export_objects(scene, preset))
@@ -148,12 +146,13 @@ class EXPORT_OT_batch_stl_multi(bpy.types.Operator):
 
         # The worker goes first: it takes a second or more to boot, while the direct objects are written meanwhile.
         # Its snapshot is taken before the direct export touches the scene (it unhides eye-hidden objects for a moment).
-        if needs_headless and not self._start_worker(context, scene, preset, job): return {'CANCELLED'}
+        if needs_headless and not self._start_worker(context, scene, preset, job, preset_root): return {'CANCELLED'}
 
         # Resolve every path now (the settings are the ones at the click); _export_direct finds the objects again by name.
+        base = blend_dir()
         for c, obj_prop, bl_obj in objects_to_export_directly:
             full_dir_parts, filename = export_file_parts(preset, c, obj_prop, bl_obj)
-            out_dir = os.path.normpath(os.path.join(preset_root, *full_dir_parts)) if full_dir_parts else preset_root
+            out_dir = export_dir(preset_root, full_dir_parts, base)
             label = f"{preset.name} | {c.collection_name} | {bl_obj.name} | Permutation 1/1 | Batch 1/1"
             self.direct_queue.append((c.collection_name, bl_obj.name, os.path.join(out_dir, filename), label))
         self.direct_total = len(self.direct_queue)
@@ -169,7 +168,7 @@ class EXPORT_OT_batch_stl_multi(bpy.types.Operator):
         job.is_exporting, job.cancel_export, job.export_progress = True, False, 0.0
         return {'RUNNING_MODAL'}
 
-    def _start_worker(self, context, scene, preset, job):
+    def _start_worker(self, context, scene, preset, job, preset_root):
         """Save the snapshot the worker opens, write its job file and start it. False (reported) when it did not start."""
         job.export_status = "Spawning Worker... (0.0s)"
         t_spawn_start = time.perf_counter()
@@ -179,7 +178,8 @@ class EXPORT_OT_batch_stl_multi(bpy.types.Operator):
 
         bpy.ops.wm.save_as_mainfile(filepath=self.temp_blend, copy=True, compress=False)
         # context.view_layer, as for `live` in _start: the worker skips the objects written directly by the same test
-        write_job_file(self.job_json, scene, context.view_layer, preset, bpy.path.abspath(scene.batch_stl_root_dir), skip_direct=True)
+        # The worker opens a copy saved elsewhere: it gets the folders that relative paths start at from here.
+        write_job_file(self.job_json, scene, context.view_layer, preset, preset_root, blend_dir(), skip_direct=True)
 
         # The standby worker (when the preference keeps one ready) opens the snapshot as soon as it gets the job, so
         # Blender's boot is not part of the export. Otherwise a worker starts with WORKER_SCRIPT, which loads this package

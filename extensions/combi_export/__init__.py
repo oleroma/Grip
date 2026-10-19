@@ -8,7 +8,7 @@ window manager properties, app handlers and the UI cache timer.
 import sys
 
 # Modules in dependency order: each one imports only modules listed before it
-_MODULES = ("common", "nodes", "naming", "fields", "engine", "scope", "targets", "stl", "data", "validation", "headless",
+_MODULES = ("paths", "common", "nodes", "naming", "fields", "engine", "scope", "targets", "stl", "data", "validation", "headless",
             "standby", "ui_cache", "props", "operators", "export_operator", "ui")
 
 if "bpy" in locals():
@@ -21,8 +21,8 @@ if "bpy" in locals():
 import bpy
 from bpy.app.handlers import persistent
 
-from . import (common, nodes, naming, fields, engine, scope, targets, stl, data, validation, headless, standby, ui_cache,
-               props, operators, export_operator, ui)
+from . import (paths, common, nodes, naming, fields, engine, scope, targets, stl, data, validation, headless, standby,
+               ui_cache, props, operators, export_operator, ui)
 from .common import OVERRIDES_OPEN_PROPS, mark_dirty
 from .data import SAVED_JSON_SUFFIX, batch_stl_import_handler, batch_stl_save_handler, batch_stl_saved_handler, prepare_scenes
 from .export_operator import remove_stale_temp_dirs
@@ -50,6 +50,13 @@ WM_PROPS = ("batch_stl_jobs", "batch_stl_verbose_console", "batch_stl_ui_tips", 
 SCENE_PROPS = ("batch_stl_data_version", "batch_stl_root_dir", "batch_stl_presets", "batch_stl_preset_index", "batch_stl_global_nodegroups",
                "batch_stl_save_json")
 
+def on_root_dir_update(scene, context):
+    """A folder picked in the file browser (or typed) is stored with '/' when it is relative, so a file set up on Windows
+    shows and saves the same path on Linux."""
+    portable = paths.portable_setting(scene.batch_stl_root_dir)
+    if portable != scene.batch_stl_root_dir: scene.batch_stl_root_dir = portable
+    mark_dirty()
+
 def register():
     for cls in classes: bpy.utils.register_class(cls)
 
@@ -69,7 +76,9 @@ def register():
     WM.batch_stl_info_global = bpy.props.BoolProperty(name="Global Mode", default=False, update=lambda s, c: mark_dirty())
 
     Scene = bpy.types.Scene
-    Scene.batch_stl_root_dir = bpy.props.StringProperty(name="Root", default="//", subtype="DIR_PATH", options={'PATH_SUPPORTS_BLEND_RELATIVE'}, update=mark_dirty)
+    Scene.batch_stl_root_dir = bpy.props.StringProperty(name="Root", default="//", update=on_root_dir_update, description=(
+        "Folder the presets export to. A relative path (stl, ../stl, or Blender's //../stl) starts at the .blend file's "
+        "folder (the current folder while the file is not saved); '/' and '\\' both separate folders"))
     Scene.batch_stl_presets = bpy.props.CollectionProperty(type=BatchSTLExportPreset)
     Scene.batch_stl_global_nodegroups = bpy.props.CollectionProperty(type=BatchSTLNodeGroup)
     Scene.batch_stl_preset_index = bpy.props.IntProperty(name="Active Preset", default=0, update=mark_dirty)

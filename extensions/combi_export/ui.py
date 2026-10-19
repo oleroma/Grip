@@ -26,7 +26,7 @@ ICONS = {
     'TIME': 'TIME', 'MODIFIER': 'MODIFIER', 'TREE': 'OUTLINER_OB_EMPTY', 'ERROR': 'ERROR',
     'RIGHT': 'TRIA_RIGHT', 'BLANK': 'BLANK1', 'FILE': 'FILE_3D',
     'EXPAND_ALL': 'FULLSCREEN_ENTER', 'COLLAPSE_ALL': 'FULLSCREEN_EXIT', 'EXPAND_LAST': 'TRIA_DOWN_BAR',
-    'MERGE': 'AUTOMERGE_ON', 'PLAIN': 'DOT', 'STANDBY': 'FF', 'SAVE_JSON': 'FILE_TICK'
+    'MERGE': 'AUTOMERGE_ON', 'PLAIN': 'DOT', 'STANDBY': 'FF', 'SAVE_JSON': 'FILE_TICK', 'BROWSE': 'FILEBROWSER'
 }
 
 def draw_tree_dict(layout, tree_node, current_path="", toggled_list=None, duplicates=None, actual_path=""):
@@ -499,7 +499,9 @@ class VIEW3D_PT_batch_export_stl_main(bpy.types.Panel):
         label_row.ui_units_x = ROOT_LABEL_UNITS
         label_row.alignment = 'RIGHT'
         label_row.label(text="Root:")
-        dir_row.prop(scene, "batch_stl_root_dir", text="")
+        field_row = dir_row.row(align=True)  # the field and its folder button touch, like Blender's own path fields
+        field_row.prop(scene, "batch_stl_root_dir", text="")
+        field_row.operator("batch_stl.pick_root_dir", text="", icon=ICONS['BROWSE'])
         json_row = dir_row.row(align=True)
         json_row.operator("batch_stl.import_presets_json", text="", icon=ICONS['IMPORT'])
         json_row.operator("batch_stl.export_presets_json", text="", icon=ICONS['EXPORT'])

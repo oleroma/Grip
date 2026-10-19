@@ -8,9 +8,10 @@ import traceback
 import bpy
 from bpy.app.handlers import persistent
 
-from .common import COUNT_LIMIT, bump_revision, mark_dirty, redraw_sidebars, _ui_cache
+from .common import COUNT_LIMIT, blend_dir, bump_revision, root_dir, mark_dirty, redraw_sidebars, _ui_cache
 from .nodes import cached_menu_items, get_menu_switch_items
-from .naming import clash_key
+from .naming import clash_key, export_dir
+from .paths import parts_below
 from .engine import count_override_combinations, generate_named_combinations, get_flat_overrides, get_override_signature
 from .targets import SUPPORTED_OBJECT_TYPES, export_file_parts, iter_export_objects, sync_collection_objects
 from .data import ensure_preset_uids, get_active_preset, iter_scene_nodegroup_lists, stamp_data_version
@@ -163,8 +164,10 @@ def build_tree_dict(context, is_global=False):
     """Folder tree of the files the active preset (or every preset) writes, and the clash keys of paths written more
     than once. Stops above COUNT_LIMIT files; the export runs its own collision check without a limit."""
     scene = context.scene
-    root_name = os.path.normpath(bpy.path.abspath(scene.batch_stl_root_dir) if scene.batch_stl_root_dir else "//")
-    tree, all_filepaths, duplicates = {}, set(), set()
+    base = blend_dir()
+    root = root_dir(scene)
+    root_name = root or os.path.normpath("//")
+    tree, outside, all_filepaths, duplicates = {}, {}, set(), set()
     file_count = 0
     global_ovrs = get_flat_overrides(scene.batch_stl_global_nodegroups, "GLOBAL")
     active = get_active_preset(scene)
@@ -183,19 +186,21 @@ def build_tree_dict(context, is_global=False):
                 if file_count > COUNT_LIMIT:
                     return {root_name: {"_files": [f"Tree preview limited to {COUNT_LIMIT} files (the export still checks every file for collisions)"]}}, set()
                 full_dir_parts, filename = export_file_parts(preset, c, obj_prop, bl_obj, tags_by_level, paths_by_level)
-
-                combo_root = tree
-                for part in full_dir_parts:
+                # A folder a '..' or absolute sub-folder puts outside the root is a tree of its own, by its full path
+                folder = export_dir(root or base, full_dir_parts, base)
+                below = parts_below(root or base, folder)
+                combo_root, top_name = (tree, root_name) if below is not None else (outside.setdefault(folder, {}), folder)
+                for part in below or ():
                     combo_root = combo_root.setdefault(part, {})
                 combo_root.setdefault('_files', []).append(filename)
 
-                full_path_key = clash_key(os.path.join(root_name, *full_dir_parts, filename))
+                full_path_key = clash_key(os.path.join(top_name, *(below or ()), filename))
                 if full_path_key in all_filepaths:
                     duplicates.add(full_path_key)
                 else:
                     all_filepaths.add(full_path_key)
 
-    return {root_name: tree}, duplicates
+    return {root_name: tree, **dict(sorted(outside.items()))}, duplicates
 
 # Expansion state: `WindowManager.batch_stl_collapsed_dirs` stores the directory paths whose state is flipped from the
 # default. The root folder starts expanded and everything below it collapsed.

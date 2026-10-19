@@ -4,6 +4,8 @@ import os
 import re
 import sys
 
+from .paths import is_absolute, resolve_below, split_relative
+
 # Spaces are not allowed in names: they become '_' like the characters a file name cannot hold
 _INVALID_NAME_CHARS = re.compile(r'[<>:"/\\|?*\x00-\x1f ]')
 # Device names Windows reserves (COM¹ etc. with superscript digits too), also with any extension: 'CON.stl', 'nul.txt'
@@ -31,6 +33,20 @@ def split_path_parts(path_text):
     if not path_text: return []
     parts = (sanitize_whole_name(p) for p in re.split(r"[\\/]", path_text))
     return [p for p in parts if p]
+
+def folder_setting_parts(text):
+    """Steps of a folder setting below another folder (preset root directory, collection / object sub-folder), for
+    paths.resolve_below one after the other: an absolute setting is one step, used as typed (`/home/me/stl`, `D:\\stl`,
+    `//stl`); a relative one gives its safe folder names, with `..` kept to go one folder up. A name keeps its leading
+    dots (`..hidden`, `.cache`): only trailing ones are dropped, as Windows drops them."""
+    if not text: return []
+    if is_absolute(text): return [text]
+    parts = (p if p == ".." else sanitize_name(p.strip(" ").rstrip(" .")) for p in split_relative(text))
+    return [p for p in parts if p]
+
+def is_name_step(part):
+    """False for the `..` and absolute steps of folder_setting_parts, which are not folder names."""
+    return part != ".." and not is_absolute(part)
 
 def clash_key(path):
     """Key for output-path collision checks; Windows and macOS file systems are case-insensitive by default."""
@@ -138,7 +154,7 @@ def join_name_segments(segments):
     out, out_fixed = [], []
     for names, fixed in segments:
         for n in names:
-            if out and out[-1] == n and (fixed or out_fixed[-1]): continue
+            if out and out[-1] == n and (fixed or out_fixed[-1]) and is_name_step(n): continue
             out.append(n); out_fixed.append(fixed)
     return out
 
@@ -159,14 +175,23 @@ def format_export_filename(bl_obj_name, obj_tag, col_use_tag, col_tag, tags_by_l
     return safe_name + "".join(f"_{t}" for t in tokens) + ".stl"
 
 def build_export_dir_parts(preset_prefix, col_sub_path, obj_sub_path, paths_by_level=None):
+    """Steps from the root folder to the folder of a file, for paths.resolve_below (see export_dir): folder names, and
+    the `..` and absolute steps of the preset root directory and the collection / object sub-folders."""
     if paths_by_level is None: paths_by_level = {}
     return join_name_segments([
         (paths_by_level.get("GLOBAL", []), False),
-        (split_path_parts(preset_prefix), True),
+        (folder_setting_parts(preset_prefix), True),
         (paths_by_level.get("PRESET", []), False),
-        (split_path_parts(col_sub_path), True),
+        (folder_setting_parts(col_sub_path), True),
         (paths_by_level.get("COLLECTION", []), False),
-        (split_path_parts(obj_sub_path), True),
+        (folder_setting_parts(obj_sub_path), True),
         (paths_by_level.get("OBJECT", []), False),
         (paths_by_level.get("NONE", []), False),
     ])
+
+def export_dir(root, dir_parts, base_dir, flavor=os.path):
+    """Absolute folder of a file: `dir_parts` (build_export_dir_parts) resolved one after the other from `root`. A `//`
+    step starts at `base_dir`, the .blend file's folder."""
+    folder = flavor.normpath(root)
+    for part in dir_parts: folder = resolve_below(folder, part, base_dir, flavor)
+    return folder

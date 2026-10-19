@@ -2,8 +2,11 @@
 raw-edit machinery every property callback and operator goes through (ARCHITECTURE.md, Undo Stack Protection)."""
 import contextlib
 import functools
+import os
 
 import bpy
+
+from .paths import resolve_path
 
 MAX_SWEEP_STEPS = 1000
 # Counting variants by enumeration (only needed when values apply to some branches only) stops above this, and so does
@@ -29,6 +32,15 @@ _ui_cache = {
     # found changed. Draw-time caches (the override tables' merge predictions) hold for one revision.
     "revision": 0,
 }
+
+def blend_dir():
+    """Folder relative path settings start at (paths.py): the .blend file's, or the current folder while the file is not
+    saved, as Blender's own `//` paths."""
+    return os.path.dirname(os.path.abspath(bpy.data.filepath)) if bpy.data.filepath else os.getcwd()
+
+def root_dir(scene):
+    """Absolute root folder of `scene`, or "" when the Root field is empty."""
+    return resolve_path(scene.batch_stl_root_dir, blend_dir())
 
 def mark_dirty(self=None, context=None):
     _ui_cache["is_dirty"] = True

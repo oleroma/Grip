@@ -4,9 +4,10 @@ import os
 
 import bpy
 
-from .common import COUNT_LIMIT
+from .common import COUNT_LIMIT, blend_dir, root_dir
 from .nodes import cached_menu_items
-from .naming import build_export_dir_parts, clash_key, format_export_filename
+from .naming import build_export_dir_parts, clash_key, export_dir, format_export_filename
+from .paths import relative_below
 from .engine import generate_named_combinations, get_flat_overrides, get_override_signature, resolve_overrides
 
 SUPPORTED_OBJECT_TYPES = {"MESH", "CURVE", "SURFACE", "META", "FONT"}
@@ -174,9 +175,9 @@ def iter_export_files(scene, preset, global_ovrs=None):
 def find_export_clashes(scene, preset, root):
     """{clash key: path} of the output paths that more than one file of the preset would be written to. No limit:
     every collision overwrites a file."""
-    seen, clashes = set(), {}
+    seen, clashes, base = set(), {}, blend_dir()
     for dir_parts, filename in iter_export_files(scene, preset):
-        path = os.path.join(root, *dir_parts, filename)
+        path = os.path.join(export_dir(root, dir_parts, base), filename)
         key = clash_key(path)
         if key in seen: clashes.setdefault(key, path)
         else: seen.add(key)
@@ -184,9 +185,12 @@ def find_export_clashes(scene, preset, root):
 
 def export_manifest(scene, limit=COUNT_LIMIT):
     """The files each preset of `scene` writes, for the JSON saved with the file: {"complete", "presets": [{"name",
-    "files"}]}. Files are paths below the root folder with `/` between names, sorted, each once. After `limit` files in
-    all the rest are left out and `complete` is false. Call sync_collection_objects() first."""
+    "files"}]}. Files are paths below the root folder with `/` between names (absolute when a `..` or absolute
+    sub-folder puts them outside it), sorted, each once. After `limit` files in all the rest are left out and
+    `complete` is false. Call sync_collection_objects() first."""
     global_ovrs = get_flat_overrides(scene.batch_stl_global_nodegroups, "GLOBAL")
+    base = blend_dir()
+    root = root_dir(scene) or base
     presets, total, complete = [], 0, True
     with cached_menu_items():
         for preset in scene.batch_stl_presets:
@@ -196,7 +200,7 @@ def export_manifest(scene, limit=COUNT_LIMIT):
                     complete = False
                     break
                 total += 1
-                files.add("/".join([*dir_parts, filename]))
+                files.add(relative_below(root, os.path.join(export_dir(root, dir_parts, base), filename)))
             presets.append({"name": preset.name, "files": sorted(files)})
             if not complete: break
     return {"complete": complete, "presets": presets}

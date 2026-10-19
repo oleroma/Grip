@@ -14,6 +14,7 @@ from .naming import (SCOPE_KINDS, VALUE_SLOT, legacy_naming_template, split_path
 from .fields import (add_value, compose_block_naming, compose_value_field, expr_text, fields_text, _is_open, lex_expr,
     name_permutations, parse_block_naming, parse_number, parse_value_field, _render_typed, same_fields, _slot_run,
     _split_bare, split_field, value_expr, value_fields, _value_readers, _value_runs, value_specs)
+from .paths import is_absolute
 from .scope import OTHER_KIND, BranchScope, naming_completions, scope_dead
 from .data import get_active_collection, get_active_object, get_active_preset
 
@@ -230,11 +231,18 @@ def on_value_update(prop_name, label=""):
             setattr(self, "prev_" + prop_name, getattr(self, prop_name))
     return update
 
+# The plain folder fields below the root folder (naming.folder_setting_parts)
+FOLDER_FIELDS = ("sub_path", "preset_prefix")
+FOLDER_FIELD_HINT = ("'/' or '\\' between folders, '..' goes one folder up. An absolute path (/home/me/stl, D:\\stl, "
+                     "//stl from the .blend file's folder) replaces the folder above")
+
 def on_name_field_update(prop_name):
     """Update callback of a plain name field (tag, sub-folder, preset root): spaces are not allowed in names, so they
     are written as '_' (underscore_spaces)."""
     def update(self, context):
         val = getattr(self, prop_name)
+        # An absolute folder is used as typed (paths.py): its folders already exist, 'D:\\My Prints' among them
+        if prop_name in FOLDER_FIELDS and is_absolute(val): return mark_dirty()
         fixed = underscore_spaces(val)
         if fixed != val: setattr(self, prop_name, fixed)
         mark_dirty()
@@ -744,7 +752,7 @@ class BatchSTLObject(bpy.types.PropertyGroup):
     export: bpy.props.BoolProperty(default=True, update=mark_dirty)
     export_tick: bpy.props.BoolProperty(name="Export", description="Export this object. " + EXPORT_TICK_HINT, get=lambda self: self.export, set=set_export_tick, options={'SKIP_SAVE'})
     tag: bpy.props.StringProperty(name="Tag", default="", description="Filename token(s), '/' between tokens. Placed in hierarchy order: Global, Preset, Collection, Object", update=on_name_field_update("tag"))
-    sub_path: bpy.props.StringProperty(name="Sub-folder", default="", update=on_name_field_update("sub_path"))
+    sub_path: bpy.props.StringProperty(name="Sub-folder", default="", description="Folder of this object's files, below its collection's. " + FOLDER_FIELD_HINT, update=on_name_field_update("sub_path"))
     nodegroups: bpy.props.CollectionProperty(type=BatchSTLNodeGroup)
 
 @edit_callback("Edit Collection", "collection_name", "prev_collection_name")
@@ -759,7 +767,7 @@ class BatchSTLCollection(bpy.types.PropertyGroup):
     export_tick: bpy.props.BoolProperty(name="Export", description="Export this collection's ticked objects, even when the view layer excludes or hides it. " + EXPORT_TICK_HINT, get=lambda self: self.export, set=set_export_tick, options={'SKIP_SAVE'})
     use_tag: bpy.props.BoolProperty(name="Use Tag", default=True, update=mark_dirty)
     tag: bpy.props.StringProperty(name="Tag", default="", description="Filename token(s), '/' between tokens. Placed in hierarchy order: Global, Preset, Collection, Object", update=on_name_field_update("tag"))
-    sub_path: bpy.props.StringProperty(name="Sub-folder", default="", update=on_name_field_update("sub_path"))
+    sub_path: bpy.props.StringProperty(name="Sub-folder", default="", description="Folder of this collection's files, below the preset's. " + FOLDER_FIELD_HINT, update=on_name_field_update("sub_path"))
     objects: bpy.props.CollectionProperty(type=BatchSTLObject)
     object_index: bpy.props.IntProperty(default=0, update=mark_dirty)
     nodegroups: bpy.props.CollectionProperty(type=BatchSTLNodeGroup)
@@ -779,7 +787,7 @@ class BatchSTLJob(bpy.types.PropertyGroup):
 class BatchSTLExportPreset(bpy.types.PropertyGroup):
     name: bpy.props.StringProperty(name="Preset Name", default="New Preset", update=mark_dirty)
     uid: bpy.props.StringProperty(default="", options={'HIDDEN'})  # stable identity of a running export's preset
-    preset_prefix: bpy.props.StringProperty(name="Preset Root Directory", default="", update=on_name_field_update("preset_prefix"))
+    preset_prefix: bpy.props.StringProperty(name="Preset Root Directory", default="", description="Folder of this preset's files, below the Root folder. " + FOLDER_FIELD_HINT, update=on_name_field_update("preset_prefix"))
     collections: bpy.props.CollectionProperty(type=BatchSTLCollection)
     collection_index: bpy.props.IntProperty(name="Collection Index", default=0, update=mark_dirty)
     nodegroups: bpy.props.CollectionProperty(type=BatchSTLNodeGroup)
