@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 
 import bpy
 
-from . import blender_seams, build3mf, props, reload3mf, seams
+from . import blender_seams, build3mf, paths, props, reload3mf, seams
 
 REPORT_TEXT = "Orca build report"
 
@@ -95,20 +95,76 @@ def _new_project(scene, project, previous):
         if previous.template:
             project.template = previous.template
         elif os.path.isfile(props.project_path(scene, previous)):
-            project.template = _blend_relative(props.project_path(scene, previous))
-
-
-def _blend_relative(path):
-    try:
-        return bpy.path.relpath(path) if bpy.data.filepath else path
-    except ValueError:  # another drive
-        return path
+            project.template = props.blend_relative(props.project_path(scene, previous))
 
 
 def _stl_browser(operator, context, folder):
     operator.directory = folder + os.sep if os.path.isdir(folder) else ""
     context.window_manager.fileselect_add(operator)
     return {'RUNNING_MODAL'}
+
+
+ROOTS = (('STL_ROOT', "STL root", "The folder the parts' STL paths start from"),
+         ('PROJECT_ROOT', "3MF root", "The folder the projects' 3MF files are saved in"))
+_ROOT_PROPS = {'STL_ROOT': "stl_root", 'PROJECT_ROOT': "project_root"}
+
+
+class ORCA_OT_browse_root(bpy.types.Operator):
+    bl_idname = "orca_reload.browse_root"
+    bl_label = "Pick Folder"
+    bl_description = "Pick the folder. It is saved from the .blend file's folder (../stl) when the .blend is saved"
+    bl_options = {'UNDO', 'INTERNAL'}
+    root: bpy.props.EnumProperty(items=ROOTS, options={'SKIP_SAVE'})
+    directory: bpy.props.StringProperty(subtype='DIR_PATH', options={'SKIP_SAVE'})
+    filter_folder: bpy.props.BoolProperty(default=True, options={'HIDDEN'})
+
+    def invoke(self, context, event):
+        scene = context.scene
+        folder = props.stl_root(scene) if self.root == 'STL_ROOT' else props.project_root(scene)
+        if not os.path.isdir(folder):
+            folder = props.absolute("//")
+        self.directory = folder + os.sep if os.path.isdir(folder) else ""
+        context.window_manager.fileselect_add(self)
+        return {'RUNNING_MODAL'}
+
+    def execute(self, context):
+        if not self.directory:
+            return {'CANCELLED'}
+        setattr(context.scene.orca_reload, _ROOT_PROPS[self.root],
+                props.blend_relative(os.path.normpath(self.directory)))
+        return {'FINISHED'}
+
+
+class ORCA_OT_browse_template(bpy.types.Operator):
+    bl_idname = "orca_reload.browse_template"
+    bl_label = "Pick Orca Project"
+    bl_description = ("Pick the Orca project (.3mf) a new project takes its settings from. It is saved from the "
+                      ".blend file's folder (../printer.3mf) when the .blend is saved")
+    bl_options = {'UNDO', 'INTERNAL'}
+    filepath: bpy.props.StringProperty(subtype='FILE_PATH', options={'SKIP_SAVE'})
+    filter_glob: bpy.props.StringProperty(default="*.3mf;*.3MF", options={'HIDDEN'})
+
+    @classmethod
+    def poll(cls, context):
+        return props.active_project(context.scene.orca_reload) is not None
+
+    def invoke(self, context, event):
+        project = props.active_project(context.scene.orca_reload)
+        current = props.absolute(project.template)
+        if current and os.path.isfile(current):
+            self.filepath = current
+        else:
+            root = props.project_root(context.scene)
+            self.filepath = root + os.sep if os.path.isdir(root) else ""
+        context.window_manager.fileselect_add(self)
+        return {'RUNNING_MODAL'}
+
+    def execute(self, context):
+        project = props.active_project(context.scene.orca_reload)
+        if project is None or not self.filepath:
+            return {'CANCELLED'}
+        project.template = props.blend_relative(os.path.normpath(self.filepath))
+        return {'FINISHED'}
 
 
 class ORCA_OT_add_parts(bpy.types.Operator):
@@ -137,7 +193,7 @@ class ORCA_OT_add_parts(bpy.types.Operator):
         names = sorted(f.name for f in self.files if f.name.lower().endswith(".stl"))
         for name in names:
             part = plate.parts.add()
-            part.path = props.relative_to(os.path.join(self.directory, name), base)
+            part.path = paths.relative_form(os.path.normpath(os.path.join(self.directory, name)), base)
             part.name = name
         if names:
             plate.part_index = len(plate.parts) - 1
@@ -174,7 +230,8 @@ class ORCA_OT_browse_part(bpy.types.Operator):
         if part is None or not self.filepath:
             return {'CANCELLED'}
         old_file = os.path.basename(part.path.replace("\\", "/"))
-        part.path = props.relative_to(os.path.normpath(self.filepath), props.plate_folder(context.scene, project, plate))
+        part.path = paths.relative_form(os.path.normpath(self.filepath),
+                                        props.plate_folder(context.scene, project, plate))
         if not part.name or part.name in {old_file, os.path.splitext(old_file)[0]}:
             part.name = os.path.basename(self.filepath)
         return {'FINISHED'}
@@ -276,7 +333,7 @@ def project_spec(context, project, painted):
             parts.append(build3mf.PartSpec(part.label(), props.part_path(scene, project, plate, part), part.up,
                                            part.angle, part.copies, seam, mirror=part.mirror))
         plates.append(build3mf.PlateSpec(plate.name, plate.gap, parts))
-    template = os.path.normpath(bpy.path.abspath(project.template)) if project.template else ""
+    template = props.absolute(project.template)
     return build3mf.ProjectSpec(props.project_path(scene, project), plates, template), problems
 
 
@@ -372,5 +429,5 @@ class ORCA_OT_clear_log(bpy.types.Operator):
         return {'FINISHED'}
 
 
-classes = (ORCA_OT_list_action, ORCA_OT_add_parts, ORCA_OT_browse_part, ORCA_OT_import_project, ORCA_OT_build,
-           ORCA_OT_clear_log)
+classes = (ORCA_OT_list_action, ORCA_OT_add_parts, ORCA_OT_browse_part, ORCA_OT_browse_root, ORCA_OT_browse_template,
+           ORCA_OT_import_project, ORCA_OT_build, ORCA_OT_clear_log)

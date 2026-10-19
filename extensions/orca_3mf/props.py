@@ -6,6 +6,9 @@ import os
 
 import bpy
 
+from . import paths
+from .paths import relative_to  # noqa: F401  (used by the operators)
+
 DEFAULT_GAP = 5.0  # mm between parts on a plate
 
 
@@ -63,9 +66,10 @@ class OrcaProject(bpy.types.PropertyGroup):
     stl_folder: bpy.props.StringProperty(
         name="STL folder", description="Folder of this project's parts, below the STL root. Use / between folders")
     template: bpy.props.StringProperty(
-        name="Settings from", subtype='FILE_PATH',
+        name="Settings from",
         description="An Orca project (.3mf) whose printer, process and filament settings a new project starts "
-                    "with; the bed size comes from it too. Once the project exists, its own settings are kept")
+                    "with; the bed size comes from it too. Once the project exists, its own settings are kept. "
+                    "A relative path (../printer.3mf) starts at the .blend file's folder")
     plates: bpy.props.CollectionProperty(type=OrcaPlate)
     plate_index: bpy.props.IntProperty()
 
@@ -77,11 +81,13 @@ class OrcaLogLine(bpy.types.PropertyGroup):
 
 class OrcaSettings(bpy.types.PropertyGroup):
     stl_root: bpy.props.StringProperty(
-        name="STL root", subtype='DIR_PATH',
-        description="Folder the parts' STL paths start from. Empty: Combi Export's root")
+        name="STL root",
+        description="Folder the parts' STL paths start from. Empty: Combi Export's root. A relative path "
+                    "(../stl) starts at the .blend file's folder")
     project_root: bpy.props.StringProperty(
-        name="3MF root", subtype='DIR_PATH', default="//../orca_slicer/",
-        description="Folder the projects' 3MF files are saved in. Empty: the .blend file's folder")
+        name="3MF root", default="../orca_slicer",
+        description="Folder the projects' 3MF files are saved in. Empty: the .blend file's folder. A relative "
+                    "path (../orca_slicer) starts at the .blend file's folder")
     projects: bpy.props.CollectionProperty(type=OrcaProject)
     project_index: bpy.props.IntProperty()
     seam_width: bpy.props.FloatProperty(
@@ -114,61 +120,46 @@ def active_part(plate):
     return active(plate.parts, plate.part_index) if plate else None
 
 
-def _abs(path):
-    return os.path.normpath(bpy.path.abspath(path)) if path else ""
+def absolute(path):
+    """A saved root or file as an absolute path: // and a relative path (../stl) start at the .blend file's folder."""
+    return paths.absolute(path, os.path.dirname(bpy.data.filepath))
+
+
+def blend_relative(path):
+    """A picked folder or file as it is saved: from the .blend file's folder (../stl), or absolute while the .blend
+    is not saved or the path is on another drive."""
+    return paths.relative_form(path, os.path.dirname(bpy.data.filepath))
 
 
 def stl_root(scene):
     """The STL root: ours, else Combi Export's (when it is installed), else the .blend file's folder."""
     settings = scene.orca_reload
     if settings.stl_root:
-        return _abs(settings.stl_root)
+        return absolute(settings.stl_root)
     combi = getattr(scene, "batch_stl_root_dir", "")
     if combi:
-        return _abs(combi)
-    return _abs("//")
-
-
-def _join(base, *subs):
-    """base joined with folders written with / (or \\) between names; an absolute folder starts over."""
-    path = base
-    for sub in subs:
-        sub = sub.replace("\\", "/")
-        if os.path.isabs(sub) or sub[1:2] == ":":
-            path = sub
-        else:
-            path = os.path.join(path, *[p for p in sub.split("/") if p])
-    return os.path.normpath(path) if path else path
+        return absolute(combi)
+    return absolute("//")
 
 
 def plate_folder(scene, project, plate):
-    return _join(stl_root(scene), project.stl_folder, plate.stl_folder if plate else "")
+    return paths.join(stl_root(scene), project.stl_folder, plate.stl_folder if plate else "")
 
 
 def part_path(scene, project, plate, part):
-    path = part.path.replace("\\", "/")
-    if os.path.isabs(path) or path.startswith("//"):
-        return _abs(path)
-    return _join(plate_folder(scene, project, plate), path)
+    if part.path.startswith("//"):
+        return absolute(part.path)
+    return paths.join(plate_folder(scene, project, plate), part.path)
 
 
 def project_root(scene):
     """The 3MF root; empty is the .blend file's folder."""
-    return _abs(scene.orca_reload.project_root or "//")
+    return absolute(scene.orca_reload.project_root or "//")
 
 
 def project_path(scene, project):
     name = project.name if project.name.lower().endswith(".3mf") else project.name + ".3mf"
-    return _join(_join(project_root(scene), project.folder), name)
-
-
-def relative_to(path, base):
-    """`path` below `base` with / between folders, or the absolute path when it is not below it."""
-    try:
-        rel = os.path.relpath(path, base)
-    except ValueError:  # another drive
-        return path
-    return path if rel.startswith("..") else rel.replace("\\", "/")
+    return paths.join(project_root(scene), project.folder, name)
 
 
 # --------------------------------------------------------------------------

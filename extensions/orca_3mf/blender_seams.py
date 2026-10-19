@@ -1,7 +1,8 @@
 """Seam lines from Blender objects, in world space (the STL files' coordinates).
 
 A part's seam is a curve or mesh object picked in the part's Seam field:
-- curve: its splines (Bezier at the curve's resolution; poly and NURBS by their points). Modifiers are ignored.
+- curve: its splines (Bezier and NURBS as the smooth curve at the spline's resolution; poly by its points).
+  Modifiers are ignored.
 - mesh: the evaluated mesh, so Geometry Nodes output works. A mesh with faces gives the edges marked as seam
   (Edge > Mark Seam) or the edges of a boolean edge attribute named "orca_seam"; a mesh of only edges gives all.
 """
@@ -13,6 +14,33 @@ from mathutils.geometry import interpolate_bezier
 from .seams import SeamLine
 
 EDGE_ATTRIBUTE = "orca_seam"
+
+
+def nurbs_points(spline):
+    """Local-space points along a NURBS spline, evaluated by Blender at the spline's resolution.
+
+    The spline is copied alone into a temporary curve without bevel or extrusion, so its mesh is the bare line.
+    """
+    curve = bpy.data.curves.new("orca_seam_nurbs", 'CURVE')
+    obj = None
+    try:
+        curve.dimensions = '3D'
+        copy = curve.splines.new('NURBS')
+        copy.points.add(len(spline.points) - 1)
+        for a, b in zip(copy.points, spline.points):
+            a.co = b.co
+        for attr in ("order_u", "resolution_u", "use_endpoint_u", "use_bezier_u", "use_cyclic_u"):
+            setattr(copy, attr, getattr(spline, attr))
+        obj = bpy.data.objects.new("orca_seam_nurbs", curve)
+        mesh = obj.to_mesh()
+        try:
+            return [v.co.copy() for v in mesh.vertices]
+        finally:
+            obj.to_mesh_clear()
+    finally:
+        if obj is not None:
+            bpy.data.objects.remove(obj)
+        bpy.data.curves.remove(curve)
 
 
 def curve_polylines(obj):
@@ -32,6 +60,12 @@ def curve_polylines(obj):
                 seg = interpolate_bezier(a.co, a.handle_right, b.handle_left, b.co, res)
                 line += seg if not line else seg[1:]
             result.append([mw @ p for p in line])
+        elif spline.type == 'NURBS':
+            line = nurbs_points(spline)
+            if spline.use_cyclic_u and len(line) > 2:
+                line.append(line[0])
+            if len(line) > 1:
+                result.append([mw @ p for p in line])
         else:
             line = [mw @ p.co.xyz for p in spline.points]
             if spline.use_cyclic_u and len(line) > 2:

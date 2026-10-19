@@ -128,14 +128,18 @@ class VIEW3D_PT_orca_reload(_OrcaPanel, bpy.types.Panel):
         settings = scene.orca_reload
 
         row = draw_label_row(layout, "STL root:")
-        row.prop(settings, "stl_root", text="")
+        field = row.row(align=True)
+        field.prop(settings, "stl_root", text="")
+        field.operator("orca_reload.browse_root", text="", icon=ICONS['DIR']).root = 'STL_ROOT'
         if not settings.stl_root:
             hint = draw_label_row(layout, "")
             hint.label(text=("Combi Export's root" if getattr(scene, "batch_stl_root_dir", "")
                              else "the .blend file's folder") + ": " + props.stl_root(scene))
 
         row = draw_label_row(layout, "3MF root:")
-        row.prop(settings, "project_root", text="")
+        field = row.row(align=True)
+        field.prop(settings, "project_root", text="")
+        field.operator("orca_reload.browse_root", text="", icon=ICONS['DIR']).root = 'PROJECT_ROOT'
         buttons = row.row(align=True)
         buttons.operator("orca_reload.import_project", text="", icon=ICONS['IMPORT'])
         buttons.operator("orca_reload.build", text="", icon=ICONS['BUILD']).index = -1
@@ -239,10 +243,11 @@ class VIEW3D_PT_orca_reload_projects(_OrcaPanel, bpy.types.Panel):
         row.prop(project, "stl_folder", text="", icon=ICONS['DIR'])
         row = draw_label_row(box, "Settings from:")
         exists = os.path.isfile(props.project_path(scene, project))
-        sub = row.row()
+        sub = row.row(align=True)
         sub.active = not exists
         sub.alert = not exists and not project.template
         sub.prop(project, "template", text="")
+        sub.operator("orca_reload.browse_template", text="", icon=ICONS['DIR'])
         if exists:
             draw_label_row(box, "").label(text="The project exists: its own settings are kept")
 

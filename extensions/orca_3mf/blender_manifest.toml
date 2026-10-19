@@ -6,7 +6,7 @@ name = "Orca 3MF"
 tagline = "Build OrcaSlicer projects with plates, nesting and seams"
 maintainer = "Oleroma"
 type = "add-on"
-website = "https://github.com/oleroma/Grip"
+website = "https://github.com/oleroma/orca_3mf"
 tags = ["Import-Export", "3D View"]
 
 blender_version_min = "5.2.0"
