@@ -2,6 +2,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="6.4000006mm" height="7.39007mm" viewBox="0 0 6.4000005 7.39007">
   <g fill="none" stroke="#232323" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round">
     <path d="M 3.2,0.4619 L 6,2.0785 L 6,5.3116 L 3.2,6.9282 L 0.4,5.3116 L 0.4,2.0785 Z"/>
-    <path d="M 1.9,3.8 L 2.75,4.65 L 4.5,2.75"/>
+    <circle cx="2.45" cy="2.45" r="0.5" stroke="none" fill="#232323"/>
+    <circle cx="2.45" cy="4.95" r="0.5" stroke="none" fill="#232323"/>
+    <circle cx="4.1" cy="3.1" r="0.5" stroke="none" fill="#232323"/>
+    <path d="M 2.45,2.45 L 2.45,4.95"/>
+    <path d="M 2.45,4.4 C 2.45,3.6 4.1,4 4.1,3.1"/>
   </g>
 </svg>
