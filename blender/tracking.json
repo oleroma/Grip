@@ -2106,12 +2106,15 @@
             "[marks parameters] Bundle -> Bundle [Join Bundle]",
             "[marks parameters] Bundle -> Bundle [marks outputs]",
             "[tolerance set (bp tol)] Value -> button press tolerance [trigger parameters.001]",
+            "[tolerance set (bp tol)] Value -> button press tolerance [trigger parameters.002]",
             "[tolerance set (bp tol)] Value -> button press tolerance [trigger parameters]",
             "[tolerance set.001 (x and rad tol)] Value -> radius tolerance [trigger parameters.001]",
+            "[tolerance set.001 (x and rad tol)] Value -> radius tolerance [trigger parameters.002]",
             "[tolerance set.001 (x and rad tol)] Value -> radius tolerance [trigger parameters]",
             "[tolerance set.001 (x and rad tol)] Value -> x tolerance [trigger parameters.001]",
+            "[tolerance set.001 (x and rad tol)] Value -> x tolerance [trigger parameters.002]",
             "[tolerance set.001 (x and rad tol)] Value -> x tolerance [trigger parameters]",
-            "[trigger parameters.001] Bundle -> True [Switch]",
+            "[trigger parameters.002] Bundle -> True [Switch]",
             "[trigger parameters] Bundle -> False [Switch]"
         ],
         "GripX abxy": [
@@ -13971,6 +13974,32 @@
                             "x offset": 0.0,
                             "x tolerance": 0.2
                         }
+                    },
+                    "trigger parameters.002": {
+                        "inputs": {
+                            "action": false,
+                            "bevel": 2.0,
+                            "bevel cutoff": 0.5,
+                            "bevel subd": 1,
+                            "button press tolerance": 0.7,
+                            "button pressed height": 1.29,
+                            "button radius offset": 2.0,
+                            "button rotation": 1.3439,
+                            "height": 12.0,
+                            "radius tolerance": 0.2,
+                            "shift z": 2.5,
+                            "stopper height": 2.0,
+                            "stopper length": 15.001,
+                            "subdivision length": 1.0,
+                            "tip angle offset": -0.48,
+                            "tip shear": 0.0698,
+                            "top bevel": 0.9,
+                            "trigger length": 25.8,
+                            "trigger radius": 37.5,
+                            "width": 10.9,
+                            "x offset": 0.0,
+                            "x tolerance": 0.2
+                        }
                     }
                 }
             },
@@ -14245,7 +14274,7 @@
                             "ball support radius": 2.2,
                             "button center offset": 9.0,
                             "button travel": 1.3,
-                            "cap fit tolerance": 0.0,
+                            "cap fit tolerance": 0.15,
                             "cap height offset": 20.0,
                             "cap oval offset": 0.7,
                             "cap radius": 7.4,
@@ -14257,7 +14286,7 @@
                             "flex cut depth": 1.0,
                             "flex cut width": 0.4,
                             "hook extrude": 1.6,
-                            "hook z tolerance": 0.16,
+                            "hook z tolerance": 0.24,
                             "inner hook tolerance": 0.6,
                             "rocker base thickness": 0.6,
                             "rocker size": 14.0,
