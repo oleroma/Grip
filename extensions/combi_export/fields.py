@@ -28,7 +28,9 @@ from .naming import SCOPE_KINDS, VALUE_SLOT, value_parts
 # - In a folder section '_' belongs to the name (\15_mm), except right after '\' or a space: there the filename
 #   section starts. In the value part '_' starts it after the longest text that is a value: '15_big' is 15 with the
 #   token big, while the string 'a_b' or the menu item 'Mode_A' stay whole. A space before '_' ends the value: 'a _b'.
-# - Double quotes make text literal, never the value or a mark: \"15"\15 is folder 15, then the value 15.
+# - Double quotes make text literal, never the value or a mark: \"15"\15 is folder 15, then the value 15. In a name
+#   not quoted whole, quotes around '{' or '}', or around a '_' that starts a folder name, only keep them chars:
+#   \a"{"b can be the value a{b, \"_"x_mm the value _x joined with mm, \"_"a_15 the name _a joined with 15.
 # Node group and node blocks use the sections without a value (BatchSTLNodeGroup.naming): \C\2\_B.
 
 def lex_expr(text):
@@ -152,15 +154,24 @@ def _is_open(kind, chars, closed):
     """Whether a section ends in its separator, so the value comes after its names ('\\B\\', '_B_')."""
     return bool(chars) and not closed and bare(chars[-1], "\\/" if kind == "dir" else "_/")
 
+def _literal(chars, s, e):
+    """Whether chars[s:e] of a name hold quoted text, which is never the value. Quotes around marks in a name that is
+    not quoted whole only keep them chars: '{' and '}' ('\\a"{"b' can be the value a{b), and a '_' that starts the
+    name ('\\"_"x_mm' can be the value _x joined with mm), see _name_value."""
+    quoted = [k for k in range(s, e) if chars[k][1]]
+    if not quoted: return False
+    if all(ch[1] for ch in chars): return True
+    return not all(chars[k][0] in "{}" or (k == 0 and chars[k][0] == "_") for k in quoted)
+
 def _value_runs(chars, accept, seps="_"):
-    """[(start, end)] of the runs of whole pieces of `chars` (between bare `seps`) without a quoted char that `accept`
-    takes: the places a value can be written at."""
+    """[(start, end)] of the runs of whole pieces of `chars` (between bare `seps`) without quoted text (_literal) that
+    `accept` takes: the places a value can be written at."""
     spans = _split_bare(chars, seps)
     runs = []
     for a in range(len(spans)):
         for b in range(a, len(spans)):
             s, e = spans[a][0], spans[b][1]
-            if e > s and not any(ch[1] for ch in chars[s:e]) and accept(chars[s:e]): runs.append((s, e))
+            if e > s and not _literal(chars, s, e) and accept(chars[s:e]): runs.append((s, e))
     return runs
 
 def _value_places(sections):
@@ -415,17 +426,26 @@ def _render_section(kind, template, vtext, always=False, short=False):
             # The '_' next to the value stays bare: it separates the value from the text around it
             pre = _render_typed(prefix[:-1], "_", True, always) + "_" if prefix.endswith("_") else _render_typed(prefix, "_", True, always)
             post = "_" + _render_typed(suffix[1:], "_", False, always) if suffix.startswith("_") else _render_typed(suffix, "_", False, always)
-            out.append(pre + vtext + post)
+            name = pre + vtext + post
+            # A '_' starting the name is quoted, else it would start the filename section (see _literal)
+            if name.startswith("_"): name = '"_' + name[2:] if name[1:2] == '"' else _quote("_") + name[1:]
+            out.append(name)
         return "\\".join(out)
     if VALUE_SLOT not in template: return _render_typed(template, "_/", False, always)
     prefix, suffix = template.split(VALUE_SLOT, 1)
     if short and not suffix: return _render_typed(prefix, "_/", False, always)
     return _render_typed(prefix, "_/", False, always) + vtext + _render_typed(suffix, "_/", False, always)
 
+def _name_value(vtext, fields):
+    """The value as written in a name: '{' and '}' of a value that is no sweep are quoted, else they would start one
+    (see _literal)."""
+    if fields is None or fields["use_sweep"]: return vtext
+    return re.sub(r"[{}]+", lambda m: _quote(m.group()), vtext)
+
 def _quote_value_part(vtext, fields, override_type, always=False):
     """The value written before the sections, quoted when it would not read back as typed."""
     if fields["use_sweep"] or override_type in ('FLOAT', 'INT'): return vtext
-    if always or not vtext or vtext != vtext.strip() or vtext.startswith(("_", "{")) or vtext == "*" or any(c in vtext for c in '"\\'):
+    if always or not vtext or vtext != vtext.strip() or vtext.startswith("_") or vtext == "*" or any(c in vtext for c in '"\\{}'):
         return _quote(vtext)
     return vtext
 
@@ -447,7 +467,7 @@ def compose_value_field(fields, templates, override_type, items=None, current=No
         if text is not None: return text
     stored, stored_templates = current if current is not None else (fields, templates)
 
-    def sections(always=False, short=False, value=vtext):
+    def sections(always=False, short=False, value=_name_value(vtext, fields)):
         d, t = templates["dir"], templates["tag"]
         out = "\\" + _render_section("dir", d, value, always, short) if d is not None else ""
         if t is not None: out += ("\\" if d is not None and not out.endswith("\\") else "") + "_" + _render_section("tag", t, value, always, short)
