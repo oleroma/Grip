@@ -581,7 +581,7 @@ class BatchSTLLogLine(bpy.types.PropertyGroup): text: bpy.props.StringProperty()
 EXPR_DESCRIPTION = (
     "The value and its naming: '\\' starts the folder, '_' the filename token, and the value goes where it is written.\n"
     "15: value only · \\15: folder 15 · _15: token 15 · \\15\\_15: both\n"
-    "\\big, _big: your name instead of the value (the value stays, hover the icon to see it) · \\15_mm, \\size_15, _15_mm: the value joined with text\n"
+    "\\big, _big: your name instead of the value (the value stays, written first: 15\\big) · \\15_mm, \\size_15, _15_mm: the value joined with text\n"
     "\\B\\15, _B_15: B, then the value. Names that exist upstream merge into that branch (\\C\\2\\15)\n"
     "\\15 → \\16 changes the value, unless 16 exists upstream (then it merges). 16\\big: value and names at once\n"
     "Tab completes an upstream name with its separator (\\A → \\A\\), so the next name can be typed\n"

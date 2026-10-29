@@ -459,8 +459,11 @@ def compose_value_field(fields, templates, override_type, items=None, current=No
         return same_fields(override_type, f, fields) and all(norm(tps[k]) == norm(templates[k]) for k in SCOPE_KINDS)
 
     candidates = []
+    # Typed names that replace the value hide it: the value is written first then ('15\\big'), so the field shows it
+    hidden = fields is not None and any(t is not None for t in templates.values()) and \
+        not any(VALUE_SLOT in norm(t) for t in templates.values() if t is not None)
     if fields is not None:
-        if any(t is not None for t in templates.values()):
+        if any(t is not None for t in templates.values()) and not hidden:
             # Typed names that could be read as the value go in quotes: the last one ('\\A\\1\\"3"'), every one, then all
             # names. The test is asked once per name, left to right.
             readable = _value_readers(override_type, items)[1]
