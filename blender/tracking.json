@@ -2098,6 +2098,7 @@
         "GripX R4 parameters": [
             "[Index Switch] Output -> text [marks parameters]",
             "[Join Bundle] Bundle -> Bundle [Group Output]",
+            "[Menu Switch] Output -> True [Switch]",
             "[Switch] Output -> Bundle [Join Bundle]",
             "[Switch] Output -> parameter bundle [marks parameters]",
             "[global outputs.001] button press tol -> tolerance [tolerance set (bp tol)]",
@@ -2114,7 +2115,8 @@
             "[tolerance set.001 (x and rad tol)] Value -> x tolerance [trigger parameters.001]",
             "[tolerance set.001 (x and rad tol)] Value -> x tolerance [trigger parameters.002]",
             "[tolerance set.001 (x and rad tol)] Value -> x tolerance [trigger parameters]",
-            "[trigger parameters.002] Bundle -> True [Switch]",
+            "[trigger parameters.001] Bundle -> long [Menu Switch]",
+            "[trigger parameters.002] Bundle -> short [Menu Switch]",
             "[trigger parameters] Bundle -> False [Switch]"
         ],
         "GripX abxy": [
