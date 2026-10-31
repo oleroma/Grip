@@ -13822,7 +13822,7 @@
                     "tolerance set.001 (x and rad tol)": {
                         "inputs": {
                             "default": 0.22,
-                            "loose": 0.22,
+                            "loose": 0.24,
                             "tight": 0.2,
                             "tolerance": 0
                         }
@@ -13920,7 +13920,7 @@
                     "tolerance set.001 (x and rad tol)": {
                         "inputs": {
                             "default": 0.2,
-                            "loose": 0.2,
+                            "loose": 0.24,
                             "tight": 0.18,
                             "tolerance": 0
                         }
