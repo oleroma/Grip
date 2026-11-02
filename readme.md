@@ -9,7 +9,18 @@
 </h1>
 
 # GRIP
-![GripV](media/dev/GripV.jpg)
+![GripV](media/previews/V1.jpg)
+
+![GripV](media/previews/V2.jpg)
+
+![GripV](media/previews/V3.jpg)
+
+![GripV](media/previews/X1.jpg)
+
+![GripV](media/previews/X2.jpg)
+
+![GripV](media/previews/X3.jpg)
+
 
 *(Work in progress... release coming soon)*
 
