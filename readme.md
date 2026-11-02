@@ -15,6 +15,8 @@
 
 ![GripV](media/previews/V3.jpg)
 
+![side](media/dev/side.jpg)
+
 ![GripV](media/previews/X1.jpg)
 
 ![GripV](media/previews/X2.jpg)
@@ -99,7 +101,6 @@ The final **BLENDER** project, built with **GEOMETRY NODES**, will be released a
 
 The current `blender/Grip.blend` is documented in [docs/blender](docs/blender/README.md). There is a guide to customizing and exporting parts, and a guide to the node system for contributors.
 
-![side](media/dev/side.jpg)
 
 
 ### **RELEASE PLAN**
