@@ -13666,9 +13666,9 @@
                             "square morph": 0.08,
                             "square top subd": 4,
                             "swap top rotation": true,
-                            "texture type": "grid",
-                            "top curvature": "concave",
-                            "top shape": "square"
+                            "texture type": "icosahedron",
+                            "top curvature": "convex",
+                            "top shape": "circle"
                         }
                     }
                 }
@@ -13775,7 +13775,7 @@
                             "subdivision level": "low",
                             "tolerance": "default",
                             "top wire cutouts": false,
-                            "variant": "GripX",
+                            "variant": "GripV",
                             "voxel resolution": "low"
                         }
                     }
@@ -15636,7 +15636,7 @@
                             "subdivision level": "low",
                             "tolerance": "default",
                             "top wire cutouts": false,
-                            "variant": "GripX",
+                            "variant": "GripV",
                             "voxel resolution": "low"
                         }
                     }
