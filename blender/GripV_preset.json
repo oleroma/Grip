@@ -1,6 +1,6 @@
 {
     "data_version": 4,
-    "root_dir": "//../orca_slicer/GripV",
+    "root_dir": "../orca_slicer/GripV",
     "global_nodegroups": [
         {
             "group": "global",
