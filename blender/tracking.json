@@ -1481,6 +1481,9 @@
             "[Mesh to Curve] Curve -> Curve [Set Spline Type]",
             "[Set Spline Type] Curve -> Curve [Curve to Mesh]"
         ],
+        "Geometry Nodes.001": [
+            "[Group Input] Geometry -> Geometry [Group Output]"
+        ],
         "GripR1 FischerKoch CY hollow parameters": [
             "[fill parameters.001] Bundle -> Bundle [Group Output]"
         ],
@@ -10165,6 +10168,13 @@
             "[Vector Math] Vector -> Offset [Set Position]",
             "[selector] selected bundle -> Bundle [Separate Bundle]"
         ],
+        "scrollwheel hodler": [
+            "[Cylinder] Mesh -> Geometry [Transform Geometry]",
+            "[Group Input] Geometry -> Input [MirrorX]",
+            "[Join Geometry] Geometry -> Geometry [Group Output]",
+            "[MirrorX] Geometry -> Geometry [Join Geometry]",
+            "[Transform Geometry] Geometry -> Geometry [Join Geometry]"
+        ],
         "scrollwheel stem": [
             "[Combine XYZ.001] Vector -> Vector[0] [Vector Math.003]",
             "[Group Input] Geometry -> Geometry [Set Position.001]",
@@ -13493,8 +13503,8 @@
                     "scroll parameters (scroll)": {
                         "inputs": {
                             "scroll radius offset": -1.15,
-                            "scroll wheel shift X": -3.2,
-                            "scroll wheel tolerance": 0.6,
+                            "scroll wheel shift X": -3.6,
+                            "scroll wheel tolerance": 0.7,
                             "scroll width offset": 0.0
                         }
                     }
@@ -13775,7 +13785,7 @@
                             "subdivision level": "low",
                             "tolerance": "default",
                             "top wire cutouts": false,
-                            "variant": "GripV",
+                            "variant": "GripX",
                             "voxel resolution": "low"
                         }
                     }
@@ -15636,7 +15646,7 @@
                             "subdivision level": "low",
                             "tolerance": "default",
                             "top wire cutouts": false,
-                            "variant": "GripV",
+                            "variant": "GripX",
                             "voxel resolution": "low"
                         }
                     }
