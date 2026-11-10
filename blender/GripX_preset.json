@@ -520,7 +520,7 @@
                     "sub_path": "scrollwheel",
                     "objects": [
                         {
-                            "name": "scrollwheel",
+                            "name": "scrollwheel (alpakka)",
                             "name_override": "",
                             "export": true,
                             "tag": "",
@@ -528,7 +528,7 @@
                             "nodegroups": []
                         },
                         {
-                            "name": "scrollwheel core",
+                            "name": "scrollwheel core (alpakka)",
                             "name_override": "",
                             "export": true,
                             "tag": "",
@@ -1350,8 +1350,8 @@
                     "parts/dpad_stick/stick.stl",
                     "parts/pins/nut_lock.stl",
                     "parts/pins/pin.stl",
-                    "parts/scrollwheel/scrollwheel.stl",
-                    "parts/scrollwheel/scrollwheel_core.stl",
+                    "parts/scrollwheel/scrollwheel_(alpakka).stl",
+                    "parts/scrollwheel/scrollwheel_core_(alpakka).stl",
                     "parts/scrollwheel/scrollwheel_holder.stl"
                 ]
             },

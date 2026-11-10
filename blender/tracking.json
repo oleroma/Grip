@@ -1481,9 +1481,6 @@
             "[Mesh to Curve] Curve -> Curve [Set Spline Type]",
             "[Set Spline Type] Curve -> Curve [Curve to Mesh]"
         ],
-        "Geometry Nodes.001": [
-            "[Group Input] Geometry -> Geometry [Group Output]"
-        ],
         "GripR1 FischerKoch CY hollow parameters": [
             "[fill parameters.001] Bundle -> Bundle [Group Output]"
         ],
