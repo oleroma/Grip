@@ -508,7 +508,7 @@
             "collections": [
                 {
                     "collection_name": "capacitive",
-                    "export": false,
+                    "export": true,
                     "use_tag": false,
                     "tag": "",
                     "sub_path": "capacitive",
@@ -573,7 +573,7 @@
                 },
                 {
                     "collection_name": "bumpers",
-                    "export": false,
+                    "export": true,
                     "use_tag": false,
                     "tag": "",
                     "sub_path": "bumpers",
@@ -633,7 +633,7 @@
                 },
                 {
                     "collection_name": "dpad stick",
-                    "export": false,
+                    "export": true,
                     "use_tag": false,
                     "tag": "",
                     "sub_path": "dpad_stick",
@@ -725,7 +725,7 @@
                 },
                 {
                     "collection_name": "battery cover",
-                    "export": false,
+                    "export": true,
                     "use_tag": false,
                     "tag": "",
                     "sub_path": "battery_cover",
@@ -743,7 +743,7 @@
                 },
                 {
                     "collection_name": "cable holder",
-                    "export": false,
+                    "export": true,
                     "use_tag": false,
                     "tag": "",
                     "sub_path": "cable_holder",
@@ -795,7 +795,7 @@
                 },
                 {
                     "collection_name": "pins",
-                    "export": false,
+                    "export": true,
                     "use_tag": false,
                     "tag": "",
                     "sub_path": "pins",
@@ -813,7 +813,7 @@
                 },
                 {
                     "collection_name": "nut lock",
-                    "export": false,
+                    "export": true,
                     "use_tag": true,
                     "tag": "",
                     "sub_path": "pins",
@@ -1322,6 +1322,24 @@
             {
                 "name": "Parts",
                 "files": [
+                    "parts/battery_cover/battery_cover.stl",
+                    "parts/bumpers/press_default/L1.stl",
+                    "parts/bumpers/press_default/R1.stl",
+                    "parts/bumpers/press_loose/L1.stl",
+                    "parts/bumpers/press_loose/R1.stl",
+                    "parts/bumpers/press_tight/L1.stl",
+                    "parts/bumpers/press_tight/R1.stl",
+                    "parts/cable_holder/cable_holder.stl",
+                    "parts/capacitive/capacitive_knob.stl",
+                    "parts/capacitive/capacitive_plate.stl",
+                    "parts/dpad_stick/ball_support.stl",
+                    "parts/dpad_stick/dpad_stick_cap.stl",
+                    "parts/dpad_stick/rocker.stl",
+                    "parts/dpad_stick/rocker_ball.stl",
+                    "parts/dpad_stick/rocker_support.stl",
+                    "parts/dpad_stick/stick.stl",
+                    "parts/pins/nut_lock.stl",
+                    "parts/pins/pin.stl",
                     "parts/scrollwheel/scrollwheel_(alpakka).stl",
                     "parts/scrollwheel/scrollwheel_core_(alpakka).stl",
                     "parts/scrollwheel/scrollwheel_holder.stl"
