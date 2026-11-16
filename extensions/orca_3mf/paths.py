@@ -45,10 +45,19 @@ def relative_to(path, base):
     return path if rel == ".." or rel.startswith(".." + ospath.sep) else rel.replace("\\", "/")
 
 
+def shown(path, project_root, stl_root, blend_dir):
+    """A path as the tab shows it: from the .blend file's folder with / between folders (../stl/GripV/box.stl), the
+    way the roots are saved, when it is below the 3MF root or the STL root; the full path when it is outside both."""
+    if not path or all(relative_to(path, root) == path for root in (project_root, stl_root)):
+        return path
+    return relative_form(path, blend_dir)
+
+
 def relative_form(path, base):
     """`path` written from `base` with / between folders (../stl/GripV), as a picked folder or file is saved; the
-    absolute path when there is no way there from `base` (no base, or another drive)."""
-    if not base:
+    absolute path when there is no way there from `base`: no base, a base that is not absolute itself (the .blend
+    file is not saved yet, so a relative root has no fixed place), or another drive."""
+    if not base or not is_absolute(base):
         return path
     try:
         rel = ospath.relpath(path, base)

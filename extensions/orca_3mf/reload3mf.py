@@ -16,6 +16,7 @@ bundled Python works too. See README.md next to this file.
 """
 
 import argparse
+import math
 import os
 import re
 import struct
@@ -367,8 +368,13 @@ class SourceFinder:
                         self._names.setdefault(f.lower(), set()).add(os.path.join(dirpath, f))
         return self._names
 
-    def find(self, stored, project_dir):
-        """Returns (path or None, problem or None)."""
+    def name_hits(self, file_name):
+        """Every file named file_name (any case) below the search folders."""
+        return set(self._name_index().get(file_name.lower(), ()))
+
+    def find(self, stored, project_dir, by_name=True):
+        """Returns (path or None, problem or None). by_name=False takes only paths: the stored path, or its trailing
+        pieces with at least one folder (".../parts/R4.stl"), never a file found by its name alone."""
         direct = stored if os.path.isabs(stored) else os.path.join(project_dir, stored)
         if os.path.isfile(direct):
             return direct, None
@@ -378,12 +384,12 @@ class SourceFinder:
         # Trailing pieces of the stored path, longest first, under the project's
         # folder and each search folder ("...\GripV\parts\R4.stl" -> "parts/R4.stl").
         for root in [project_dir] + self.search_dirs:
-            for k in range(len(parts), 0, -1):
+            for k in range(len(parts), 0 if by_name else 1, -1):
                 cand = os.path.join(root, *parts[-k:])
                 if os.path.isfile(cand):
                     return cand, None
         # Same file name anywhere under the search folders.
-        if self.search_dirs:
+        if self.search_dirs and by_name:
             hits = sorted(self._name_index().get(parts[-1].lower(), ()))
             if len(hits) == 1:
                 return hits[0], None

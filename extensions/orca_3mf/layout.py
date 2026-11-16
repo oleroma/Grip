@@ -88,16 +88,20 @@ def footprint(verts, rotation):
 # Nesting: rectangles on a bed (MaxRects free space), each put where the group stays most compact
 
 
-def nest(sizes, bed, gap, margin=None):
+def nest(sizes, bed, gap, margin=None, blocked=()):
     """Places rectangles (width, depth) on a bed (width, depth) with `gap` between them and `margin` from the
     edges (default: gap / 2). Largest first, each where the bounding box of the group grows least (relative to
     the bed's shape), so the parts end up in a compact block; the block is centred on the bed.
+    blocked: rectangles (x, y, width, depth) on the bed already taken (parts that keep their place); the others
+    keep `gap` from them, and the block is then not centred.
 
     Returns (positions, left_out): positions[i] is the (x, y) of rectangle i's lower left corner, or None when
     it did not fit; left_out lists those indices."""
     margin = gap / 2.0 if margin is None else margin
     width, depth = bed[0] - 2 * margin + gap, bed[1] - 2 * margin + gap
     free = [(0.0, 0.0, width, depth)] if width > 0 and depth > 0 else []
+    for bx, by, bw, bd in blocked:  # in the free space's own coordinates: a part at u sits at u + margin
+        free = _split_free(free, (bx - margin, by - margin, bw + gap, bd + gap))
     order = sorted(range(len(sizes)), key=lambda i: (-max(sizes[i]), -sizes[i][0] * sizes[i][1], i))
     placed = [None] * len(sizes)
     group = (0.0, 0.0, 0.0, 0.0)  # extent of the placed rectangles
@@ -117,6 +121,9 @@ def nest(sizes, bed, gap, margin=None):
         group = (0.0, 0.0, max(group[2], x + w), max(group[3], y + d))
         free = _split_free(free, (x, y, w, d))
     used = [i for i, p in enumerate(placed) if p is not None]
+    if blocked:
+        return ([(p[0] + margin, p[1] + margin) if p is not None else None for p in placed],
+                [i for i, p in enumerate(placed) if p is None])
     if used:
         lo_x = min(placed[i][0] for i in used)
         lo_y = min(placed[i][1] for i in used)
