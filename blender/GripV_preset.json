@@ -213,8 +213,8 @@
                                         {
                                             "value_string": "",
                                             "value_menu": "standard",
-                                            "use_tag": false,
-                                            "tag": "",
+                                            "use_tag": true,
+                                            "tag": "*",
                                             "use_dir": false,
                                             "dir_tag": "",
                                             "use_sweep": false,
@@ -409,8 +409,8 @@
                                                 {
                                                     "value_string": "",
                                                     "value_menu": "hollow",
-                                                    "use_tag": false,
-                                                    "tag": "",
+                                                    "use_tag": true,
+                                                    "tag": "*",
                                                     "use_dir": false,
                                                     "dir_tag": "",
                                                     "use_sweep": false,
@@ -1457,22 +1457,22 @@
             {
                 "name": "Case standard",
                 "files": [
-                    "case_standard/case_bottom.stl",
-                    "case_standard/case_top_cap_knob.stl",
-                    "case_standard/case_top_cap_plate.stl",
-                    "case_standard/case_top_dpad_stick_cap_knob.stl",
-                    "case_standard/case_top_dpad_stick_cap_plate.stl"
+                    "case_standard/case_bottom_standard.stl",
+                    "case_standard/case_top_standard_cap_knob.stl",
+                    "case_standard/case_top_standard_cap_plate.stl",
+                    "case_standard/case_top_standard_dpad_stick_cap_knob.stl",
+                    "case_standard/case_top_standard_dpad_stick_cap_plate.stl"
                 ]
             },
             {
                 "name": "Case hollow",
                 "files": [
-                    "case_hollow/case_bottom.stl",
+                    "case_hollow/case_bottom_hollow.stl",
                     "case_hollow/case_middle_plate.stl",
-                    "case_hollow/case_top_cap_knob.stl",
-                    "case_hollow/case_top_cap_plate.stl",
-                    "case_hollow/case_top_dpad_stick_cap_knob.stl",
-                    "case_hollow/case_top_dpad_stick_cap_plate.stl"
+                    "case_hollow/case_top_hollow_cap_knob.stl",
+                    "case_hollow/case_top_hollow_cap_plate.stl",
+                    "case_hollow/case_top_hollow_dpad_stick_cap_knob.stl",
+                    "case_hollow/case_top_hollow_dpad_stick_cap_plate.stl"
                 ]
             },
             {

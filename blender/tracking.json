@@ -12937,7 +12937,7 @@
                             "capacitive": "knob",
                             "capacitive plate stem tolerance": -0.1,
                             "capacitive plate tolerance": 0.4,
-                            "plate button offset": 1.0,
+                            "plate button offset": 1.4,
                             "screw hole": true
                         }
                     },
@@ -13610,7 +13610,7 @@
                             "case cutout thickness": 2.5,
                             "contact angle": 23.0,
                             "hole bevel": 1.0,
-                            "hole radius": 9.0,
+                            "hole radius": 8.6,
                             "shaft X correction": 0.0,
                             "shaft Y correction": 0.0,
                             "stick XY correction": false,
@@ -13689,7 +13689,7 @@
                             "case cutout thickness": 2.5,
                             "contact angle": 23.0,
                             "hole bevel": 1.0,
-                            "hole radius": 9.0,
+                            "hole radius": 8.6,
                             "shaft X correction": 0.0,
                             "shaft Y correction": 0.0,
                             "stick XY correction": false,
